@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">CTF Time</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    //team_data_row
+    <string name="default_rank">1</string>
+    <string name="default_name">BytesForEveryone</string>
+    <string name="default_country">US</string>
+    <string name="default_points">9001</string>
+</resources>
