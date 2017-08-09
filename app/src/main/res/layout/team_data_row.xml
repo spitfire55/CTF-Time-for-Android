@@ -2,36 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingTop="3dp">
 
 
     <TextView
         android:id="@+id/team_rank_textview"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="4"
+        android:layout_weight="1"
         android:textAlignment="center"
+        android:gravity="center_horizontal"
         android:text = "@string/default_rank"/>
 
     <TextView
         android:id="@+id/team_name_textview"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/default_country" />
+        android:layout_weight="4"
+        android:gravity="center_horizontal"
+        android:text="@string/default_name" />
 
     <TextView
         android:id="@+id/team_country_textview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:text="@string/default_name"/>
+        android:gravity="center_horizontal"
+        android:text="@string/default_country"/>
 
     <TextView
         android:id="@+id/team_points_textview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="2"
+        android:gravity="center_horizontal"
         android:text="@string/default_points"/>
 
 </LinearLayout>

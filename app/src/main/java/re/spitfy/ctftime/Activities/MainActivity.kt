@@ -81,11 +81,9 @@ class MainActivity : AppCompatActivity(),
 
         if (fragment != null) {
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, fragment).commit()
+                    .replace(R.id.main_fragment, fragment).commit()
         }
 
-        if (supportActionBar != null) {
-            supportActionBar.setTitle(title)
-        }
+        supportActionBar?.title = title
     }
 }
