@@ -19,23 +19,24 @@
         android:id="@+id/team_name_textview"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="4"
+        android:layout_weight="6"
         android:gravity="center_horizontal"
         android:text="@string/default_name" />
 
-    <TextView
+    <!-- <TextView
         android:id="@+id/team_country_textview"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
         android:gravity="center_horizontal"
         android:text="@string/default_country"/>
+    -->
 
     <TextView
         android:id="@+id/team_points_textview"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:gravity="center_horizontal"
         android:text="@string/default_points"/>
 
