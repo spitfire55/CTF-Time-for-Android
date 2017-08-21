@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group>
+    <!-- <group> -->
         <item
             android:id="@+id/nav_team_ranking"
             android:icon="@drawable/ic_menu_list"
-            android:title="Team Rankings" />
-        <item
+            android:title="@string/navbar_team_rankings" />
+    <!--<item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_gallery"
             android:title="Gallery" />
@@ -34,5 +34,5 @@
                 android:title="Send" />
         </menu>
     </item>
-
+    -->
 </menu>

@@ -6,13 +6,17 @@ import android.widget.TextView
 import re.spitfy.ctftime.Data.TeamRankData
 import re.spitfy.ctftime.R
 
-class TeamRankViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-    val rankView = itemView.findViewById<TextView>(R.id.team_rank_textview)
-    val teamNameView = itemView.findViewById<TextView>(R.id.team_name_textview)
-    val pointsView = itemView.findViewById<TextView>(R.id.team_points_textview)
+class TeamRankViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
+{
+    private val rankView = itemView
+            .findViewById<TextView>(R.id.team_rank_textview)
+    private val teamNameView = itemView
+            .findViewById<TextView>(R.id.team_name_textview)
+    private val pointsView = itemView
+            .findViewById<TextView>(R.id.team_points_textview)
 
-    fun bind(ranking: Int, rankData: TeamRankData) {
-        rankView.text = ranking.toString()
+    fun bind(rankData: TeamRankData, rankValue: String) {
+        rankView.text = (rankValue.toInt() + 1).toString()
         teamNameView.text = rankData.team_name
         pointsView.text = rankData.points.toString()
     }

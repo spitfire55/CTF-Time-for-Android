@@ -1,54 +1,41 @@
 package re.spitfy.ctftime.Activities
 
+import android.content.res.Configuration
 import android.support.v4.app.Fragment
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.view.Menu
+import android.support.v7.widget.Toolbar
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_bar_main.*
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.Fragments.TeamRankingsFragment
 
 class MainActivity : AppCompatActivity(),
-        NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener
+{
+
+    lateinit var drawerLayout: DrawerLayout
+    lateinit var navView: NavigationView
+    lateinit private var drawerToggle: ActionBarDrawerToggle
+    lateinit private var toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_appbar_main)
+
+        toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view,
-                    "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
-
-        val toggle = ActionBarDrawerToggle(
-                this, drawer_layout, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
-
-        nav_view.setNavigationItemSelectedListener(this)
-    }
-
-    override fun onBackPressed() {
-        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main, menu)
-        return true
+        drawerLayout = findViewById(R.id.drawer_layout)
+        drawerToggle = setupDrawerToggle()
+        navView = findViewById(R.id.navView)
+        navView.setNavigationItemSelectedListener({ menuItem ->
+            displayNavView(menuItem.itemId)
+            true
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -56,19 +43,42 @@ class MainActivity : AppCompatActivity(),
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
-            R.id.action_settings -> return true
-            else -> return super.onOptionsItemSelected(item)
+            R.id.action_settings -> {
+                drawerLayout.openDrawer(GravityCompat.START)
+                return true
+            }
         }
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         displayNavView(item.itemId)
-        drawer_layout.closeDrawer(GravityCompat.START)
+        drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 
-    fun displayNavView(viewId: Int) {
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        drawerToggle.syncState()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        drawerToggle.onConfigurationChanged(newConfig)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if(supportFragmentManager.backStackEntryCount == 0) {
+            this.supportActionBar?.setTitle(R.string.app_name)
+        }
+    }
+
+    private fun displayNavView(viewId: Int) {
         var title = getString(R.string.app_name) // default
         var fragment: Fragment? = null
 
@@ -81,8 +91,21 @@ class MainActivity : AppCompatActivity(),
 
         if (fragment != null) {
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.main_fragment, fragment).commit()
+                    .replace(R.id.frameLayout, fragment)
+                    .addToBackStack("main")
+                    .commit()
+            this.supportActionBar?.title = title
+            drawerLayout.closeDrawers()
         }
-        supportActionBar?.title = title
+    }
+
+    private fun setupDrawerToggle(): ActionBarDrawerToggle {
+        return ActionBarDrawerToggle(
+                this,
+                drawerLayout,
+                toolbar,
+                R.string.navdrawer_open,
+                R.string.navdrawer_close
+        )
     }
 }
