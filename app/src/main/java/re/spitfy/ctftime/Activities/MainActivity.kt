@@ -57,7 +57,6 @@ class MainActivity : AppCompatActivity(),
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         displayNavView(item.itemId)
-        drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 
@@ -88,15 +87,25 @@ class MainActivity : AppCompatActivity(),
                 title = "Team Rankings"
             }
         }
-
+        
+        val oldFragment = supportFragmentManager.findFragmentByTag(title)
         if (fragment != null) {
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.frameLayout, fragment)
-                    .addToBackStack("main")
-                    .commit()
+            if (oldFragment == null) {
+                supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.frameLayout, fragment, title)
+                        .addToBackStack(title)
+                        .commit()
+            }
+            else {
+                supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.frameLayout, oldFragment, title)
+                        .commit()
+            }
             this.supportActionBar?.title = title
-            drawerLayout.closeDrawers()
         }
+        drawerLayout.closeDrawers()
     }
 
     private fun setupDrawerToggle(): ActionBarDrawerToggle {

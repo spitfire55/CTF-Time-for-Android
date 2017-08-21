@@ -46,6 +46,7 @@ class TeamRankingsFragment: android.support.v4.app.Fragment()
         recyclerView?.adapter = adapter
 
         val rankingLayoutManager = LinearLayoutManager(activity)
+        rankingLayoutManager.orientation = LinearLayoutManager.VERTICAL
         rankingLayoutManager.reverseLayout = true
         rankingLayoutManager.stackFromEnd = true
         recyclerView?.layoutManager = rankingLayoutManager
