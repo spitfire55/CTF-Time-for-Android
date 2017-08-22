@@ -11,6 +11,7 @@ import com.google.firebase.database.*
 import re.spitfy.ctftime.Adapters.TeamRankingsAdapter
 import re.spitfy.ctftime.Data.TeamRankData
 import re.spitfy.ctftime.R
+import re.spitfy.ctftime.SimpleDividerItemDecoration
 
 class TeamRankingsFragment: android.support.v4.app.Fragment()
 {
@@ -42,8 +43,9 @@ class TeamRankingsFragment: android.support.v4.app.Fragment()
 
         val recyclerView = rootView?.
                 findViewById<RecyclerView>(R.id.team_ranking_recyclerview)
-        val adapter = TeamRankingsAdapter(rankingRef)
+        val adapter = TeamRankingsAdapter(rankingRef, this.context)
         recyclerView?.adapter = adapter
+        recyclerView?.addItemDecoration(SimpleDividerItemDecoration(this.context))
 
         val rankingLayoutManager = LinearLayoutManager(activity)
         rankingLayoutManager.orientation = LinearLayoutManager.VERTICAL

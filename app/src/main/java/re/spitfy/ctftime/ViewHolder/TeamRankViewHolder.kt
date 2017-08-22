@@ -16,7 +16,7 @@ class TeamRankViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
             .findViewById<TextView>(R.id.team_points_textview)
 
     fun bind(rankData: TeamRankData, rankValue: String) {
-        rankView.text = (rankValue.toInt() + 1).toString()
+        rankView.text = rankValue
         teamNameView.text = rankData.team_name
         pointsView.text = rankData.points.toString()
     }

@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.MenuItem
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.Fragments.TeamRankingsFragment
@@ -21,14 +22,19 @@ class MainActivity : AppCompatActivity(),
     lateinit var navView: NavigationView
     lateinit private var drawerToggle: ActionBarDrawerToggle
     lateinit private var toolbar: Toolbar
+    private var title: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appbar_main)
 
         toolbar = findViewById(R.id.toolbar)
+        if(savedInstanceState != null) {
+            val savedTitle = savedInstanceState.getString("Title")
+            this.title = savedTitle
+            toolbar.title = savedTitle
+        }
         setSupportActionBar(toolbar)
-
         drawerLayout = findViewById(R.id.drawer_layout)
         drawerToggle = setupDrawerToggle()
         navView = findViewById(R.id.navView)
@@ -77,6 +83,11 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putString("Title", this.title)
+    }
+
     private fun displayNavView(viewId: Int) {
         var title = getString(R.string.app_name) // default
         var fragment: Fragment? = null
@@ -87,9 +98,10 @@ class MainActivity : AppCompatActivity(),
                 title = "Team Rankings"
             }
         }
-        
+        // gets fragment if it is already in the stack
         val oldFragment = supportFragmentManager.findFragmentByTag(title)
         if (fragment != null) {
+            // check to see if fragment already in the stack
             if (oldFragment == null) {
                 supportFragmentManager
                         .beginTransaction()
@@ -104,6 +116,7 @@ class MainActivity : AppCompatActivity(),
                         .commit()
             }
             this.supportActionBar?.title = title
+            this.title = title
         }
         drawerLayout.closeDrawers()
     }
