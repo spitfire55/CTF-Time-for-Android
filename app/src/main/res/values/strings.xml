@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">CTF Time</string>
+    <string name="title">Title</string>
 
     <string name="navdrawer_open">Open navigation drawer</string>
     <string name="navdrawer_close">Close navigation drawer</string>
@@ -12,4 +13,10 @@
     <string name="default_points">9001</string>
 
     <string name="navbar_team_rankings">Team Rankings</string>
+
+    <string name="twenty_seventeen">2017</string>
+    <string name="year">Year</string>
+    <string name="rank">Rank</string>
+    <string name="team_name">Team Name</string>
+    <string name="points">Points</string>
 </resources>

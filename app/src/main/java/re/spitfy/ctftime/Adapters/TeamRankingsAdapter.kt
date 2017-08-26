@@ -1,6 +1,8 @@
 package re.spitfy.ctftime.Adapters
 
 import android.content.Context
+import android.view.View
+import android.widget.AdapterView
 import android.widget.Toast
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.google.firebase.database.Query
@@ -10,11 +12,10 @@ import re.spitfy.ctftime.ViewHolder.TeamRankViewHolder
 
 
 class TeamRankingsAdapter(ref: Query?, ctx: Context) :
-        FirebaseRecyclerAdapter<TeamRankData, TeamRankViewHolder>
-        (TeamRankData::class.java,
-                R.layout.team_data_row,
-                TeamRankViewHolder::class.java,
-                ref)
+        FirebaseRecyclerAdapter<TeamRankData, TeamRankViewHolder>(
+                TeamRankData::class.java,R.layout.team_data_row,
+                TeamRankViewHolder::class.java, ref
+        )
 {
     private val context = ctx
     companion object {

@@ -1,18 +1,17 @@
 package re.spitfy.ctftime.Activities
 
 import android.content.res.Configuration
-import android.support.v4.app.Fragment
 import android.os.Bundle
 import android.support.design.widget.NavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.MenuItem
+import re.spitfy.ctftime.Fragments.RankingsPagerFragment
 import re.spitfy.ctftime.R
-import re.spitfy.ctftime.Fragments.TeamRankingsFragment
 
 class MainActivity : AppCompatActivity(),
         NavigationView.OnNavigationItemSelectedListener
@@ -30,7 +29,7 @@ class MainActivity : AppCompatActivity(),
 
         toolbar = findViewById(R.id.toolbar)
         if(savedInstanceState != null) {
-            val savedTitle = savedInstanceState.getString("Title")
+            val savedTitle = savedInstanceState.getString(getString(R.string.title))
             this.title = savedTitle
             toolbar.title = savedTitle
         }
@@ -80,12 +79,13 @@ class MainActivity : AppCompatActivity(),
         super.onBackPressed()
         if(supportFragmentManager.backStackEntryCount == 0) {
             this.supportActionBar?.setTitle(R.string.app_name)
+            this.title = getString(R.string.app_name)
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        outState?.putString("Title", this.title)
+        outState?.putString(getString(R.string.title), this.title)
     }
 
     private fun displayNavView(viewId: Int) {
@@ -94,8 +94,8 @@ class MainActivity : AppCompatActivity(),
 
         when (viewId) {
             R.id.nav_team_ranking -> {
-                fragment = TeamRankingsFragment()
-                title = "Team Rankings"
+                fragment = RankingsPagerFragment()
+                title = getString(R.string.navbar_team_rankings)
             }
         }
         // gets fragment if it is already in the stack

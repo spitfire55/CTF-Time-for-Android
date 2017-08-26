@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <LinearLayout
@@ -18,7 +18,7 @@
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:textStyle="bold"
-            android:text="Rank" />
+            android:text="@string/rank" />
         <TextView
             android:id="@+id/TeamNameHeader"
             android:layout_width="0dp"
@@ -26,7 +26,7 @@
             android:gravity="center_horizontal"
             android:layout_weight="4"
             android:textStyle="bold"
-            android:text="Team Name"/>
+            android:text="@string/team_name"/>
         <!-- <TextView
             android:id="@+id/CountryFlagHeader"
             android:layout_width="0dp"
@@ -36,7 +36,6 @@
             android:textStyle="bold"
             android:text="Country"/>
         -->
-
         <TextView
             android:id="@+id/PointsTotalHeader"
             android:layout_width="0dp"
@@ -44,7 +43,7 @@
             android:gravity="center_horizontal"
             android:layout_weight="2"
             android:textStyle="bold"
-            android:text="Points"/>
+            android:text="@string/points"/>
 
     </LinearLayout>
 
@@ -53,4 +52,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"/>
+
 </LinearLayout>

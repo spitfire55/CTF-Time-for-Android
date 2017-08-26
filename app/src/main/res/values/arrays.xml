@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="ranking_years">
+        <item>2017</item>
+        <item>2016</item>
+        <item>2015</item>
+        <item>2012</item>
+    </string-array>
+</resources>
