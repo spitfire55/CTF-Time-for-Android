@@ -1,20 +1,21 @@
 language: android
 jdk:
-        - oraclejdk8
+  - oraclejdk8
+
+env:
+  global:
+    - COMPILE_SDK_VERSION = 26
+    - BUILD_TOOLS_VERSION = 26.0.1
+
 android:
-        components:
-                - tools
-                - tools
-                - platform-tools
-                - build-tools-26.0.1
-                - android-26
-                - extra-android-support
-                - sys-img-armeabi-v7a-android-26.0.1
-before_script:
-        - echo no | android create avd --force -n test -t \"Google Inc.:Google APIs:\"26 --abi armeabi-v7a
-        - emulator -avd test -no-audio -no-window &
-        - android-wait-for-emulator
-        - adb shell input keyevent 82 &
+  components:
+    - tools
+    - tools
+    - platform-tools
+    - build-tools-$BUILD_TOOLS_VERSION
+    - android-$COMPILE_SDK_VERSION
+    - extra-android-support
+
 script:
-        - "./gradlew clean build connectedCheck -PdisablePreDex -- stacktrace"
+  - "./gradlewbuild connectedCheck
 
