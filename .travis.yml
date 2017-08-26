@@ -17,5 +17,5 @@ android:
                 - extra-android-support
 
 script:
-        - "./gradlewbuild connectedCheck
+        - "./gradlewbuild connectedCheck"
 
