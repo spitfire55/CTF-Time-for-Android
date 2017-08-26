@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.firebase.FirebaseApp
 import com.google.firebase.database.*
 import re.spitfy.ctftime.Adapters.TeamRankingsAdapter
 import re.spitfy.ctftime.Data.TeamRankData
