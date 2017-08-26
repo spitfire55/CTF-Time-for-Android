@@ -7,8 +7,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.firebase.FirebaseApp
 import com.google.firebase.database.*
-import org.jetbrains.anko.support.v4.find
 import re.spitfy.ctftime.Adapters.TeamRankingsAdapter
 import re.spitfy.ctftime.Data.TeamRankData
 import re.spitfy.ctftime.R
