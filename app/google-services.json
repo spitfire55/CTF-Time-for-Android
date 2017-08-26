@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "79752192993",
+    "firebase_url": "https://ctf-time-for-android.firebaseio.com",
+    "project_id": "ctf-time-for-android",
+    "storage_bucket": "ctf-time-for-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:79752192993:android:e486deb167a69626",
+        "android_client_info": {
+          "package_name": "re.spitfy.ctftime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "79752192993-j4deum2kang0crrscehvkjo2g4plr8ha.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "re.spitfy.ctftime",
+            "certificate_hash": "bf829ea40609a76cbc9daadfeab6fbb569ba6add"
+          }
+        },
+        {
+          "client_id": "79752192993-6n2nkl7e3pl3fjhntt89dremdqdco70v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAq8GMwAc7qqqmUXVqgdlbPAIGup5bC1I4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "79752192993-6n2nkl7e3pl3fjhntt89dremdqdco70v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
