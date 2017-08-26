@@ -15,7 +15,8 @@ android:
                 - build-tools-$BUILD_TOOLS_VERSION
                 - android-$COMPILE_SDK_VERSION
                 - extra-android-support
-
+        licenses:
+                - android-sdk-license-.+
 script:
         - "./gradlew build connectedCheck"
 
