@@ -17,10 +17,10 @@ class MainActivity : AppCompatActivity(),
         NavigationView.OnNavigationItemSelectedListener
 {
 
-    lateinit var drawerLayout: DrawerLayout
-    lateinit var navView: NavigationView
-    lateinit private var drawerToggle: ActionBarDrawerToggle
-    lateinit private var toolbar: Toolbar
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navView: NavigationView
+    private lateinit var drawerToggle: ActionBarDrawerToggle
+    private lateinit var toolbar: Toolbar
     private var title: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
