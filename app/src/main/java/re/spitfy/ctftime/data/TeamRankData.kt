@@ -1,4 +1,4 @@
-package re.spitfy.ctftime.Data
+package re.spitfy.ctftime.data
 
 data class TeamRankData (
     val points: Float = 0.0f,

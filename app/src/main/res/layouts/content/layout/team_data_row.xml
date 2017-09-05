@@ -1,29 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="3dp">
 
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/team_rank_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:text="@string/default_rank"
         android:textAlignment="center"
-        android:gravity="center_horizontal"
-        android:text = "@string/default_rank"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        app:autoSizeMaxTextSize="48sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform" />
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/team_name_textview"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
         android:layout_weight="4"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:text="@string/default_name"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:maxLines="1"
+        app:autoSizeMaxTextSize="48sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform" />
 
     <!-- <TextView
         android:id="@+id/team_country_textview"
@@ -34,13 +47,21 @@
         android:text="@string/default_country"/>
     -->
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/team_points_textview"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical|start"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="4dp"
         android:layout_weight="2"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:text="@string/default_points"
-        android:textSize="20sp"/>
+        android:textAlignment="textStart"
+        android:textSize="20sp"
+        app:autoSizeMaxTextSize="48sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeTextType="uniform"
+        android:maxLines="1"/>
 
 </LinearLayout>

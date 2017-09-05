@@ -1,9 +1,9 @@
-package re.spitfy.ctftime.ViewHolder
+package re.spitfy.ctftime.viewHolder
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
-import re.spitfy.ctftime.Data.TeamRankData
+import re.spitfy.ctftime.data.TeamRankData
 import re.spitfy.ctftime.R
 
 class TeamRankViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
@@ -18,6 +18,9 @@ class TeamRankViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
     fun bind(rankData: TeamRankData, rankValue: String) {
         rankView.text = rankValue
         teamNameView.text = rankData.team_name
-        pointsView.text = rankData.points.toString()
+        pointsView.text = rankData.points.format(3)
     }
+
+    fun Float.format(digits: Int) = java.lang.String
+            .format("%.${digits}f", this)
 }

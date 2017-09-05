@@ -1,10 +1,10 @@
-package re.spitfy.ctftime.Adapters
+package re.spitfy.ctftime.adapters
 
 import android.support.v4.app.FragmentManager
 import android.content.Context
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
-import re.spitfy.ctftime.Fragments.TeamRankingsFragment
+import re.spitfy.ctftime.fragments.TeamRankingsFragment
 import re.spitfy.ctftime.R
 
 

@@ -1,14 +1,12 @@
-package re.spitfy.ctftime.Adapters
+package re.spitfy.ctftime.adapters
 
 import android.content.Context
-import android.view.View
-import android.widget.AdapterView
 import android.widget.Toast
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.google.firebase.database.Query
-import re.spitfy.ctftime.Data.TeamRankData
+import re.spitfy.ctftime.data.TeamRankData
 import re.spitfy.ctftime.R
-import re.spitfy.ctftime.ViewHolder.TeamRankViewHolder
+import re.spitfy.ctftime.viewHolder.TeamRankViewHolder
 
 
 class TeamRankingsAdapter(ref: Query?, ctx: Context) :

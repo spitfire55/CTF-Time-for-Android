@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">CTF Time</string>
     <string name="title">Title</string>
+    <string name="ctf_time_logo">CTF Time Logo</string>
 
     <string name="navdrawer_open">Open navigation drawer</string>
     <string name="navdrawer_close">Close navigation drawer</string>
@@ -8,11 +9,13 @@
     <string name="action_settings">Settings</string>
 
     <string name="default_rank">1</string>
-    <string name="default_name">BytesForEveryone</string>
+    <string name="default_name">The Shell Collecting Club</string>
     <string name="default_country">US</string>
     <string name="default_points">9001</string>
 
     <string name="navbar_team_rankings">Team Rankings</string>
+    <string name="teams">Teams</string>
+    <string name="team_profile_image">Team Profile Image</string>
 
     <string name="twenty_seventeen">2017</string>
     <string name="year">Year</string>

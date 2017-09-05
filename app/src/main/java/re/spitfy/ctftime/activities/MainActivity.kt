@@ -1,5 +1,6 @@
-package re.spitfy.ctftime.Activities
+package re.spitfy.ctftime.activities
 
+import android.app.Activity
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -10,8 +11,9 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
-import re.spitfy.ctftime.Fragments.RankingsPagerFragment
+import re.spitfy.ctftime.fragments.RankingsPagerFragment
 import re.spitfy.ctftime.R
+import re.spitfy.ctftime.fragments.TeamProfileFragment
 
 class MainActivity : AppCompatActivity(),
         NavigationView.OnNavigationItemSelectedListener
@@ -25,7 +27,7 @@ class MainActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_appbar_main)
+        setContentView(R.layout.activity_main)
 
         toolbar = findViewById(R.id.toolbar)
         if(savedInstanceState != null) {
@@ -78,7 +80,7 @@ class MainActivity : AppCompatActivity(),
     override fun onBackPressed() {
         super.onBackPressed()
         if(supportFragmentManager.backStackEntryCount == 0) {
-            this.supportActionBar?.setTitle(R.string.app_name)
+            this.actionBar?.setTitle(R.string.app_name)
             this.title = getString(R.string.app_name)
         }
     }
@@ -97,6 +99,10 @@ class MainActivity : AppCompatActivity(),
                 fragment = RankingsPagerFragment()
                 title = getString(R.string.navbar_team_rankings)
             }
+            R.id.nav_team_profile -> {
+                fragment = TeamProfileFragment()
+                title = "Team Profiles"
+            }
         }
         // gets fragment if it is already in the stack
         val oldFragment = supportFragmentManager.findFragmentByTag(title)
@@ -105,14 +111,14 @@ class MainActivity : AppCompatActivity(),
             if (oldFragment == null) {
                 supportFragmentManager
                         .beginTransaction()
-                        .replace(R.id.frameLayout, fragment, title)
+                        .replace(R.id.mainFrame, fragment, title)
                         .addToBackStack(title)
                         .commit()
             }
             else {
                 supportFragmentManager
                         .beginTransaction()
-                        .replace(R.id.frameLayout, oldFragment, title)
+                        .replace(R.id.mainFrame, oldFragment, title)
                         .commit()
             }
             this.supportActionBar?.title = title

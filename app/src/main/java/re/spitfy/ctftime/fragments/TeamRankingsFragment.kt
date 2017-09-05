@@ -1,4 +1,4 @@
-package re.spitfy.ctftime.Fragments
+package re.spitfy.ctftime.fragments
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -8,17 +8,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.database.*
-import re.spitfy.ctftime.Adapters.TeamRankingsAdapter
-import re.spitfy.ctftime.Data.TeamRankData
+import com.google.firebase.perf.metrics.AddTrace
+import re.spitfy.ctftime.adapters.TeamRankingsAdapter
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.SimpleDividerItemDecoration
 
 class TeamRankingsFragment : android.support.v4.app.Fragment()
 {
-    companion object {
+    private lateinit var year: String
+
+    companion object
+    {
         val TAG = "TeamRankingsFragment"
 
-        fun newInstance(year: String): TeamRankingsFragment {
+        fun newInstance(year: String): TeamRankingsFragment
+        {
             val args = Bundle()
             args.putString("YEAR", year)
             val fragment = TeamRankingsFragment()
@@ -27,28 +31,31 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
         }
     }
 
-    lateinit var data: Array<TeamRankData>
-    lateinit var rankingRef: Query
-    lateinit var year: String
-
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         val yearArg = arguments.getString("YEAR")
         if (yearArg != null) {
             year = yearArg
         } else {
-            Log.d(TAG, "No arguments. Did you create TeamRankingsFragment instance with newInstance method")
+            Log.d(TAG, "No arguments. Did you create TeamRankingsFragment " +
+                    "instance with newInstance method")
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater?,
                               container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+                              savedInstanceState: Bundle?): View
+    {
 
-        val rootView = inflater?.inflate(R.layout.fragment_rankings, container, false)
+        val rootView = inflater?.inflate(
+                R.layout.fragment_rankings,
+                container,
+                false)
         rootView?.tag = TAG + year
 
-        val recyclerView = rootView?.findViewById<RecyclerView>(R.id.team_ranking_recyclerview)
+        val recyclerView = rootView?.
+                findViewById<RecyclerView>(R.id.team_ranking_recyclerview)
         if (recyclerView == null) {
             Log.d(TAG, "Recyclerview not found?")
         }
@@ -65,13 +72,16 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                 + "Unable to inflate view.")
     }
 
-    private fun startRecyclerView(recyclerView: RecyclerView?, rankingsYear: String) {
-        rankingRef = FirebaseDatabase.getInstance()
+    private fun startRecyclerView(recyclerView: RecyclerView?,
+                                  rankingsYear: String)
+    {
+        val rankingRef = FirebaseDatabase.getInstance()
                 .getReference("Rankings/" + rankingsYear)
                 .orderByChild("points")
 
         val recyclerViewAdapter = TeamRankingsAdapter(rankingRef, this.context)
         recyclerView?.adapter = recyclerViewAdapter
-        recyclerView?.addItemDecoration(SimpleDividerItemDecoration(this.context))
+        recyclerView?.addItemDecoration(
+                SimpleDividerItemDecoration(this.context))
     }
 }
