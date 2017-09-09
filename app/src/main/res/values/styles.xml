@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="android:colorPrimary">@color/colorPrimary</item>
+    <style name="AppTheme" parent="@style/Theme.AppCompat.NoActionBar">
+        <item name="android:colorPrimary">@android:color/white</item>
         <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="android:windowActionBar">false</item>
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="android:colorPrimary">@android:color/white</item>
+        <item name="android:windowActionBar">true</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:statusBarColor">@android:color/black</item>
-    </style>
-
-    <style name="Toolbar">
-        <item name="android:textColor">@android:color/white</item>
     </style>
 
 </resources>

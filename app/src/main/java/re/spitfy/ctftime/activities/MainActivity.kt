@@ -5,8 +5,10 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
+import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -43,6 +45,8 @@ class MainActivity : AppCompatActivity(),
             displayNavView(menuItem.itemId)
             true
         })
+        val nestedScrollView = findViewById<NestedScrollView>(R.id.nested_scroll_view)
+        nestedScrollView.isFillViewport = true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -77,14 +81,6 @@ class MainActivity : AppCompatActivity(),
         drawerToggle.onConfigurationChanged(newConfig)
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        if(supportFragmentManager.backStackEntryCount == 0) {
-            this.actionBar?.setTitle(R.string.app_name)
-            this.title = getString(R.string.app_name)
-        }
-    }
-
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState?.putString(getString(R.string.title), this.title)
@@ -97,30 +93,20 @@ class MainActivity : AppCompatActivity(),
         when (viewId) {
             R.id.nav_team_ranking -> {
                 fragment = RankingsPagerFragment()
-                title = getString(R.string.navbar_team_rankings)
+                title = getString(R.string.toolbar_team_rankings)
             }
             R.id.nav_team_profile -> {
                 fragment = TeamProfileFragment()
-                title = "Team Profiles"
+                title = getString(R.string.toolbar_team_profiles)
             }
         }
         // gets fragment if it is already in the stack
-        val oldFragment = supportFragmentManager.findFragmentByTag(title)
-        if (fragment != null) {
+        if (fragment != null && this.title != title) {
             // check to see if fragment already in the stack
-            if (oldFragment == null) {
-                supportFragmentManager
-                        .beginTransaction()
-                        .replace(R.id.mainFrame, fragment, title)
-                        .addToBackStack(title)
-                        .commit()
-            }
-            else {
-                supportFragmentManager
-                        .beginTransaction()
-                        .replace(R.id.mainFrame, oldFragment, title)
-                        .commit()
-            }
+            supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.mainFrame, fragment, title)
+                    .commit()
             this.supportActionBar?.title = title
             this.title = title
         }

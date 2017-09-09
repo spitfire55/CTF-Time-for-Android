@@ -13,7 +13,8 @@
     <string name="default_country">US</string>
     <string name="default_points">9001</string>
 
-    <string name="navbar_team_rankings">Team Rankings</string>
+    <string name="toolbar_team_rankings">Team Rankings</string>
+    <string name="toolbar_team_profiles">Team Profiles</string>
     <string name="teams">Teams</string>
     <string name="team_profile_image">Team Profile Image</string>
 
