@@ -1,21 +1,22 @@
 package re.spitfy.ctftime.activities
 
-import android.app.Activity
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.MenuItem
+import org.jetbrains.anko.coroutines.experimental.bg
 import re.spitfy.ctftime.fragments.RankingsPagerFragment
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.fragments.TeamProfileFragment
+
 
 class MainActivity : AppCompatActivity(),
         NavigationView.OnNavigationItemSelectedListener
@@ -96,7 +97,11 @@ class MainActivity : AppCompatActivity(),
                 title = getString(R.string.toolbar_team_rankings)
             }
             R.id.nav_team_profile -> {
-                fragment = TeamProfileFragment()
+                if (TeamProfileFragment.teamNames.isEmpty()) {
+                    TeamProfileFragment.getTeamNameList()
+                    Log.d("MainActivity", "Done!")
+                }
+                fragment = TeamProfileFragment.newInstance(8327)
                 title = getString(R.string.toolbar_team_profiles)
             }
         }
@@ -114,12 +119,12 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun setupDrawerToggle(): ActionBarDrawerToggle {
+
         return ActionBarDrawerToggle(
                 this,
                 drawerLayout,
                 toolbar,
                 R.string.navdrawer_open,
-                R.string.navdrawer_close
-        )
+                R.string.navdrawer_close)
     }
 }

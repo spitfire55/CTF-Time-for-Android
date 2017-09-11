@@ -14,6 +14,6 @@
         android:id="@+id/mainFrame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/Primary100"/>
+        android:background="@color/colorPrimary"/>
 
 </android.support.v4.widget.NestedScrollView>

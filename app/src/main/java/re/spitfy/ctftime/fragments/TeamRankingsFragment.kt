@@ -8,10 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.database.*
-import com.google.firebase.perf.metrics.AddTrace
 import re.spitfy.ctftime.adapters.TeamRankingsAdapter
 import re.spitfy.ctftime.R
-import re.spitfy.ctftime.SimpleDividerItemDecoration
 
 class TeamRankingsFragment : android.support.v4.app.Fragment()
 {
@@ -58,8 +56,9 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                 findViewById<RecyclerView>(R.id.team_ranking_recyclerview)
         if (recyclerView == null) {
             Log.d(TAG, "Recyclerview not found?")
+        } else {
+            startRecyclerView(recyclerView, year)
         }
-        startRecyclerView(recyclerView, year)
 
         val rankingLayoutManager = LinearLayoutManager(activity)
         rankingLayoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -72,7 +71,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                 + "Unable to inflate view.")
     }
 
-    private fun startRecyclerView(recyclerView: RecyclerView?,
+    private fun startRecyclerView(recyclerView: RecyclerView,
                                   rankingsYear: String)
     {
         val rankingRef = FirebaseDatabase.getInstance()
@@ -80,8 +79,6 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                 .orderByChild("points")
 
         val recyclerViewAdapter = TeamRankingsAdapter(rankingRef, this.context)
-        recyclerView?.adapter = recyclerViewAdapter
-        recyclerView?.addItemDecoration(
-                SimpleDividerItemDecoration(this.context))
+        recyclerView.adapter = recyclerViewAdapter
     }
 }

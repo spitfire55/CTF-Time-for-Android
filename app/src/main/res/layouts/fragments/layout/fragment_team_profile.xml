@@ -10,21 +10,23 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/Primary300">
+        android:background="@color/colorPrimary">
 
         <android.support.v7.widget.AppCompatAutoCompleteTextView
             android:id="@+id/team_search_bar"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginLeft="48dp"
+            android:layout_marginRight="48dp"
+            android:textAlignment="center"
             android:hint="@string/team_name"
             android:textSize="24sp"
             android:cursorVisible="false"
-            android:paddingRight="8dp"
-            android:paddingLeft="8dp"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black"
-            android:backgroundTint="@color/colorAccent"
+            android:backgroundTint="@color/colorSecondary"
+            android:textCursorDrawable="@drawable/team_profile_cursor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -36,10 +38,9 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="0dp"
-            android:background="@color/Primary100"
             app:cardCornerRadius="4dp"
             app:cardElevation="2dp"
-            app:cardBackgroundColor="@color/Primary100"
+            app:cardBackgroundColor="@color/colorPrimaryLight"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/team_search_bar"
