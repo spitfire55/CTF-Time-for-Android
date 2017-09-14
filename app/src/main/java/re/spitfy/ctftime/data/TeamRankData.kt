@@ -1,8 +1,9 @@
 package re.spitfy.ctftime.data
 
-data class TeamRankData (
-    val points: Float = 0.0f,
-    val team_name: String = "",
-    val team_id: Int = 0
-)
+
+
+class TeamRankData(val academic : Boolean = false,
+                   val country: String = "",
+                   val name: String = "",
+                   val rating: Map<String, RatingData> = emptyMap())
 

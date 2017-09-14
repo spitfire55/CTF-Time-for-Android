@@ -10,7 +10,7 @@ import re.spitfy.ctftime.R
 import re.spitfy.ctftime.viewHolder.TeamRankViewHolder
 
 
-class TeamRankingsAdapter(ref : Query?, ctx: Context) :
+class TeamRankingsAdapter(val year: String, ref : Query?, ctx: Context) :
         FirebaseRecyclerAdapter<TeamRankData, TeamRankViewHolder>(
                 TeamRankData::class.java,R.layout.team_data_row,
                 TeamRankViewHolder::class.java, ref
@@ -25,14 +25,8 @@ class TeamRankingsAdapter(ref : Query?, ctx: Context) :
                                     model: TeamRankData?,
                                     position: Int)
     {
-        val actualPosition = (this.getRef(position).key.toInt() + 1).toString()
-        viewHolder?.itemView?.setOnClickListener {
-            Toast.makeText(context,
-                    "You clicked on item " + actualPosition,
-                    Toast.LENGTH_SHORT).show()
-        }
         if (model != null) {
-            viewHolder?.bind(model, actualPosition)
+            viewHolder?.bind(model, year)
         }
 
     }

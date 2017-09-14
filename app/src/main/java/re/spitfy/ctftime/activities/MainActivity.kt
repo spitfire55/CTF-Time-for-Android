@@ -12,10 +12,9 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
-import org.jetbrains.anko.coroutines.experimental.bg
-import re.spitfy.ctftime.fragments.RankingsPagerFragment
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.fragments.TeamProfileFragment
+import re.spitfy.ctftime.fragments.TeamRankingsFragment
 
 
 class MainActivity : AppCompatActivity(),
@@ -93,7 +92,7 @@ class MainActivity : AppCompatActivity(),
 
         when (viewId) {
             R.id.nav_team_ranking -> {
-                fragment = RankingsPagerFragment()
+                fragment = TeamRankingsFragment.newInstance("2017", 1)
                 title = getString(R.string.toolbar_team_rankings)
             }
             R.id.nav_team_profile -> {

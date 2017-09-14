@@ -15,10 +15,10 @@ class TeamRankViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
     private val pointsView = itemView
             .findViewById<TextView>(R.id.team_points_textview)
 
-    fun bind(rankData: TeamRankData, rankValue: String) {
-        rankView.text = rankValue
-        teamNameView.text = rankData.team_name
-        pointsView.text = rankData.points.format(3)
+    fun bind(rankData: TeamRankData, year: String) {
+        rankView.text = rankData.rating[year]?.rating_place.toString()
+        teamNameView.text = rankData.name
+        pointsView.text = rankData.rating[year]?.rating_points?.format(3)
     }
 
     fun Float.format(digits: Int) = java.lang.String
