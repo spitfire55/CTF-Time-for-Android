@@ -3,117 +3,107 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="@color/colorPrimary">
 
-    <android.support.v7.widget.CardView
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/rankings_spinner"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        app:cardElevation="4dp"
-        app:cardBackgroundColor="@color/colorPrimary">
-        <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:paddingTop="5dp">
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/RankHeader"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                app:autoSizeMinTextSize="18sp"
-                app:autoSizeMaxTextSize="60sp"
-                app:autoSizeStepGranularity="21sp"
-                app:autoSizeTextType="uniform"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:text="@string/rank" />
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/TeamNameHeader"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                app:autoSizeMinTextSize="18sp"
-                app:autoSizeMaxTextSize="60sp"
-                app:autoSizeStepGranularity="21sp"
-                app:autoSizeTextType="uniform"
-                android:gravity="center"
-                android:layout_weight="4"
-                android:textStyle="bold"
-                android:text="@string/team_name"/>
-            <!-- <TextView
-                android:id="@+id/CountryFlagHeader"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal"
-                android:layout_weight="2"
-                android:textStyle="bold"
-                android:text="Country"/>
-            -->
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/PointsTotalHeader"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                app:autoSizeMinTextSize="18sp"
-                app:autoSizeMaxTextSize="60sp"
-                app:autoSizeStepGranularity="21sp"
-                app:autoSizeTextType="uniform"
-                android:gravity="center"
-                android:layout_weight="2"
-                android:textStyle="bold"
-                android:text="@string/points"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:textAlignment="center"
+        android:background="@color/colorSecondary"
+        android:popupBackground="@color/colorSecondary" />
 
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
+    <android.support.v7.widget.LinearLayoutCompat
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="0dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:cardBackgroundColor="@color/colorPrimaryDark">
+        android:orientation="horizontal"
+        android:layout_weight="1">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/RankHeader"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-            
-            <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:entries="@arrays/ranking_years"
-                android:prompt="Year" />
+            android:layout_weight="2"
+            android:textColor="@android:color/white"
+            app:autoSizeMinTextSize="18sp"
+            app:autoSizeMaxTextSize="60sp"
+            app:autoSizeStepGranularity="21sp"
+            app:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="@string/rank" />
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/TeamNameHeader"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textColor="@android:color/white"
+            app:autoSizeMinTextSize="18sp"
+            app:autoSizeMaxTextSize="60sp"
+            app:autoSizeStepGranularity="21sp"
+            app:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:layout_weight="4"
+            android:textStyle="bold"
+            android:text="@string/team_name"/>
+        <!-- <TextView
+            android:id="@+id/CountryFlagHeader"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:layout_weight="2"
+            android:textStyle="bold"
+            android:text="Country"/>
+        -->
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/PointsTotalHeader"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textColor="@android:color/white"
+            app:autoSizeMinTextSize="18sp"
+            app:autoSizeMaxTextSize="60sp"
+            app:autoSizeStepGranularity="21sp"
+            app:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:layout_weight="2"
+            android:textStyle="bold"
+            android:text="@string/points"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/team_ranking_recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="8"
-                android:scrollbars="vertical"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:orientation="horizontal"
-                android:layout_weight="1">
+    </android.support.v7.widget.LinearLayoutCompat>
 
-                <Button
-                    android:id="@+id/leftButton"
-                    android:text="Previous Page"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content" />
-                <Button
-                    android:id="@+id/rightButton"
-                    android:text="Next Page"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/team_ranking_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:scrollbars="vertical"/>
 
-            </LinearLayout>
-        </LinearLayout>
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1">
 
-    </android.support.v7.widget.CardView>
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/leftButton"
+            android:text="Previous Page"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@color/colorSecondary"
+            android:layout_height="match_parent"
+            android:layout_margin="1dp"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/rightButton"
+            android:text="Next Page"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:background="@color/colorSecondary"
+            android:layout_height="match_parent"
+            android:layout_margin="1dp"/>
+
+    </android.support.v7.widget.LinearLayoutCompat>
 
 </LinearLayout>

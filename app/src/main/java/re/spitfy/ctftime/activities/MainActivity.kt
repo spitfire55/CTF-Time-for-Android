@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity(),
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var toolbar: Toolbar
     private var title: String? = null
+    private var userIsInteracting = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,12 +89,14 @@ class MainActivity : AppCompatActivity(),
 
     private fun displayNavView(viewId: Int) {
         var title = getString(R.string.app_name) // default
+        var tag = getString(R.string.app_name)
         var fragment: Fragment? = null
 
         when (viewId) {
             R.id.nav_team_ranking -> {
-                fragment = TeamRankingsFragment.newInstance("2017", 1)
+                fragment = TeamRankingsFragment.newInstance("2017", 0)
                 title = getString(R.string.toolbar_team_rankings)
+                tag = "2017-0"
             }
             R.id.nav_team_profile -> {
                 if (TeamProfileFragment.teamNames.isEmpty()) {
@@ -102,6 +105,7 @@ class MainActivity : AppCompatActivity(),
                 }
                 fragment = TeamProfileFragment.newInstance(8327)
                 title = getString(R.string.toolbar_team_profiles)
+                tag = title
             }
         }
         // gets fragment if it is already in the stack
@@ -109,7 +113,7 @@ class MainActivity : AppCompatActivity(),
             // check to see if fragment already in the stack
             supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.mainFrame, fragment, title)
+                    .replace(R.id.mainFrame, fragment, tag)
                     .commit()
             this.supportActionBar?.title = title
             this.title = title
@@ -125,5 +129,10 @@ class MainActivity : AppCompatActivity(),
                 toolbar,
                 R.string.navdrawer_open,
                 R.string.navdrawer_close)
+    }
+
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        userIsInteracting = true
     }
 }
