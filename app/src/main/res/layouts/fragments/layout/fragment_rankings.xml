@@ -3,23 +3,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="@color/colorPrimary">
 
-    <android.support.v7.widget.AppCompatSpinner
-        android:id="@+id/rankings_spinner"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:textAlignment="center"
+        android:elevation="4dp"
         android:background="@color/colorSecondary"
-        android:popupBackground="@color/colorSecondary" />
+        android:layout_weight="1">
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/rankings_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@color/colorSecondary"
+            tools:text="2017"/>
+
+    </FrameLayout>
 
     <android.support.v7.widget.LinearLayoutCompat
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_height="0dp"
         android:layout_width="match_parent"
         android:orientation="horizontal"
+        android:background="@color/colorSecondary"
+        android:elevation="4dp"
         android:layout_weight="1">
 
         <android.support.v7.widget.AppCompatTextView
@@ -92,8 +103,9 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:background="@color/colorSecondary"
+            android:textColor="@android:color/white"
             android:layout_height="match_parent"
-            android:layout_margin="1dp"/>
+            android:layout_margin="5dp" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/rightButton"
@@ -101,8 +113,9 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:background="@color/colorSecondary"
+            android:textColor="@android:color/white"
             android:layout_height="match_parent"
-            android:layout_margin="1dp"/>
+            android:layout_margin="5dp"/>
 
     </android.support.v7.widget.LinearLayoutCompat>
 

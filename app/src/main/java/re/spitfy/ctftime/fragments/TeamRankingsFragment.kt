@@ -1,5 +1,7 @@
 package re.spitfy.ctftime.fragments
 
+import android.app.Fragment
+import android.app.FragmentManager
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -11,6 +13,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.google.firebase.database.*
+import com.jaredrummler.materialspinner.MaterialSpinner
+import com.jaredrummler.materialspinner.MaterialSpinnerAdapter
 import kotlinx.coroutines.experimental.newFixedThreadPoolContext
 import re.spitfy.ctftime.adapters.TeamRankingsAdapter
 import re.spitfy.ctftime.R
@@ -19,6 +23,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment(), AdapterView.OnIt
 {
     private lateinit var year: String
     private var pageNumber = -1
+    private var userClick = false
 
     companion object
     {
@@ -65,7 +70,9 @@ class TeamRankingsFragment : android.support.v4.app.Fragment(), AdapterView.OnIt
         val prevPageButton = rootView?.findViewById<Button>(R.id.leftButton)
         prevPageButton?.setOnClickListener(object: View.OnClickListener {
             override fun onClick(p0: View?) {
-                activity.supportFragmentManager.popBackStackImmediate()
+                val previousPageNumber = pageNumber - 1
+                activity.supportFragmentManager
+                        .popBackStackImmediate("$year-$previousPageNumber", FragmentManager.POP_BACK_STACK_INCLUSIVE)
             }
         })
         prevPageButton?.isClickable = (pageNumber != 0)
@@ -80,7 +87,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment(), AdapterView.OnIt
                         .replace(R.id.mainFrame,
                                 TeamRankingsFragment.newInstance(year, nextPage),
                                 "$year-$pageNumber")
-                        .addToBackStack(null)
+                        .addToBackStack("$year-$pageNumber")
                         .commit()
             }
         })
@@ -101,7 +108,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment(), AdapterView.OnIt
         // Ranking spinner instantiation
         val yearSpinner = rootView?.findViewById<Spinner>(R.id.rankings_spinner)
         val rankingsArray = activity.resources.getStringArray(R.array.ranking_years)
-        val yearSpinnerAdapter = ArrayAdapter<String>(activity, R.layout.spinner_item, rankingsArray)
+        val yearSpinnerAdapter = ArrayAdapter<String>(activity, R.layout.spinner_head, rankingsArray)
         yearSpinnerAdapter.setDropDownViewResource(R.layout.spinner_item)
         yearSpinner?.adapter = yearSpinnerAdapter
         val yearPosition = yearSpinnerAdapter.getPosition(year)
@@ -127,26 +134,19 @@ class TeamRankingsFragment : android.support.v4.app.Fragment(), AdapterView.OnIt
     }
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        val newYear = p0?.getItemAtPosition(p2).toString()
-        Log.d(TAG, newYear)
-        val stackFrag = activity.supportFragmentManager.findFragmentByTag("$newYear-0")
-        if (stackFrag != null) {
-            Log.d(TAG, "Not null")
-            activity.supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.mainFrame,
-                            stackFrag,
-                            "$newYear-0")
-                    .addToBackStack(null)
-                    .commit()
-        } else {
+        if (userClick) {
+            val newYear = p0?.getItemAtPosition(p2).toString()
+            activity.supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
             activity.supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.mainFrame,
                             TeamRankingsFragment.newInstance(newYear, 0),
-                            "$newYear-0")
-                    .addToBackStack(null)
+                            "$year-0")
+                    .addToBackStack("$year-0")
                     .commit()
+        }
+        else {
+            userClick = true
         }
     }
     override fun onNothingSelected(p0: AdapterView<*>?) {
