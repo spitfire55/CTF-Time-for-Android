@@ -99,10 +99,6 @@ class MainActivity : AppCompatActivity(),
                 tag = "2017-0"
             }
             R.id.nav_team_profile -> {
-                if (TeamProfileFragment.teamNames.isEmpty()) {
-                    TeamProfileFragment.getTeamNameList()
-                    Log.d("MainActivity", "Done!")
-                }
                 fragment = TeamProfileFragment.newInstance(8327)
                 title = getString(R.string.toolbar_team_profiles)
                 tag = title

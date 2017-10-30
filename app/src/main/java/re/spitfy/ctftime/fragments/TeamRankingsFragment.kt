@@ -1,29 +1,30 @@
 package re.spitfy.ctftime.fragments
 
-import android.app.Fragment
 import android.app.FragmentManager
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.util.TypedValue
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.google.firebase.database.*
-import com.jaredrummler.materialspinner.MaterialSpinner
-import com.jaredrummler.materialspinner.MaterialSpinnerAdapter
-import kotlinx.coroutines.experimental.newFixedThreadPoolContext
-import re.spitfy.ctftime.adapters.TeamRankingsAdapter
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter
+import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.firestore.FirebaseFirestore
+import org.jetbrains.anko.coroutines.experimental.asReference
 import re.spitfy.ctftime.R
+import re.spitfy.ctftime.data.TeamRankData
+import re.spitfy.ctftime.viewHolder.TeamRankViewHolder
 
-class TeamRankingsFragment : android.support.v4.app.Fragment(), AdapterView.OnItemSelectedListener
+class TeamRankingsFragment :
+        android.support.v4.app.Fragment(),
+        AdapterView.OnItemSelectedListener
 {
     private lateinit var year: String
     private var pageNumber = -1
     private var userClick = false
+    private lateinit var adapter : FirestoreRecyclerAdapter<TeamRankData, TeamRankViewHolder>
 
     companion object
     {
@@ -51,8 +52,8 @@ class TeamRankingsFragment : android.support.v4.app.Fragment(), AdapterView.OnIt
             year = yearArg
             pageNumber = pageArg
         } else {
-            Log.d(TAG, "No arguments. Did you create TeamRankingsFragment " +
-                    "instance with newInstance method")
+            Log.d(TAG, "No arguments. Did you create " +
+                    "TeamRankingsFragment instance with newInstance method?")
         }
     }
 
@@ -72,7 +73,10 @@ class TeamRankingsFragment : android.support.v4.app.Fragment(), AdapterView.OnIt
             override fun onClick(p0: View?) {
                 val previousPageNumber = pageNumber - 1
                 activity.supportFragmentManager
-                        .popBackStackImmediate("$year-$previousPageNumber", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                        .popBackStackImmediate(
+                                "$year-$previousPageNumber",
+                                FragmentManager.POP_BACK_STACK_INCLUSIVE
+                        )
             }
         })
         prevPageButton?.isClickable = (pageNumber != 0)
@@ -95,7 +99,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment(), AdapterView.OnIt
         val recyclerView = rootView?.
                 findViewById<RecyclerView>(R.id.team_ranking_recyclerview)
         if (recyclerView == null) {
-            Log.d(TAG, "Recyclerview not found?")
+            Log.d(TAG, "Recyclerview not found.")
         } else {
             recyclerView.setHasFixedSize(true)
             startRecyclerView(recyclerView, year)
@@ -120,28 +124,71 @@ class TeamRankingsFragment : android.support.v4.app.Fragment(), AdapterView.OnIt
                 + "Unable to inflate view.")
     }
 
+    override fun onStart() {
+        super.onStart()
+        adapter.startListening()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        adapter.stopListening()
+    }
+
     private fun startRecyclerView(recyclerView: RecyclerView,
                                   rankingsYear: String)
     {
-        val rankingRef = FirebaseDatabase
+        val rankingQuery = FirebaseFirestore
                 .getInstance()
-                .getReference("Teams")
-                .orderByChild("rating/$year/rating_place")
-                .limitToFirst(50).startAt((pageNumber) * 50 + 1.0)
+                .collection("Teams")
+                .orderBy("Ratings.$year.RatingPlace")
+                .limit(50).startAt((pageNumber) * 50 + 1.0)
 
-        val recyclerViewAdapter = TeamRankingsAdapter(year, rankingRef, this.context)
-        recyclerView.adapter = recyclerViewAdapter
+        val rankingOptions = FirestoreRecyclerOptions.Builder<TeamRankData>()
+                .setQuery(rankingQuery, TeamRankData::class.java)
+                .build()
+
+        val rankingAdapter = object:
+                FirestoreRecyclerAdapter<TeamRankData, TeamRankViewHolder>
+                (rankingOptions)
+        {
+            override fun onBindViewHolder(holder: TeamRankViewHolder?,
+                                          position: Int,
+                                          model: TeamRankData?)
+            {
+                holder?.bind(model, year)
+            }
+
+            override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int):
+                    TeamRankViewHolder
+            {
+                val view = LayoutInflater
+                        .from(parent?.context)
+                        .inflate(R.layout.team_rankings_row,
+                                parent,
+                                false)
+                return TeamRankViewHolder(view)
+            }
+        }
+        adapter = rankingAdapter
+        recyclerView.adapter = adapter
     }
 
-    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+    override fun onItemSelected(p0: AdapterView<*>?,
+                                p1: View?,
+                                p2: Int,
+                                p3: Long)
+    {
         if (userClick) {
             val newYear = p0?.getItemAtPosition(p2).toString()
-            activity.supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            activity.supportFragmentManager.popBackStack(
+                    null,
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE)
             activity.supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.mainFrame,
-                            TeamRankingsFragment.newInstance(newYear, 0),
-                            "$year-0")
+                             TeamRankingsFragment.newInstance(newYear,
+                                    0),
+                             "$year-0")
                     .addToBackStack("$year-0")
                     .commit()
         }

@@ -2,6 +2,7 @@ package re.spitfy.ctftime.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +12,15 @@ import android.util.Base64
 import re.spitfy.ctftime.R
 import android.util.Log
 import android.widget.ArrayAdapter
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
+import org.jetbrains.anko.coroutines.experimental.bg
 
 
 class TeamProfileFragment : android.support.v4.app.Fragment()
@@ -25,7 +31,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
     companion object
     {
         val TAG = "TeamProfileFragment"
-        var teamNames = emptyList<String>()
+        private lateinit var teamNames : MutableList<String>
 
         fun newInstance(id: Int): TeamProfileFragment
         {
@@ -34,27 +40,6 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
             val fragment = TeamProfileFragment()
             fragment.arguments = args
             return fragment
-        }
-
-        fun getTeamNameList() {
-            val fb = FirebaseDatabase.getInstance().getReference("TeamsByName")
-            fb.addValueEventListener(object : ValueEventListener {
-
-                override fun onDataChange(p0: DataSnapshot?) {
-                    val teamNamesSnapshot = p0?.children
-                    val teamMap = teamNamesSnapshot?.associateBy({it.key}, {it.value})
-                    val teamNames = teamMap?.keys?.map {
-                        it -> Base64.decode(it, Base64.URL_SAFE).toString()
-                    }?.toList()
-                    if (teamNames != null) {
-                        Companion.teamNames = teamNames
-                    }
-                }
-
-                override fun onCancelled(p0: DatabaseError?) {
-                    Log.e(TAG, "Failed to get team names." + p0.toString())
-                }
-            })
         }
     }
 
@@ -84,11 +69,25 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
             autoCompleteView.hint = ""
             autoCompleteView.isCursorVisible = true
         }
-        autoCompleteView?.dropDownHeight = 5
         val autoCompleteDropdown = android.R.layout.simple_dropdown_item_1line
-        val autoCompleteAdapter = ArrayAdapter<String>(activity, autoCompleteDropdown, teamNames)
-        autoCompleteView?.setAdapter(autoCompleteAdapter)
+        val autoCompleteAdapter = ArrayAdapter<String>(activity, autoCompleteDropdown)
 
+        FirebaseFirestore.getInstance()
+                .collection("Teams")
+                .get()
+                .addOnCompleteListener(object: OnCompleteListener<QuerySnapshot> {
+                    override fun onComplete(task: Task<QuerySnapshot>) {
+                        if (task.isSuccessful) {
+                            for (document in task.result) {
+                                val nameStr = document.getString("Name")
+                                if (nameStr != null) {
+                                    autoCompleteAdapter.add(nameStr)
+                                }
+                            }
+                        }
+                    }
+                })
+        autoCompleteView?.setAdapter(autoCompleteAdapter)
         return rootView
     }
 
@@ -101,6 +100,4 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
                 activity.currentFocus.windowToken,
                 InputMethodManager.HIDE_NOT_ALWAYS)
     }
-
-
 }
