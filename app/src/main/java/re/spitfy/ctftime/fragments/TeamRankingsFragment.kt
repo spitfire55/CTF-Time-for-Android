@@ -25,17 +25,16 @@ class TeamRankingsFragment :
     private var pageNumber = -1
     private var userClick = false
     private lateinit var adapter : FirestoreRecyclerAdapter<TeamRankData, TeamRankViewHolder>
-
     companion object
     {
         val TAG = "TeamRankingsFragment"
+        val navTracker = IntArray(7) // keeps track of page number state across years
 
         fun newInstance(year: String, pageNumber: Int): TeamRankingsFragment
         {
             val args = Bundle()
             args.putString("YEAR", year)
             args.putInt("PAGE", pageNumber)
-            Log.d(TAG, year + "-" + pageNumber)
             val fragment = TeamRankingsFragment()
             fragment.arguments = args
             return fragment
@@ -47,10 +46,11 @@ class TeamRankingsFragment :
         super.onCreate(savedInstanceState)
         val yearArg = arguments.getString("YEAR")
         val pageArg = arguments.getInt("PAGE")
-        Log.d(TAG, pageArg.toString())
         if (yearArg != null && pageArg != -1) {
             year = yearArg
             pageNumber = pageArg
+            val index = year.toInt() - 2011
+            navTracker[index] = pageNumber
         } else {
             Log.d(TAG, "No arguments. Did you create " +
                     "TeamRankingsFragment instance with newInstance method?")
@@ -71,16 +71,16 @@ class TeamRankingsFragment :
         val prevPageButton = rootView?.findViewById<Button>(R.id.leftButton)
         prevPageButton?.setOnClickListener(object: View.OnClickListener {
             override fun onClick(p0: View?) {
-                val previousPageNumber = pageNumber - 1
+                val prevPage = pageNumber - 1
                 activity.supportFragmentManager
-                        .popBackStackImmediate(
-                                "$year-$previousPageNumber",
-                                FragmentManager.POP_BACK_STACK_INCLUSIVE
-                        )
+                        .beginTransaction()
+                        .replace(R.id.mainFrame,
+                                TeamRankingsFragment.newInstance(year, prevPage),
+                                year)
+                        .commit()
             }
         })
         prevPageButton?.isClickable = (pageNumber != 0)
-        Log.d(TAG, prevPageButton?.isClickable.toString())
         //Next button instantiation
         val nextPageButton = rootView?.findViewById<Button>(R.id.rightButton)
         nextPageButton?.setOnClickListener(object: View.OnClickListener {
@@ -90,8 +90,7 @@ class TeamRankingsFragment :
                         .beginTransaction()
                         .replace(R.id.mainFrame,
                                 TeamRankingsFragment.newInstance(year, nextPage),
-                                "$year-$pageNumber")
-                        .addToBackStack("$year-$pageNumber")
+                                year)
                         .commit()
             }
         })
@@ -101,8 +100,11 @@ class TeamRankingsFragment :
         if (recyclerView == null) {
             Log.d(TAG, "Recyclerview not found.")
         } else {
-            recyclerView.setHasFixedSize(true)
+            recyclerView.setHasFixedSize(false)
             startRecyclerView(recyclerView, year)
+            if (adapter.itemCount != 50) {
+                nextPageButton?.isClickable = false
+            }
         }
         // Rankings layout instantiation
         val rankingLayoutManager = LinearLayoutManager(activity)
@@ -180,16 +182,13 @@ class TeamRankingsFragment :
     {
         if (userClick) {
             val newYear = p0?.getItemAtPosition(p2).toString()
-            activity.supportFragmentManager.popBackStack(
-                    null,
-                    FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            val index = newYear.toInt() - 2011
             activity.supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.mainFrame,
                              TeamRankingsFragment.newInstance(newYear,
-                                    0),
-                             "$year-0")
-                    .addToBackStack("$year-0")
+                                    navTracker[index]),
+                                newYear)
                     .commit()
         }
         else {
