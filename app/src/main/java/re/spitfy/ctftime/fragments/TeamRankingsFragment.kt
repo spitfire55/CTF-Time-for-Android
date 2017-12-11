@@ -13,9 +13,11 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import org.jetbrains.anko.coroutines.experimental.asReference
+import org.jetbrains.anko.coroutines.experimental.bg
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.data.TeamRankData
 import re.spitfy.ctftime.viewHolder.TeamRankViewHolder
+import re.spitfy.ctftime.workers.RankingsParser
 
 class TeamRankingsFragment :
         android.support.v4.app.Fragment(),
@@ -139,6 +141,7 @@ class TeamRankingsFragment :
     private fun startRecyclerView(recyclerView: RecyclerView,
                                   rankingsYear: String)
     {
+        bg{ RankingsParser().parse(1) }
         val rankingQuery = FirebaseFirestore
                 .getInstance()
                 .collection("Teams")

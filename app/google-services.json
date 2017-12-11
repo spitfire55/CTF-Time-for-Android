@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "79752192993-qubs6lh4f01rj63tstetlqgjorgmbu62.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "re.spitfy.ctftime",
+            "certificate_hash": "0d34e502ddb9e2cdd7575accb8d96cdfee37f496"
+          }
+        },
+        {
           "client_id": "79752192993-j4deum2kang0crrscehvkjo2g4plr8ha.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
