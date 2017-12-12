@@ -8,13 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
 import org.jetbrains.anko.coroutines.experimental.bg
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.adapters.RankingsAdapter
 import re.spitfy.ctftime.data.TeamRankData
-import re.spitfy.ctftime.workers.RankingsParser
 
 class TeamRankingsFragment :
         android.support.v4.app.Fragment(),
@@ -24,6 +21,7 @@ class TeamRankingsFragment :
     private var pageNumber = -1
     private var userClick = false
     private lateinit var adapter: RankingsAdapter
+    private val logTag = "TeamRankingsFragment"
     companion object
     {
         val TAG = "TeamRankingsFragment"
@@ -98,8 +96,9 @@ class TeamRankingsFragment :
         if (recyclerView == null) {
             Log.d(TAG, "Recyclerview not found.")
         } else {
-            recyclerView.setHasFixedSize(false)
-            startRecyclerView(recyclerView, year)
+            recyclerView.setHasFixedSize(true)
+            Log.d(logTag, "Got here...")
+            startRecyclerView(recyclerView)
             if (adapter.itemCount != 50) {
                 nextPageButton?.isClickable = false
             }
@@ -112,7 +111,10 @@ class TeamRankingsFragment :
         // Ranking spinner instantiation
         val yearSpinner = rootView?.findViewById<Spinner>(R.id.rankings_spinner)
         val rankingsArray = activity?.resources?.getStringArray(R.array.ranking_years)
-        val yearSpinnerAdapter = ArrayAdapter<String>(activity, R.layout.spinner_head, rankingsArray)
+        val yearSpinnerAdapter = ArrayAdapter<String> (
+                activity,
+                R.layout.spinner_head,
+                rankingsArray )
         yearSpinnerAdapter.setDropDownViewResource(R.layout.spinner_item)
         yearSpinner?.adapter = yearSpinnerAdapter
         val yearPosition = yearSpinnerAdapter.getPosition(year)
@@ -123,11 +125,13 @@ class TeamRankingsFragment :
                 "LayoutInflater is null in onCreateView. "
                         + "Unable to inflate view.")
     }
-
     private fun startRecyclerView(recyclerView: RecyclerView) {
             val rankings = ArrayList<TeamRankData>()
             adapter = RankingsAdapter(rankings)
-            bg { adapter.parse(year, pageNumber) }
+            bg {
+                Log.d(logTag, "In background thread")
+                adapter.parse(year, pageNumber+1)
+            }
             recyclerView.adapter = adapter
     }
 

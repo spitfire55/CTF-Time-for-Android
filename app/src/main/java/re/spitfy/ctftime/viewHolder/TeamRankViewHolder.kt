@@ -25,7 +25,7 @@ class TeamRankViewHolder(itemView: View, private val parent: ViewGroup?): Recycl
             rankView.text = rankData.Rank.toString()
             teamNameView.text = rankData.Name
             Picasso.with(parent?.context)
-                    .load("http://ctftime.org%s".format(rankData.CountryFlagUrl))
+                    .load("https://ctftime.org%s".format(rankData.CountryFlagUrl))
                     .into(countryFlagView)
             pointsView.text = rankData.Points.format(2).toString()
         }
