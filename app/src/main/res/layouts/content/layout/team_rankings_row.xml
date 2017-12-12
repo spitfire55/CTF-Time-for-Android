@@ -39,14 +39,13 @@
             app:autoSizeStepGranularity="4sp"
             app:autoSizeTextType="uniform" />
 
-        <!-- <TextView
-            android:id="@+id/team_country_textview"
+        <ImageView
+            android:id="@+id/team_country_imageview"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="center_horizontal"
             android:text="@string/default_country"/>
-        -->
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/team_points_textview"
