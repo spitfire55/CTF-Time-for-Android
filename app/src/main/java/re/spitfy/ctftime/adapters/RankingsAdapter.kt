@@ -38,7 +38,6 @@ class RankingsAdapter(private val rankings: ArrayList<TeamRankData>)
     }
 
     fun parse(year: String, pageNumber: Int) {
-        //TODO: Trigger Cloud Functions backend to get dynamic page and send it to me
         val url = "http://us-central1-ctf-time-for-android.cloudfunctions.net/" +
                 "rankings?year=%s&pageNumber=%d".format(year, pageNumber)
         val doc = Jsoup.connect(url).get()
