@@ -33,21 +33,25 @@ class MainActivity : AppCompatActivity(),
         setContentView(R.layout.activity_main)
 
         toolbar = findViewById(R.id.toolbar)
+        drawerLayout = findViewById(R.id.drawer_layout)
+
         if(savedInstanceState != null) {
             val savedTitle = savedInstanceState.getString(getString(R.string.title))
             this.title = savedTitle
             toolbar.title = savedTitle
         }
-        setSupportActionBar(toolbar)
-        drawerLayout = findViewById(R.id.drawer_layout)
+
+
         drawerToggle = setupDrawerToggle()
-        navView = findViewById(R.id.navView)
+        navView = findViewById(R.id.mainNav)
+        drawerLayout.addDrawerListener(drawerToggle)
         navView.setNavigationItemSelectedListener({ menuItem ->
             displayNavView(menuItem.itemId)
             true
         })
-        val nestedScrollView = findViewById<NestedScrollView>(R.id.nested_scroll_view)
-        nestedScrollView.isFillViewport = true
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(true)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -109,7 +113,7 @@ class MainActivity : AppCompatActivity(),
             // check to see if fragment already in the stack
             supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.mainFrame, fragment, tag)
+                    .replace(R.id.container, fragment, tag)
                     .commit()
             this.supportActionBar?.title = title
             this.title = title

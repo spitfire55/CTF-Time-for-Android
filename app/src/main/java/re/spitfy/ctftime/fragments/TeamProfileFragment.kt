@@ -2,36 +2,28 @@ package re.spitfy.ctftime.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.AutoCompleteTextView
-import android.util.Base64
 import re.spitfy.ctftime.R
 import android.util.Log
 import android.widget.ArrayAdapter
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
-import org.jetbrains.anko.coroutines.experimental.bg
 
 
 class TeamProfileFragment : android.support.v4.app.Fragment()
 {
-    //TODO: Ensure checks for id != 0 whenever accessed
     private var teamId = 0
 
     companion object
     {
         val TAG = "TeamProfileFragment"
-        private lateinit var teamNames : MutableList<String>
+        //private lateinit var teamNames : MutableList<String>
 
         fun newInstance(id: Int): TeamProfileFragment
         {
@@ -46,19 +38,21 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         try {
-            val idArg = arguments.getInt("ID")
-            teamId = idArg
+            val idArg = arguments?.getInt("ID")
+            if (idArg != null) {
+                teamId = idArg
+            }
         } catch (e : NullPointerException) {
             Log.d(TAG, "No arguments. Did you create TeamProfileFragment " +
                     "instance with newInstance method?")
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?,
+    override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View?
     {
-        val rootView = inflater?.inflate(
+        val rootView = inflater.inflate(
                 R.layout.fragment_team_profile,
                 container,
                 false)
@@ -93,11 +87,11 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
 
     override fun onDetach() {
         super.onDetach()
-        val inputManager = activity.
+        val inputManager = activity?.
                 getSystemService(Context.INPUT_METHOD_SERVICE)
                 as InputMethodManager
         inputManager.hideSoftInputFromWindow(
-                activity.currentFocus.windowToken,
+                activity?.currentFocus?.windowToken,
                 InputMethodManager.HIDE_NOT_ALWAYS)
     }
 }
