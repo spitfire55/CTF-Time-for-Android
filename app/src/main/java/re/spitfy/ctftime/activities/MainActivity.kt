@@ -98,9 +98,9 @@ class MainActivity : AppCompatActivity(),
 
         when (viewId) {
             R.id.nav_team_ranking -> {
-                fragment = TeamRankingsFragment.newInstance("2017", 0)
+                fragment = TeamRankingsFragment.newInstance("2017")
                 title = getString(R.string.toolbar_team_rankings)
-                tag = "2017-0"
+                tag = "2017"
             }
             R.id.nav_team_profile -> {
                 fragment = TeamProfileFragment.newInstance(8327)

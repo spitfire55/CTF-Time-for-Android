@@ -2,7 +2,7 @@ package re.spitfy.ctftime.data
 
 
 
-class TeamRankData(
+class Ranking(
         val CountryFlag: String = "",
         val CountryID : String = "",
         val Events: Int = 0,

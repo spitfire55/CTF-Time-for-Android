@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
-import re.spitfy.ctftime.data.TeamRankData
+import re.spitfy.ctftime.data.Ranking
 import re.spitfy.ctftime.R
 
 class TeamRankViewHolder(itemView: View, private val parent: ViewGroup?): RecyclerView.ViewHolder(itemView)
@@ -20,7 +20,7 @@ class TeamRankViewHolder(itemView: View, private val parent: ViewGroup?): Recycl
     private val pointsView = itemView
             .findViewById<TextView>(R.id.team_points_textview)
 
-    fun bind(rankData: TeamRankData?) {
+    fun bind(rankData: Ranking?) {
         if (rankData != null) {
             rankView.text = rankData.Rank.toString()
             teamNameView.text = rankData.TeamName

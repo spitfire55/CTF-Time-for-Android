@@ -91,32 +91,4 @@
         android:layout_weight="8"
         android:scrollbars="vertical"/>
 
-    <android.support.v7.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_weight="1">
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/leftButton"
-            android:text="Previous Page"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:background="@color/colorSecondary"
-            android:textColor="@android:color/white"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp" />
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/rightButton"
-            android:text="Next Page"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:background="@color/colorSecondary"
-            android:textColor="@android:color/white"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"/>
-
-    </android.support.v7.widget.LinearLayoutCompat>
-
 </LinearLayout>
