@@ -1,4 +1,4 @@
-package re.spitfy.ctftime.adapters
+package re.spitfy.ctftime.utils
 
 interface OnLoadMoreListener{
     fun onLoadMore()

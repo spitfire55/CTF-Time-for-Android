@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <pl.droidsonroids.gif.GifImageView
+    <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/dual_gear_loading_icon" />
+        android:layout_gravity="center_horizontal" />
+
 </RelativeLayout>

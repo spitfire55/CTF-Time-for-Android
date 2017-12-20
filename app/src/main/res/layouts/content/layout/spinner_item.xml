@@ -8,7 +8,7 @@
     android:paddingRight="6sp"
     android:paddingLeft="6sp"
     android:background="@color/colorSecondary"
-    android:textColor="@android:color/white"
+    android:textColor="@android:color/black"
     style="?android:attr/spinnerItemStyle"
     android:gravity="center">
 

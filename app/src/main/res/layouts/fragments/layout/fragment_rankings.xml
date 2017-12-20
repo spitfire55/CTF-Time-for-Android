@@ -7,41 +7,48 @@
     android:orientation="vertical"
     android:background="@color/colorPrimary">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:elevation="4dp"
-        android:background="@color/colorSecondary"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp">
 
         <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/rankings_spinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="12dp"
-            android:background="@color/colorSecondary"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/colorPrimary"
             tools:text="2017"/>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:elevation="4dp"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical"
+        android:layout_weight="1">
 
         <android.support.v7.widget.LinearLayoutCompat
             xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_marginTop="12dp"
             android:orientation="horizontal"
-            android:background="@color/colorSecondary"
+            android:background="@color/colorPrimary"
             android:elevation="4dp">
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/RankHeader"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 app:autoSizeMinTextSize="18sp"
-                app:autoSizeMaxTextSize="60sp"
-                app:autoSizeStepGranularity="21sp"
+                app:autoSizeMaxTextSize="36sp"
+                app:autoSizeStepGranularity="2sp"
                 app:autoSizeTextType="uniform"
                 android:gravity="center"
                 android:textStyle="bold"
@@ -50,10 +57,10 @@
                 android:id="@+id/TeamNameHeader"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 app:autoSizeMinTextSize="18sp"
-                app:autoSizeMaxTextSize="60sp"
-                app:autoSizeStepGranularity="21sp"
+                app:autoSizeMaxTextSize="36sp"
+                app:autoSizeStepGranularity="2sp"
                 app:autoSizeTextType="uniform"
                 android:gravity="center"
                 android:layout_weight="4"
@@ -72,10 +79,10 @@
                 android:id="@+id/PointsTotalHeader"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 app:autoSizeMinTextSize="18sp"
-                app:autoSizeMaxTextSize="60sp"
-                app:autoSizeStepGranularity="21sp"
+                app:autoSizeMaxTextSize="36sp"
+                app:autoSizeStepGranularity="2sp"
                 app:autoSizeTextType="uniform"
                 android:gravity="center"
                 android:layout_weight="2"
@@ -88,7 +95,7 @@
         android:id="@+id/team_ranking_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8"
+        android:layout_weight="10"
         android:scrollbars="vertical"/>
 
 </LinearLayout>

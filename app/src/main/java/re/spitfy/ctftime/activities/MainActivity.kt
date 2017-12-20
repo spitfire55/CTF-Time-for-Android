@@ -6,11 +6,8 @@ import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
-import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.MenuItem
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.fragments.TeamProfileFragment
@@ -24,7 +21,7 @@ class MainActivity : AppCompatActivity(),
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
     private lateinit var drawerToggle: ActionBarDrawerToggle
-    private lateinit var toolbar: Toolbar
+    private lateinit var toolbar: android.support.v7.widget.Toolbar
     private var title: String? = null
     private var userIsInteracting = false
 
@@ -115,7 +112,7 @@ class MainActivity : AppCompatActivity(),
                     .beginTransaction()
                     .replace(R.id.container, fragment, tag)
                     .commit()
-            this.supportActionBar?.title = title
+            this.actionBar?.title = title
             this.title = title
         }
         drawerLayout.closeDrawers()
