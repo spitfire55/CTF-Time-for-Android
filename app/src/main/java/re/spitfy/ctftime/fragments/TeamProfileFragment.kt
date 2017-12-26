@@ -25,7 +25,6 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
     companion object
     {
         val TAG = "TeamProfileFragment"
-        //private lateinit var teamNames : MutableList<String>
 
         fun newInstance(id: Int): TeamProfileFragment
         {
