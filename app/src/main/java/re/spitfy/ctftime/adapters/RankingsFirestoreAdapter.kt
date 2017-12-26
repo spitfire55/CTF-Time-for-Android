@@ -1,22 +1,14 @@
 package re.spitfy.ctftime.adapters
 
-import android.app.ActionBar
-import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import com.google.firebase.firestore.FirebaseFirestore
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.data.Ranking
-import re.spitfy.ctftime.viewHolder.RankingProgressBarViewHolder
 import re.spitfy.ctftime.viewHolder.TeamRankViewHolder
 
-class RankingsFirestoreAdapter : RecyclerView.Adapter<TeamRankViewHolder>() {
+class RankingsFirestoreAdapter(val rankingsList : MutableList<Ranking>) : RecyclerView.Adapter<TeamRankViewHolder>() {
 
-    private val rankingsList : MutableList<Ranking> = ArrayList()
 
     override fun onBindViewHolder(holder: TeamRankViewHolder?, position: Int) {
         holder?.bind(rankingsList[position])
@@ -33,14 +25,5 @@ class RankingsFirestoreAdapter : RecyclerView.Adapter<TeamRankViewHolder>() {
 
     override fun getItemCount(): Int {
         return rankingsList.size
-    }
-
-    fun appendRankings(newRankings : List<Ranking>) {
-        rankingsList.addAll(newRankings)
-        notifyDataSetChanged()
-    }
-
-    fun getLastRank() : Int {
-        return rankingsList[rankingsList.size - 1].Rank
     }
 }

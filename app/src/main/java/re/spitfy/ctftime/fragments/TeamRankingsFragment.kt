@@ -22,14 +22,13 @@ class TeamRankingsFragment :
     private lateinit var year: String
     private lateinit var rankingsYear : String
     private var userClick = false
+    private var pageLoaded = false
     private lateinit var adapter : RankingsFirestoreAdapter
-    private var rankingList : MutableList<Ranking?> = ArrayList()
     private lateinit var db : FirebaseFirestore
-    private var isLoading = false
-    private var totalItemCount = 0
-    private var lastVisibleItemPosition = 0
-    // must be Long because Firestore api...
-    private var currentPage : Long = 0 // used for startAt math (currentPage * itemsInPage)
+    private lateinit var progressBarLoadingRankings : ProgressBar
+    private lateinit var progressBarLoadingRankingsBig : ProgressBar
+    private var rankingsList : MutableList<Ranking> = ArrayList()
+    private var pageCount : Int = 0
 
     companion object
     {
@@ -70,44 +69,43 @@ class TeamRankingsFragment :
                 R.layout.fragment_rankings,
                 container,
                 false)
-        rootView?.tag = TAG + year
+        rootView.tag = TAG + year
 
         // Rankings RecyclerView instantiation
-        val recyclerView = rootView?.
+        val recyclerView = rootView.
                 findViewById<RecyclerView>(R.id.team_ranking_recyclerview)
 
         // Ranking spinner instantiation
         val yearSpinner = rootView.findViewById<Spinner>(R.id.rankings_spinner)
         spinnerInitiate(yearSpinner)
 
+        progressBarLoadingRankings = rootView.findViewById(R.id.progressBarRankings)
+        progressBarLoadingRankingsBig = rootView.findViewById(R.id.progressBarRankingsBig)
+        progressBarLoadingRankingsBig.visibility = View.VISIBLE
+
+        adapter = RankingsFirestoreAdapter(rankingsList)
+        recyclerView.adapter = adapter
+        recyclerView.setHasFixedSize(true)
+
         // Rankings layout instantiation
         val rankingLayoutManager = LinearLayoutManager(activity)
         rankingLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        recyclerView?.setHasFixedSize(true)
-        recyclerView?.setItemViewCacheSize(40)
-        recyclerView?.isDrawingCacheEnabled = true
-        recyclerView?.layoutManager = rankingLayoutManager
-
-        adapter = RankingsFirestoreAdapter()
-        recyclerView?.adapter = adapter
-
-        getRankings(null)
+        rankingLayoutManager.isAutoMeasureEnabled = false
+        recyclerView.layoutManager = rankingLayoutManager
 
         //TODO: Use InfiniteScrollListener to make pagination logic easier
-        recyclerView?.addOnScrollListener(object : InfiniteScrollListener(PAGE_LENGTH.toInt(), rankingLayoutManager) {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                totalItemCount = rankingLayoutManager.itemCount
-                lastVisibleItemPosition = rankingLayoutManager.findLastVisibleItemPosition()
-
-                if (!isLoading && totalItemCount <= (lastVisibleItemPosition + PAGE_LENGTH)) {
-                    getRankings(adapter.getLastRank() + 1)
-                    isLoading = true
-                    //TODO: Display loading view
+        recyclerView.addOnScrollListener(object : InfiniteScrollListener(PAGE_LENGTH.toInt(), rankingLayoutManager) {
+            override fun onScrolledToEnd(firstVisibleItemPosition: Int) {
+                progressBarLoadingRankings.visibility = View.VISIBLE
+                if (pageLoaded) {
+                    getRankings(pageCount * PAGE_LENGTH.toInt())
+                    refreshView(recyclerView, RankingsFirestoreAdapter(rankingsList), firstVisibleItemPosition)
+                    pageLoaded = false
                 }
             }
         })
+
+        getRankings(pageCount)
 
         // Rankings data instantiation
         return rootView ?: throw IllegalStateException(
@@ -115,16 +113,16 @@ class TeamRankingsFragment :
                 + "Unable to inflate view.")
     }
 
-    fun getRankings(startRank : Int?) {
+    fun getRankings(startRank : Int) {
         val query : Query?
-        if (startRank == null) {
+        if (startRank == 0) {
             query =  db.collection(rankingsYear)
                     .orderBy("Rank", Query.Direction.ASCENDING)
                     .limit(PAGE_LENGTH)
         } else {
             query = db.collection(rankingsYear)
                     .orderBy("Rank", Query.Direction.ASCENDING)
-                    .startAt(startRank)
+                    .startAt(startRank+1)
                     .limit(PAGE_LENGTH)
         }
         query.addSnapshotListener(object : EventListener<QuerySnapshot> {
@@ -134,23 +132,20 @@ class TeamRankingsFragment :
                     querySnapshot.documents.forEach {
                         newRankings.add(it.toObject(Ranking::class.java))
                     }
-                    adapter.appendRankings(newRankings)
-                    isLoading = false
-                    //TODO: Hide loading icon at bottom
-                    //TODO: If startRank == null, hide initial large loading view
+                    rankingsList.addAll(newRankings)
+                    if (pageCount == 0) {
+                        progressBarLoadingRankingsBig.visibility = View.GONE
+                        Log.d(TAG, "Finished loading initial data set")
+                    } else {
+                        progressBarLoadingRankings.visibility = View.GONE
+                        Log.d(TAG, "Finished loading additional data set at " + startRank.toString())
+                    }
+                    pageCount++
+                    pageLoaded = true
                 }
             }
         })
     }
-
-    private fun initializeScrollListener(rankingLayoutManager : LinearLayoutManager) : InfiniteScrollListener {
-        return object: InfiniteScrollListener(PAGE_LENGTH.toInt(), rankingLayoutManager) {
-            override fun onScrolledToEnd(firstVisibleItemPosition: Int) {
-                //TODO: Implement logic
-            }
-        }
-    }
-
     private fun spinnerInitiate(spinner: Spinner) {
         val rankingsArray = activity?.resources?.getStringArray(R.array.ranking_years)
         val yearSpinnerAdapter = ArrayAdapter<String>(activity, R.layout.spinner_head, rankingsArray)
@@ -164,25 +159,11 @@ class TeamRankingsFragment :
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         if (userClick) {
             val newYear = p0?.getItemAtPosition(p2).toString()
-            val savedFragment = activity?.supportFragmentManager?.findFragmentByTag(newYear)
-            /*TODO: Test backstack logic to make sure it isn't:
-                 a) adding duplicates to backstack and
-                 b) finding fragments by tag correctly
-            */
-            if(savedFragment != null) {
-                activity?.supportFragmentManager
-                        ?.beginTransaction()
-                        ?.replace(R.id.container, savedFragment, newYear)
-                        ?.addToBackStack(year)
-                        ?.commit()
-            } else {
-                activity?.supportFragmentManager
-                        ?.beginTransaction()
-                        ?.replace(R.id.container, TeamRankingsFragment.newInstance(newYear), newYear)
-                        ?.addToBackStack(year)
-                        ?.commit()
-        }
-        else {
+            activity?.supportFragmentManager
+                    ?.beginTransaction()
+                    ?.replace(R.id.container, TeamRankingsFragment.newInstance(newYear), newYear)
+                    ?.commit()
+        } else {
             userClick = true
         }
     }
