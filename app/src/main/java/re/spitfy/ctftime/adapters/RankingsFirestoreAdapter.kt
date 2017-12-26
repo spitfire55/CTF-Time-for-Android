@@ -1,5 +1,6 @@
 package re.spitfy.ctftime.adapters
 
+import android.app.ActionBar
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -15,10 +16,6 @@ import re.spitfy.ctftime.viewHolder.TeamRankViewHolder
 
 class RankingsFirestoreAdapter : RecyclerView.Adapter<TeamRankViewHolder>() {
 
-    companion object {
-        private val ITEM_VIEW = 0
-        private val LOADING_VIEW = 1
-    }
     private val rankingsList : MutableList<Ranking> = ArrayList()
 
     override fun onBindViewHolder(holder: TeamRankViewHolder?, position: Int) {
@@ -39,10 +36,8 @@ class RankingsFirestoreAdapter : RecyclerView.Adapter<TeamRankViewHolder>() {
     }
 
     fun appendRankings(newRankings : List<Ranking>) {
-        val currentSize = rankingsList.size
-        val newSize = newRankings.size
         rankingsList.addAll(newRankings)
-        notifyItemRangeInserted(currentSize, newSize)
+        notifyDataSetChanged()
     }
 
     fun getLastRank() : Int {

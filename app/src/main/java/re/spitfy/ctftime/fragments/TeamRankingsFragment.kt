@@ -34,7 +34,7 @@ class TeamRankingsFragment :
     companion object
     {
         val TAG = "TeamRankingsFragment"
-        val PAGE_LENGTH : Long = 10
+        val PAGE_LENGTH : Long = 20
         fun newInstance(year: String): TeamRankingsFragment
         {
             val args = Bundle()
@@ -83,6 +83,8 @@ class TeamRankingsFragment :
         val rankingLayoutManager = LinearLayoutManager(activity)
         rankingLayoutManager.orientation = LinearLayoutManager.VERTICAL
         recyclerView?.setHasFixedSize(true)
+        recyclerView?.setItemViewCacheSize(40)
+        recyclerView?.isDrawingCacheEnabled = true
         recyclerView?.layoutManager = rankingLayoutManager
 
         adapter = RankingsFirestoreAdapter()
