@@ -8,12 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.github.pwittchen.infinitescroll.library.InfiniteScrollListener
 
 import com.google.firebase.firestore.*
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.adapters.RankingsFirestoreAdapter
 import re.spitfy.ctftime.data.Ranking
-import re.spitfy.ctftime.utils.RankingsOnScrollListener
 
 class TeamRankingsFragment :
         android.support.v4.app.Fragment(),
@@ -56,6 +56,7 @@ class TeamRankingsFragment :
             Log.d(TAG, "No arguments. Did you create " +
                     "TeamRankingsFragment instance with newInstance method?")
         }
+        //TODO: Check Internet connectivity
 
         // Initialize database connection
         db = FirebaseFirestore.getInstance()
@@ -90,7 +91,8 @@ class TeamRankingsFragment :
 
         getRankings(null)
 
-        recyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        //TODO: Use InfiniteScrollListener to make pagination logic easier
+        recyclerView?.addOnScrollListener(object : InfiniteScrollListener(PAGE_LENGTH.toInt(), rankingLayoutManager) {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
@@ -100,6 +102,7 @@ class TeamRankingsFragment :
                 if (!isLoading && totalItemCount <= (lastVisibleItemPosition + PAGE_LENGTH)) {
                     getRankings(adapter.getLastRank() + 1)
                     isLoading = true
+                    //TODO: Display loading view
                 }
             }
         })
@@ -113,7 +116,7 @@ class TeamRankingsFragment :
     fun getRankings(startRank : Int?) {
         val query : Query?
         if (startRank == null) {
-            query = db.collection(rankingsYear)
+            query =  db.collection(rankingsYear)
                     .orderBy("Rank", Query.Direction.ASCENDING)
                     .limit(PAGE_LENGTH)
         } else {
@@ -131,9 +134,19 @@ class TeamRankingsFragment :
                     }
                     adapter.appendRankings(newRankings)
                     isLoading = false
+                    //TODO: Hide loading icon at bottom
+                    //TODO: If startRank == null, hide initial large loading view
                 }
             }
         })
+    }
+
+    private fun initializeScrollListener(rankingLayoutManager : LinearLayoutManager) : InfiniteScrollListener {
+        return object: InfiniteScrollListener(PAGE_LENGTH.toInt(), rankingLayoutManager) {
+            override fun onScrolledToEnd(firstVisibleItemPosition: Int) {
+                //TODO: Implement logic
+            }
+        }
     }
 
     private fun spinnerInitiate(spinner: Spinner) {
@@ -149,10 +162,23 @@ class TeamRankingsFragment :
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         if (userClick) {
             val newYear = p0?.getItemAtPosition(p2).toString()
-            activity?.supportFragmentManager
-                    ?.beginTransaction()
-                    ?.replace(R.id.container, TeamRankingsFragment.newInstance(newYear), newYear)
-                    ?.commit()
+            val savedFragment = activity?.supportFragmentManager?.findFragmentByTag(newYear)
+            /*TODO: Test backstack logic to make sure it isn't:
+                 a) adding duplicates to backstack and
+                 b) finding fragments by tag correctly
+            */
+            if(savedFragment != null) {
+                activity?.supportFragmentManager
+                        ?.beginTransaction()
+                        ?.replace(R.id.container, savedFragment, newYear)
+                        ?.addToBackStack(year)
+                        ?.commit()
+            } else {
+                activity?.supportFragmentManager
+                        ?.beginTransaction()
+                        ?.replace(R.id.container, TeamRankingsFragment.newInstance(newYear), newYear)
+                        ?.addToBackStack(year)
+                        ?.commit()
         }
         else {
             userClick = true

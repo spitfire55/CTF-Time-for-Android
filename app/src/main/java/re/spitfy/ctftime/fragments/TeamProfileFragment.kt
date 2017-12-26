@@ -20,6 +20,7 @@ import com.google.firebase.firestore.QuerySnapshot
 class TeamProfileFragment : android.support.v4.app.Fragment()
 {
     private var teamId = 0
+    private lateinit var db : FirebaseFirestore
 
     companion object
     {
@@ -47,6 +48,8 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
             Log.d(TAG, "No arguments. Did you create TeamProfileFragment " +
                     "instance with newInstance method?")
         }
+        //TODO: Check for internet connectivity
+        db = FirebaseFirestore.getInstance()
     }
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -61,20 +64,18 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
 
         val autoCompleteView = rootView?.findViewById<AutoCompleteTextView>(R.id.team_search_bar)
         autoCompleteView?.setOnClickListener {
-            autoCompleteView.hint = ""
+            autoCompleteView.hint = "Team name"
             autoCompleteView.isCursorVisible = true
         }
         val autoCompleteDropdown = android.R.layout.simple_dropdown_item_1line
         val autoCompleteAdapter = ArrayAdapter<String>(activity, autoCompleteDropdown)
 
-        FirebaseFirestore.getInstance()
-                .collection("Teams")
-                .get()
+        db.collection("Teams").get()
                 .addOnCompleteListener(object: OnCompleteListener<QuerySnapshot> {
                     override fun onComplete(task: Task<QuerySnapshot>) {
                         if (task.isSuccessful) {
-                            for (document in task.result) {
-                                val nameStr = document.getString("Name")
+                            task.result.forEach {
+                                val nameStr = it.getString("Name")
                                 if (nameStr != null) {
                                     autoCompleteAdapter.add(nameStr)
                                 }
