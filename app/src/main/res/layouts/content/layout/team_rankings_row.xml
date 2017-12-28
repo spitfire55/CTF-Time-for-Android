@@ -3,29 +3,28 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="48dp"
     app:cardBackgroundColor="@color/colorPrimaryLight"
     android:layout_marginBottom="1dp">
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/team_rank_textview"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
             android:layout_weight="2"
             android:gravity="center"
             android:text="@string/default_rank"
             android:textAlignment="center"
-            app:autoSizeMaxTextSize="48sp"
-            app:autoSizeMinTextSize="10sp"
-            app:autoSizeStepGranularity="4sp"
             app:autoSizeTextType="uniform" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <TextView
             android:id="@+id/team_name_textview"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -34,33 +33,31 @@
             android:layout_weight="4"
             android:gravity="center"
             android:text="@string/default_name"
-            app:autoSizeMaxTextSize="48sp"
-            app:autoSizeMinTextSize="10sp"
-            app:autoSizeStepGranularity="4sp"
             app:autoSizeTextType="uniform" />
 
-        <!-- <TextView
-            android:id="@+id/team_country_textview"
+        <ImageView
+            android:id="@+id/team_country_imageview"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="2"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="14dp"
             android:gravity="center_horizontal"
+            android:contentDescription="Team country flag"
             android:text="@string/default_country"/>
-        -->
 
-        <android.support.v7.widget.AppCompatTextView
+        <TextView
             android:id="@+id/team_points_textview"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical|start"
-            android:layout_marginStart="8dp"
             android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
             android:layout_weight="2"
             android:gravity="center"
             android:text="@string/default_points"
-            app:autoSizeMaxTextSize="48sp"
-            app:autoSizeMinTextSize="10sp"
-            app:autoSizeStepGranularity="4sp"
             app:autoSizeTextType="uniform"
             android:maxLines="1"/>
 

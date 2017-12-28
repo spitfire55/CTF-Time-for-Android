@@ -6,11 +6,8 @@ import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
-import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.MenuItem
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.fragments.TeamProfileFragment
@@ -24,7 +21,7 @@ class MainActivity : AppCompatActivity(),
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
     private lateinit var drawerToggle: ActionBarDrawerToggle
-    private lateinit var toolbar: Toolbar
+    private lateinit var toolbar: android.support.v7.widget.Toolbar
     private var title: String? = null
     private var userIsInteracting = false
 
@@ -33,21 +30,25 @@ class MainActivity : AppCompatActivity(),
         setContentView(R.layout.activity_main)
 
         toolbar = findViewById(R.id.toolbar)
+        drawerLayout = findViewById(R.id.drawer_layout)
+
         if(savedInstanceState != null) {
             val savedTitle = savedInstanceState.getString(getString(R.string.title))
             this.title = savedTitle
             toolbar.title = savedTitle
         }
-        setSupportActionBar(toolbar)
-        drawerLayout = findViewById(R.id.drawer_layout)
+
+
         drawerToggle = setupDrawerToggle()
-        navView = findViewById(R.id.navView)
+        navView = findViewById(R.id.mainNav)
+        drawerLayout.addDrawerListener(drawerToggle)
         navView.setNavigationItemSelectedListener({ menuItem ->
             displayNavView(menuItem.itemId)
             true
         })
-        val nestedScrollView = findViewById<NestedScrollView>(R.id.nested_scroll_view)
-        nestedScrollView.isFillViewport = true
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(true)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -94,9 +95,9 @@ class MainActivity : AppCompatActivity(),
 
         when (viewId) {
             R.id.nav_team_ranking -> {
-                fragment = TeamRankingsFragment.newInstance("2017", 0)
+                fragment = TeamRankingsFragment.newInstance("2017")
                 title = getString(R.string.toolbar_team_rankings)
-                tag = "2017-0"
+                tag = "2017"
             }
             R.id.nav_team_profile -> {
                 fragment = TeamProfileFragment.newInstance(8327)
@@ -109,9 +110,9 @@ class MainActivity : AppCompatActivity(),
             // check to see if fragment already in the stack
             supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.mainFrame, fragment, tag)
+                    .replace(R.id.container, fragment, tag)
                     .commit()
-            this.supportActionBar?.title = title
+            this.actionBar?.title = title
             this.title = title
         }
         drawerLayout.closeDrawers()

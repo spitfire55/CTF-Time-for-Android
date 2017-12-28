@@ -5,7 +5,7 @@ apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    buildToolsVersion "26.0.3"
     defaultConfig {
         applicationId "re.spitfy.ctftime"
         minSdkVersion 21
@@ -33,6 +33,7 @@ android {
                             'src/main/res/layouts/activities',
                             'src/main/res/layouts/navbar',
                             'src/main/res/layouts/content',
+                            'src/main/res/layouts/res',
                             'src/main/res/layouts',
                             'src/main/res'
                     ]
@@ -52,17 +53,22 @@ repositories {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:1.1.4-3"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support:design:26.1.0'
     implementation 'org.jetbrains.anko:anko-coroutines:0.10.3'
-    implementation 'com.google.firebase:firebase-database:11.6.2'
+    implementation 'com.google.firebase:firebase-database:11.8.0'
+    implementation 'com.google.firebase:firebase-firestore:11.8.0'
     implementation 'com.firebaseui:firebase-ui-firestore:3.1.0'
-    implementation 'com.google.firebase:firebase-perf:11.6.2'
+    implementation 'com.google.firebase:firebase-perf:11.8.0'
     implementation 'com.jaredrummler:material-spinner:1.1.0'
+    implementation 'com.github.pwittchen:infinitescroll:0.0.1'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.9'
+    implementation 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:2.0.0'
     testImplementation 'junit:junit:4.12'
-    androidTestCompile 'com.android.support:support-annotations:27.0.2'
-    androidTestCompile 'com.android.support.test:rules:1.0.1'
+    androidTestImplementation 'com.android.support:support-annotations:27.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.1'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:' +
             'espresso-core:3.0.1'

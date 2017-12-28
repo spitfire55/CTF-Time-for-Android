@@ -6,23 +6,24 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <include
-        layout="@layout/app_bar_main"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"/>
+        android:layout_height="match_parent">
 
-    <android.support.design.widget.NavigationView
-        android:id="@+id/navView"
-        android:layout_height="match_parent"
-        android:layout_width="wrap_content"
-        android:layout_gravity="start"
-        android:background="@color/colorPrimary"
-        app:menu="@menu/activity_main_drawer"
-        app:headerLayout="@layout/navbar_header"
-        app:itemTextColor="@android:color/black"
-        app:itemIconTint="@android:color/black"/>
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/MainCoordinatorLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <include layout="@layout/appbar_main" />
+            <include layout="@layout/fragment_container" />
+
+        </android.support.design.widget.CoordinatorLayout>
+
+    </LinearLayout>
+
+    <include layout="@layout/nav_menu_layout"/>
 </android.support.v4.widget.DrawerLayout>
