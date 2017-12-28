@@ -16,16 +16,15 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
             android:layout_weight="2"
             android:gravity="center"
             android:text="@string/default_rank"
             android:textAlignment="center"
-            app:autoSizeMaxTextSize="48sp"
-            app:autoSizeMinTextSize="10sp"
-            app:autoSizeStepGranularity="4sp"
             app:autoSizeTextType="uniform" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <TextView
             android:id="@+id/team_name_textview"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -34,9 +33,6 @@
             android:layout_weight="4"
             android:gravity="center"
             android:text="@string/default_name"
-            app:autoSizeMaxTextSize="48sp"
-            app:autoSizeMinTextSize="10sp"
-            app:autoSizeStepGranularity="4sp"
             app:autoSizeTextType="uniform" />
 
         <ImageView
@@ -44,26 +40,24 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:layout_marginEnd="12dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="14dp"
             android:gravity="center_horizontal"
+            android:contentDescription="Team country flag"
             android:text="@string/default_country"/>
 
-        <android.support.v7.widget.AppCompatTextView
+        <TextView
             android:id="@+id/team_points_textview"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical|start"
-            android:layout_marginStart="8dp"
             android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
             android:layout_weight="2"
             android:gravity="center"
             android:text="@string/default_points"
-            app:autoSizeMaxTextSize="48sp"
-            app:autoSizeMinTextSize="10sp"
-            app:autoSizeStepGranularity="4sp"
             app:autoSizeTextType="uniform"
             android:maxLines="1"/>
 

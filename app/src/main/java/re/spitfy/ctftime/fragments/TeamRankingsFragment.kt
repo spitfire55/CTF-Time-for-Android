@@ -33,7 +33,7 @@ class TeamRankingsFragment :
     companion object
     {
         val TAG = "TeamRankingsFragment"
-        val PAGE_LENGTH : Long = 20
+        val PAGE_LENGTH : Long = 50
         fun newInstance(year: String): TeamRankingsFragment
         {
             val args = Bundle()
@@ -157,15 +157,11 @@ class TeamRankingsFragment :
     }
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        if (userClick) {
-            val newYear = p0?.getItemAtPosition(p2).toString()
-            activity?.supportFragmentManager
-                    ?.beginTransaction()
-                    ?.replace(R.id.container, TeamRankingsFragment.newInstance(newYear), newYear)
-                    ?.commit()
-        } else {
-            userClick = true
-        }
+        val newYear = p0?.getItemAtPosition(p2).toString()
+        activity?.supportFragmentManager
+                ?.beginTransaction()
+                ?.replace(R.id.container, TeamRankingsFragment.newInstance(newYear), newYear)
+                ?.commit()
     }
     override fun onNothingSelected(p0: AdapterView<*>?) {
         //Do nothing

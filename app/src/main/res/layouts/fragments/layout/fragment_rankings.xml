@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorPrimary">
 
@@ -11,90 +12,113 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/colorPrimary"
-        android:elevation="4dp">
+        android:background="@color/colorPrimaryLight"
+        android:elevation="@dimen/actionbar_elevation">
 
-        <android.support.v7.widget.AppCompatSpinner
+        <Spinner
             android:id="@+id/rankings_spinner"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:background="@color/colorPrimary"
+            android:layout_gravity="center"
+            android:spinnerMode="dropdown"
+            android:dropDownVerticalOffset="48dp"
             tools:text="2017"/>
 
     </FrameLayout>
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:elevation="4dp"
-        android:background="@color/colorPrimary"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:background="@color/colorPrimaryLight"
+        android:elevation="@dimen/actionbar_elevation">
 
-        <android.support.v7.widget.LinearLayoutCompat
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:background="@color/colorPrimary"
-            android:elevation="4dp">
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/RankHeader"
+            android:layout_width="0dp"
+            android:layout_height="34dp"
+            android:maxLines="1"
+            android:text="@string/rank"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            app:autoSizeStepGranularity="4sp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/TeamNameHeader"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/RankHeader"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:textColor="@android:color/black"
-                app:autoSizeMinTextSize="18sp"
-                app:autoSizeMaxTextSize="36sp"
-                app:autoSizeStepGranularity="2sp"
-                app:autoSizeTextType="uniform"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:text="@string/rank" />
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/TeamNameHeader"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                app:autoSizeMinTextSize="18sp"
-                app:autoSizeMaxTextSize="36sp"
-                app:autoSizeStepGranularity="2sp"
-                app:autoSizeTextType="uniform"
-                android:gravity="center"
-                android:layout_weight="4"
-                android:textStyle="bold"
-                android:text="@string/team_name"/>
-            <!-- <TextView
-                android:id="@+id/CountryFlagHeader"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal"
-                android:layout_weight="2"
-                android:textStyle="bold"
-                android:text="Country"/>
-            -->
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/PointsTotalHeader"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                app:autoSizeMinTextSize="18sp"
-                app:autoSizeMaxTextSize="36sp"
-                app:autoSizeStepGranularity="2sp"
-                app:autoSizeTextType="uniform"
-                android:gravity="center"
-                android:layout_weight="2"
-                android:textStyle="bold"
-                android:text="@string/points"/>
-        </android.support.v7.widget.LinearLayoutCompat>
-    </LinearLayout>
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/TeamNameHeader"
+            android:layout_width="0dp"
+            android:layout_height="34dp"
+            android:maxLines="1"
+            android:text="@string/team_name"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            app:autoSizeStepGranularity="4sp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintBaseline_toBaselineOf="@+id/RankHeader"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/CountryFlagHeader"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintHorizontal_weight="4"
+            app:layout_constraintStart_toEndOf="@+id/RankHeader"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/CountryFlagHeader"
+            android:layout_width="0dp"
+            android:layout_height="34dp"
+            android:layout_alignBaseline="@id/RankHeader"
+            android:maxLines="1"
+            android:text="Country"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            app:autoSizeStepGranularity="4sp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintBaseline_toBaselineOf="@+id/RankHeader"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/PointsTotalHeader"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintStart_toEndOf="@+id/TeamNameHeader"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/PointsTotalHeader"
+            android:layout_width="0dp"
+            android:layout_height="34dp"
+            android:maxLines="1"
+            android:text="@string/points"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            app:autoSizeStepGranularity="4sp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintBaseline_toBaselineOf="@+id/RankHeader"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintStart_toEndOf="@+id/CountryFlagHeader"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="10"
+        android:layout_weight="12"
         android:orientation="vertical">
 
         <ProgressBar
@@ -118,7 +142,5 @@
             android:layout_above="@id/progressBarRankings"
             android:scrollbars="vertical"/>
 
-
     </RelativeLayout>
-
 </LinearLayout>
