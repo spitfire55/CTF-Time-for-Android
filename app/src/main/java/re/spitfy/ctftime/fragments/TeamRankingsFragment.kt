@@ -11,6 +11,7 @@ import android.widget.*
 import com.github.pwittchen.infinitescroll.library.InfiniteScrollListener
 
 import com.google.firebase.firestore.*
+import kotlinx.android.synthetic.main.appbar_main.*
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.adapters.RankingsFirestoreAdapter
 import re.spitfy.ctftime.data.Ranking
@@ -21,12 +22,13 @@ class TeamRankingsFragment :
 {
     private lateinit var year: String
     private lateinit var rankingsYear : String
-    private var userClick = false
+    private var initiated = false
     private var pageLoaded = false
     private lateinit var adapter : RankingsFirestoreAdapter
     private lateinit var db : FirebaseFirestore
     private lateinit var progressBarLoadingRankings : ProgressBar
     private lateinit var progressBarLoadingRankingsBig : ProgressBar
+    private lateinit var recyclerView : RecyclerView
     private var rankingsList : MutableList<Ranking> = ArrayList()
     private var pageCount : Int = 0
 
@@ -70,9 +72,9 @@ class TeamRankingsFragment :
                 container,
                 false)
         rootView.tag = TAG + year
-
+        activity.toolbar.title = "Team Rankings"
         // Rankings RecyclerView instantiation
-        val recyclerView = rootView.
+        recyclerView = rootView.
                 findViewById<RecyclerView>(R.id.team_ranking_recyclerview)
 
         // Ranking spinner instantiation
@@ -107,7 +109,6 @@ class TeamRankingsFragment :
 
         getRankings(pageCount)
 
-        // Rankings data instantiation
         return rootView ?: throw IllegalStateException(
                 "LayoutInflater is null in onCreateView. "
                 + "Unable to inflate view.")
@@ -157,11 +158,15 @@ class TeamRankingsFragment :
     }
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        val newYear = p0?.getItemAtPosition(p2).toString()
-        activity?.supportFragmentManager
-                ?.beginTransaction()
-                ?.replace(R.id.container, TeamRankingsFragment.newInstance(newYear), newYear)
-                ?.commit()
+        if (initiated) {
+            val newYear = p0?.getItemAtPosition(p2).toString()
+            activity?.supportFragmentManager
+                    ?.beginTransaction()
+                    ?.replace(R.id.container, TeamRankingsFragment.newInstance(newYear), newYear)
+                    ?.commit()
+        } else {
+            initiated = true
+        }
     }
     override fun onNothingSelected(p0: AdapterView<*>?) {
         //Do nothing

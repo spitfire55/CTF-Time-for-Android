@@ -67,7 +67,7 @@ dependencies {
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.9'
     implementation 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:2.0.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support:support-annotations:27.0.2'
+    androidTestImplementation 'com.android.support:support-annotations:26.1.0'
     androidTestImplementation 'com.android.support.test:rules:1.0.1'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:' +

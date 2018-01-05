@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import kotlinx.android.synthetic.main.appbar_main.*
 
 
 class TeamProfileFragment : android.support.v4.app.Fragment()
@@ -60,7 +61,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
                 container,
                 false)
         rootView?.tag = TAG + id
-
+        activity.toolbar.title = "Team Profile"
         val autoCompleteView = rootView?.findViewById<AutoCompleteTextView>(R.id.team_search_bar)
         autoCompleteView?.setOnClickListener {
             autoCompleteView.hint = "Team name"
