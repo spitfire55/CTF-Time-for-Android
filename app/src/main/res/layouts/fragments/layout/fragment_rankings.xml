@@ -5,31 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorSecondary">
 
-    <!-- <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/colorPrimaryLight"
-        android:elevation="@dimen/actionbar_elevation">
-
-        <Spinner
-            android:id="@+id/rankings_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:spinnerMode="dropdown"
-            android:dropDownVerticalOffset="48dp"
-            tools:text="2017"/>
-
-    </FrameLayout>
-    -->
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/colorPrimaryLight"
+        android:background="@color/colorPrimary"
         android:elevation="@dimen/actionbar_elevation">
 
         <android.support.v7.widget.AppCompatTextView
@@ -39,7 +21,7 @@
             android:maxLines="1"
             android:text="@string/rank"
             android:textAlignment="center"
-            android:textColor="@android:color/black"
+            android:textColor="@color/colorSecondaryLight"
             android:textStyle="bold"
             app:autoSizeStepGranularity="4sp"
             app:autoSizeTextType="uniform"
@@ -58,7 +40,7 @@
             android:maxLines="1"
             android:text="@string/team_name"
             android:textAlignment="center"
-            android:textColor="@android:color/black"
+            android:textColor="@color/colorSecondaryLight"
             android:textStyle="bold"
             app:autoSizeStepGranularity="4sp"
             app:autoSizeTextType="uniform"
@@ -79,7 +61,7 @@
             android:maxLines="1"
             android:text="@string/Country"
             android:textAlignment="center"
-            android:textColor="@android:color/black"
+            android:textColor="@color/colorSecondaryLight"
             android:textStyle="bold"
             app:autoSizeStepGranularity="4sp"
             app:autoSizeTextType="uniform"
@@ -99,7 +81,7 @@
             android:maxLines="1"
             android:text="@string/points"
             android:textAlignment="center"
-            android:textColor="@android:color/black"
+            android:textColor="@color/colorSecondaryLight"
             android:textStyle="bold"
             app:autoSizeStepGranularity="4sp"
             app:autoSizeTextType="uniform"
@@ -118,7 +100,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="12"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/colorSecondary">
 
         <ProgressBar
             android:id="@+id/progressBarRankingsBig"
@@ -126,7 +109,7 @@
             android:layout_height="match_parent"
             android:layout_margin="96dp"
             android:indeterminate="true"
-            android:indeterminateTint="@color/colorSecondary"
+            android:indeterminateTint="@color/colorPrimary"
             android:visibility="gone"/>
 
         <android.support.v7.widget.RecyclerView
@@ -146,7 +129,7 @@
             android:layout_marginBottom="16dp">
             <ProgressBar
                 android:indeterminate="true"
-                android:indeterminateTint="@color/colorSecondary"
+                android:indeterminateTint="@color/colorPrimary"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 />

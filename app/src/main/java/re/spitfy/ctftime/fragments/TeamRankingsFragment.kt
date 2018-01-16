@@ -35,6 +35,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
     {
         val TAG = "TeamRankingsFragment"
         val PAGE_LENGTH : Long = 50
+        val years = listOf("2017", "2016", "2015", "2014", "2013", "2012", "2011")
         fun newInstance(year: String): TeamRankingsFragment {
             val args = Bundle()
             args.putString("YEAR", year)
@@ -77,7 +78,6 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
 
         setHasOptionsMenu(true)
 
-
         return inflater.inflate(
                 R.layout.fragment_rankings,
                 container,
@@ -91,14 +91,9 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.rankings_spinner, menu)
         val spinner = menu?.findItem(R.id.rankings_spinner)?.actionView as Spinner
-        val adapter = ArrayAdapter.createFromResource(
-                context,
-                R.array.ranking_years,
-                android.R.layout.simple_spinner_item
-        )
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
-        spinner.setSelection(adapter.getPosition(year))
+        val spinnerAdapter = ArrayAdapter<String>(context, R.layout.spinner_item, years)
+        spinner.adapter = spinnerAdapter
+        spinner.setSelection(spinnerAdapter.getPosition(year))
         spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 val newYear = p0?.getItemAtPosition(p2).toString()

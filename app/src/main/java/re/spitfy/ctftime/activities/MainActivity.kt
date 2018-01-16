@@ -9,6 +9,8 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.fragments.TeamProfileFragment
 import re.spitfy.ctftime.fragments.TeamRankingsFragment
@@ -25,6 +27,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Fabric.with(this, Crashlytics())
         setContentView(R.layout.activity_main)
 
         toolbar = findViewById(R.id.toolbar)
@@ -45,8 +48,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             true
         }
         setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeButtonEnabled(true)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -106,7 +107,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     .beginTransaction()
                     .replace(R.id.container, fragment, tag)
                     .commit()
-            this.actionBar?.title = title
+            this.toolbar.title = title
             this.title = title
         }
         drawerLayout.closeDrawers()

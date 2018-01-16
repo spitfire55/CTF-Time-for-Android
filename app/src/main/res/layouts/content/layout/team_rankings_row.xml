@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    app:cardBackgroundColor="@color/colorPrimaryLight"
+    app:cardBackgroundColor="@color/colorSecondary"
     android:layout_marginBottom="1dp">
     <LinearLayout
         android:orientation="horizontal"
@@ -21,10 +21,11 @@
             android:layout_weight="2"
             android:gravity="center"
             android:text="@string/default_rank"
+            android:textColor="@android:color/black"
             android:textAlignment="center"
             app:autoSizeTextType="uniform" />
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/team_name_textview"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -33,7 +34,8 @@
             android:layout_weight="4"
             android:gravity="center"
             android:text="@string/default_name"
-            app:autoSizeTextType="uniform" />
+            android:textColor="@android:color/black"
+            app:autoSizeTextType="uniform"/>
 
         <ImageView
             android:id="@+id/team_country_imageview"
@@ -48,7 +50,7 @@
             android:contentDescription="Team country flag"
             android:text="@string/default_country"/>
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/team_points_textview"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -58,6 +60,7 @@
             android:layout_weight="2"
             android:gravity="center"
             android:text="@string/default_points"
+            android:textColor="@android:color/black"
             app:autoSizeTextType="uniform"
             android:maxLines="1"/>
 
