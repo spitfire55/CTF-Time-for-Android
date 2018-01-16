@@ -2,13 +2,12 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorPrimary">
 
-    <FrameLayout
+    <!-- <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -25,7 +24,7 @@
             tools:text="2017"/>
 
     </FrameLayout>
-
+    -->
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -125,16 +124,7 @@
             android:id="@+id/progressBarRankingsBig"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="24dp"
-            android:indeterminate="true"
-            android:indeterminateTint="@color/colorSecondary"
-            android:visibility="gone"/>
-
-        <ProgressBar
-            android:id="@+id/progressBarRankings"
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:layout_alignParentBottom="true"
+            android:layout_margin="96dp"
             android:indeterminate="true"
             android:indeterminateTint="@color/colorSecondary"
             android:visibility="gone"/>
@@ -143,8 +133,24 @@
             android:id="@+id/team_ranking_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/progressBarRankings"
             android:scrollbars="vertical"/>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/progressBarRankings"
+            app:cardCornerRadius="18dp"
+            app:contentPadding="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="16dp">
+            <ProgressBar
+                android:indeterminate="true"
+                android:indeterminateTint="@color/colorSecondary"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                />
+        </android.support.v7.widget.CardView>
 
     </RelativeLayout>
 </LinearLayout>

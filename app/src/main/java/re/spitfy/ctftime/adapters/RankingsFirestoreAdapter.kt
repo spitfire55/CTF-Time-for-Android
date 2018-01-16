@@ -4,14 +4,14 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import re.spitfy.ctftime.R
-import re.spitfy.ctftime.data.Ranking
-import re.spitfy.ctftime.viewHolder.TeamRankViewHolder
+import re.spitfy.ctftime.data.Team
+import re.spitfy.ctftime.viewHolders.TeamRankViewHolder
 
-class RankingsFirestoreAdapter(val rankingsList : MutableList<Ranking>) : RecyclerView.Adapter<TeamRankViewHolder>() {
+class RankingsFirestoreAdapter(val rankingsList : MutableList<Team>, val year: String) : RecyclerView.Adapter<TeamRankViewHolder>() {
 
 
     override fun onBindViewHolder(holder: TeamRankViewHolder?, position: Int) {
-        holder?.bind(rankingsList[position])
+        holder?.bind(rankingsList[position], year, position + 1)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TeamRankViewHolder? {

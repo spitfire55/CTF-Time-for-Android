@@ -1,36 +1,41 @@
 package re.spitfy.ctftime.fragments
 
+import android.content.Context
 import android.os.Bundle
+import android.support.v4.view.MenuItemCompat
+import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import com.github.pwittchen.infinitescroll.library.InfiniteScrollListener
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.appbar_main.*
+import kotlinx.android.synthetic.main.nav_menu_layout.*
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.adapters.RankingsFirestoreAdapter
-import re.spitfy.ctftime.data.Ranking
+import re.spitfy.ctftime.data.Team
+import re.spitfy.ctftime.utils.RankingsRecyclerViewScrollListener
 
-class TeamRankingsFragment :
-        android.support.v4.app.Fragment(),
-        AdapterView.OnItemSelectedListener
+class TeamRankingsFragment : android.support.v4.app.Fragment()
 {
     private lateinit var year: String
     private lateinit var rankingsYear : String
-    private var initiated = false
-    private var pageLoaded = false
     private lateinit var adapter : RankingsFirestoreAdapter
     private lateinit var db : FirebaseFirestore
-    private lateinit var progressBarLoadingRankings : ProgressBar
+    private lateinit var collectionRef : CollectionReference
+    private lateinit var progressBarLoadingRankings : CardView
     private lateinit var progressBarLoadingRankingsBig : ProgressBar
     private lateinit var recyclerView : RecyclerView
-    private var rankingsList : MutableList<Ranking> = ArrayList()
-    private var pageCount : Int = 0
+    private lateinit var rankingsRecyclerViewScrollListener : RankingsRecyclerViewScrollListener
+    private lateinit var listenerRegistration : ListenerRegistration
+    private lateinit var lastDocument : DocumentSnapshot
+    private var rankingsList : MutableList<Team> = ArrayList()
+    private var page = 0
 
     companion object
     {
@@ -61,6 +66,7 @@ class TeamRankingsFragment :
 
         // Initialize database connection
         db = FirebaseFirestore.getInstance()
+        collectionRef = db.collection("Teams")
     }
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -72,81 +78,160 @@ class TeamRankingsFragment :
                 container,
                 false)
         rootView.tag = TAG + year
-        activity.toolbar.title = "Team Rankings"
-        // Rankings RecyclerView instantiation
-        recyclerView = rootView.
-                findViewById<RecyclerView>(R.id.team_ranking_recyclerview)
 
-        // Ranking spinner instantiation
-        val yearSpinner = rootView.findViewById<Spinner>(R.id.rankings_spinner)
-        spinnerInitiate(yearSpinner)
+        setHasOptionsMenu(true)
 
-        progressBarLoadingRankings = rootView.findViewById(R.id.progressBarRankings)
-        progressBarLoadingRankingsBig = rootView.findViewById(R.id.progressBarRankingsBig)
-        progressBarLoadingRankingsBig.visibility = View.VISIBLE
 
-        adapter = RankingsFirestoreAdapter(rankingsList)
-        recyclerView.adapter = adapter
-        recyclerView.setHasFixedSize(true)
-
-        // Rankings layout instantiation
-        val rankingLayoutManager = LinearLayoutManager(activity)
-        rankingLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        rankingLayoutManager.isAutoMeasureEnabled = false
-        recyclerView.layoutManager = rankingLayoutManager
-
-        //TODO: Use InfiniteScrollListener to make pagination logic easier
-        recyclerView.addOnScrollListener(object : InfiniteScrollListener(PAGE_LENGTH.toInt(), rankingLayoutManager) {
-            override fun onScrolledToEnd(firstVisibleItemPosition: Int) {
-                progressBarLoadingRankings.visibility = View.VISIBLE
-                if (pageLoaded) {
-                    getRankings(pageCount * PAGE_LENGTH.toInt())
-                    refreshView(recyclerView, RankingsFirestoreAdapter(rankingsList), firstVisibleItemPosition)
-                    pageLoaded = false
-                }
-            }
-        })
-
-        getRankings(pageCount)
-
-        return rootView ?: throw IllegalStateException(
+        return inflater.inflate(R.layout.fragment_rankings, container, false) ?:
+                throw IllegalStateException(
                 "LayoutInflater is null in onCreateView. "
                 + "Unable to inflate view.")
     }
 
-    fun getRankings(startRank : Int) {
-        val query : Query?
-        if (startRank == 0) {
-            query =  db.collection(rankingsYear)
-                    .orderBy("Rank", Query.Direction.ASCENDING)
-                    .limit(PAGE_LENGTH)
-        } else {
-            query = db.collection(rankingsYear)
-                    .orderBy("Rank", Query.Direction.ASCENDING)
-                    .startAt(startRank+1)
-                    .limit(PAGE_LENGTH)
-        }
-        query.addSnapshotListener(object : EventListener<QuerySnapshot> {
-            override fun onEvent(querySnapshot: QuerySnapshot?, e: FirebaseFirestoreException?) {
-                val newRankings : MutableList<Ranking> = ArrayList()
-                if (querySnapshot != null) {
-                    querySnapshot.documents.forEach {
-                        newRankings.add(it.toObject(Ranking::class.java))
-                    }
-                    rankingsList.addAll(newRankings)
-                    if (pageCount == 0) {
-                        progressBarLoadingRankingsBig.visibility = View.GONE
-                        Log.d(TAG, "Finished loading initial data set")
-                    } else {
-                        progressBarLoadingRankings.visibility = View.GONE
-                        Log.d(TAG, "Finished loading additional data set at " + startRank.toString())
-                    }
-                    pageCount++
-                    pageLoaded = true
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.rankings_spinner, menu)
+        val spinner = menu?.findItem(R.id.rankings_spinner)?.actionView as Spinner
+        val adapter = ArrayAdapter.createFromResource(context,
+                R.array.ranking_years,
+                android.R.layout.simple_spinner_item)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
+        spinner.setSelection(adapter.getPosition(year))
+        spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                val newYear = p0?.getItemAtPosition(p2).toString()
+                if (year != newYear) {
+                    activity?.supportFragmentManager
+                            ?.beginTransaction()
+                            ?.replace(R.id.container,
+                                    TeamRankingsFragment.newInstance(newYear),
+                                    newYear)
+                            ?.commit()
                 }
             }
-        })
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                // Do nothing
+            }
+        }
     }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        item?.setOnMenuItemClickListener(object : MenuItem.OnMenuItemClickListener {
+            override fun onMenuItemClick(item: MenuItem?): Boolean {
+                Log.d(TAG, item.toString())
+                return true
+            }
+        })
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (view != null) {
+            activity.toolbar.title = "Team Rankings"
+            // Rankings RecyclerView instantiation
+            recyclerView = view.
+                    findViewById(R.id.team_ranking_recyclerview)
+
+            /* Ranking spinner instantiation
+            val yearSpinner = view.findViewById<Spinner>(R.id.rankings_spinner)
+            spinnerInitiate(yearSpinner)
+            */
+
+            progressBarLoadingRankings = view.findViewById(R.id.progressBarRankings)
+            progressBarLoadingRankingsBig = view.findViewById(R.id.progressBarRankingsBig)
+            progressBarLoadingRankings.visibility = View.GONE
+            progressBarLoadingRankingsBig.visibility = View.GONE
+
+            adapter = RankingsFirestoreAdapter(rankingsList, year)
+            recyclerView.adapter = adapter
+            recyclerView.setHasFixedSize(true)
+
+            // Rankings layout instantiation
+            val rankingLayoutManager = LinearLayoutManager(activity)
+            rankingLayoutManager.orientation = LinearLayoutManager.VERTICAL
+            recyclerView.layoutManager = rankingLayoutManager
+
+            rankingsRecyclerViewScrollListener = object : RankingsRecyclerViewScrollListener(rankingLayoutManager) {
+                override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+                    getRankings()
+                }
+            }
+            recyclerView.addOnScrollListener(rankingsRecyclerViewScrollListener)
+
+            getFirstRankings() // initial query
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        detachCollectionSnapshotListener()
+    }
+
+    private fun getFirstRankings() {
+        progressBarLoadingRankingsBig.visibility = View.VISIBLE
+        rankingsRecyclerViewScrollListener.resetState()
+        attachCollectionSnapshotListener()
+    }
+
+    fun getRankings() {
+        progressBarLoadingRankings.visibility = View.VISIBLE
+        collectionRef.orderBy("Scores.$year", Query.Direction.DESCENDING)
+                .limit(PAGE_LENGTH)
+                .startAfter(lastDocument)
+                .get()
+                .addOnCompleteListener(object : OnCompleteListener<QuerySnapshot> {
+                    override fun onComplete(task: Task<QuerySnapshot>) {
+                        if (task.isSuccessful) {
+                            val querySnapshot = task.result
+                            if (!querySnapshot.isEmpty) {
+                                for (document in querySnapshot.documents) {
+                                    val team = document.toObject(Team::class.java)
+                                    rankingsList.add(team)
+                                    lastDocument = document
+                                }
+                                Log.d(TAG, "Loaded more data for page $page")
+                                page++
+                                progressBarLoadingRankings.visibility = View.GONE
+                                adapter.notifyDataSetChanged()
+                            }
+                        }
+                    }
+                })
+    }
+
+    private fun attachCollectionSnapshotListener() {
+        val eventListener = object : EventListener<QuerySnapshot> {
+            override fun onEvent(snapshot: QuerySnapshot?, e: FirebaseFirestoreException?) {
+                if (snapshot != null) {
+                    if (!snapshot.isEmpty) {
+                        rankingsList.clear()
+                        for (document in snapshot.documents) {
+                            val ranking = document.toObject(Team::class.java)
+                            rankingsList.add(ranking)
+                            lastDocument = document
+                        }
+                    progressBarLoadingRankingsBig.visibility = View.GONE
+                    adapter.notifyDataSetChanged()
+                    } else {
+                        //TODO: Small textview as bottom row saying no more teams available
+                    }
+                } else {
+                    //TODO: Large textview saying error retrieving contents
+                }
+            }
+        }
+        listenerRegistration = collectionRef.orderBy("Scores.$year", Query.Direction.DESCENDING)
+                .limit(PAGE_LENGTH)
+                .addSnapshotListener(eventListener)
+    }
+
+    private fun detachCollectionSnapshotListener() {
+        listenerRegistration.remove()
+    }
+
+    /*
     private fun spinnerInitiate(spinner: Spinner) {
         val rankingsArray = activity?.resources?.getStringArray(R.array.ranking_years)
         val yearSpinnerAdapter = ArrayAdapter<String>(activity, R.layout.spinner_head, rankingsArray)
@@ -156,19 +241,5 @@ class TeamRankingsFragment :
         spinner.setSelection(yearPosition, false)
         spinner.onItemSelectedListener = this
     }
-
-    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        if (initiated) {
-            val newYear = p0?.getItemAtPosition(p2).toString()
-            activity?.supportFragmentManager
-                    ?.beginTransaction()
-                    ?.replace(R.id.container, TeamRankingsFragment.newInstance(newYear), newYear)
-                    ?.commit()
-        } else {
-            initiated = true
-        }
-    }
-    override fun onNothingSelected(p0: AdapterView<*>?) {
-        //Do nothing
-    }
+    */
 }

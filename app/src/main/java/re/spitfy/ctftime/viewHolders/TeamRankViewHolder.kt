@@ -1,4 +1,4 @@
-package re.spitfy.ctftime.viewHolder
+package re.spitfy.ctftime.viewHolders
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
-import re.spitfy.ctftime.data.Ranking
+import re.spitfy.ctftime.data.Team
 import re.spitfy.ctftime.R
 
 class TeamRankViewHolder(itemView: View, private val parent: ViewGroup?): RecyclerView.ViewHolder(itemView)
@@ -20,14 +20,14 @@ class TeamRankViewHolder(itemView: View, private val parent: ViewGroup?): Recycl
     private val pointsView = itemView
             .findViewById<TextView>(R.id.team_points_textview)
 
-    fun bind(rankData: Ranking?) {
+    fun bind(rankData: Team?, year: String, recyclerIndex : Int) {
         if (rankData != null) {
-            rankView.text = rankData.Rank.toString()
-            teamNameView.text = rankData.TeamName
+            rankView.text = recyclerIndex.toString()
+            teamNameView.text = rankData.Name
             Picasso.with(parent?.context)
-                    .load("https://ctftime.org%s".format(rankData.CountryFlag))
+                    .load("https://ctftime.org/static/images/f/${rankData.CountryCode.toLowerCase()}.png")
                     .into(teamCountryFlagView)
-            pointsView.text = rankData.Score.format(3).toString()
+            pointsView.text = rankData.Scores[year]?.format(3).toString()
         }
     }
 
