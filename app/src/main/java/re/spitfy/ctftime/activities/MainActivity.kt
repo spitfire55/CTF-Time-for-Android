@@ -14,9 +14,7 @@ import re.spitfy.ctftime.fragments.TeamProfileFragment
 import re.spitfy.ctftime.fragments.TeamRankingsFragment
 
 
-class MainActivity : AppCompatActivity(),
-        NavigationView.OnNavigationItemSelectedListener
-{
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
@@ -42,19 +40,16 @@ class MainActivity : AppCompatActivity(),
         drawerToggle = setupDrawerToggle()
         navView = findViewById(R.id.mainNav)
         drawerLayout.addDrawerListener(drawerToggle)
-        navView.setNavigationItemSelectedListener({ menuItem ->
-            displayNavView(menuItem.itemId)
+        navView.setNavigationItemSelectedListener {
+            displayNavView(it.itemId)
             true
-        })
+        }
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
             R.id.action_settings -> {
                 drawerLayout.openDrawer(GravityCompat.START)
@@ -68,7 +63,6 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
         displayNavView(item.itemId)
         return true
     }
@@ -125,7 +119,8 @@ class MainActivity : AppCompatActivity(),
                 drawerLayout,
                 toolbar,
                 R.string.navdrawer_open,
-                R.string.navdrawer_close)
+                R.string.navdrawer_close
+        )
     }
 
     override fun onUserInteraction() {

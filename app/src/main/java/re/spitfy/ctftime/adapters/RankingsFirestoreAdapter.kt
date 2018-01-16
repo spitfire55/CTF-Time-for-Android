@@ -7,8 +7,10 @@ import re.spitfy.ctftime.R
 import re.spitfy.ctftime.data.Team
 import re.spitfy.ctftime.viewHolders.TeamRankViewHolder
 
-class RankingsFirestoreAdapter(val rankingsList : MutableList<Team>, val year: String) : RecyclerView.Adapter<TeamRankViewHolder>() {
-
+class RankingsFirestoreAdapter(
+        private val rankingsList : MutableList<Team>,
+        private val year: String
+) : RecyclerView.Adapter<TeamRankViewHolder>() {
 
     override fun onBindViewHolder(holder: TeamRankViewHolder?, position: Int) {
         holder?.bind(rankingsList[position], year, position + 1)
@@ -17,9 +19,7 @@ class RankingsFirestoreAdapter(val rankingsList : MutableList<Team>, val year: S
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TeamRankViewHolder? {
         val v = LayoutInflater
                 .from(parent?.context)
-                .inflate(R.layout.team_rankings_row,
-                        parent,
-                        false)
+                .inflate(R.layout.team_rankings_row, parent, false)
         return TeamRankViewHolder(v, parent)
     }
 

@@ -1,6 +1,5 @@
 package re.spitfy.ctftime.fragments
 
-import android.app.Fragment
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,10 +10,7 @@ import android.widget.AutoCompleteTextView
 import re.spitfy.ctftime.R
 import android.util.Log
 import android.widget.ArrayAdapter
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.appbar_main.*
 
 
@@ -23,12 +19,10 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
     private var teamId = 0
     private lateinit var db : FirebaseFirestore
 
-    companion object
-    {
+    companion object {
         val TAG = "TeamProfileFragment"
 
-        fun newInstance(id: Int): TeamProfileFragment
-        {
+        fun newInstance(id: Int): TeamProfileFragment {
             val args = Bundle()
             args.putInt("ID", id)
             val fragment = TeamProfileFragment()
@@ -45,21 +39,25 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
                 teamId = idArg
             }
         } catch (e : NullPointerException) {
-            Log.d(TAG, "No arguments. Did you create TeamProfileFragment " +
-                    "instance with newInstance method?")
+            Log.d(
+                    TAG,
+                    "No arguments. Did you create TeamProfileFragment " +
+                            "instance with newInstance method?")
         }
         //TODO: Check for internet connectivity
         db = FirebaseFirestore.getInstance()
     }
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View?
-    {
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? {
         val rootView = inflater.inflate(
                 R.layout.fragment_team_profile,
                 container,
-                false)
+                false
+        )
         rootView?.tag = TAG + id
         activity.toolbar.title = "Team Profile"
         val autoCompleteView = rootView?.findViewById<AutoCompleteTextView>(R.id.team_search_bar)
@@ -70,9 +68,9 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
         val autoCompleteDropdown = android.R.layout.simple_dropdown_item_1line
         val autoCompleteAdapter = ArrayAdapter<String>(activity, autoCompleteDropdown)
 
-        db.collection("Teams").get()
-                .addOnCompleteListener(object: OnCompleteListener<QuerySnapshot> {
-                    override fun onComplete(task: Task<QuerySnapshot>) {
+        db.collection("Teams")
+                .get()
+                .addOnCompleteListener{ task ->
                         if (task.isSuccessful) {
                             task.result.forEach {
                                 val nameStr = it.getString("Name")
@@ -81,8 +79,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
                                 }
                             }
                         }
-                    }
-                })
+                }
         autoCompleteView?.setAdapter(autoCompleteAdapter)
         return rootView
     }
@@ -94,6 +91,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
                 as InputMethodManager
         inputManager.hideSoftInputFromWindow(
                 activity?.currentFocus?.windowToken,
-                InputMethodManager.HIDE_NOT_ALWAYS)
+                InputMethodManager.HIDE_NOT_ALWAYS
+        )
     }
 }

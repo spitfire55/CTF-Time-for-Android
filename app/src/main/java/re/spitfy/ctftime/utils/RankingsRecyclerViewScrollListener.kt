@@ -3,7 +3,8 @@ package re.spitfy.ctftime.utils
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.LinearLayoutManager
 
-abstract class RankingsRecyclerViewScrollListener(val layoutManager : LinearLayoutManager) : RecyclerView.OnScrollListener() {
+abstract class RankingsRecyclerViewScrollListener(val layoutManager : LinearLayoutManager)
+    : RecyclerView.OnScrollListener() {
 
     private val visibleThreshold = 5
     private var currentPage = 0

@@ -1,21 +1,15 @@
 package re.spitfy.ctftime.fragments
 
-import android.content.Context
 import android.os.Bundle
-import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.*
 import android.widget.*
-import com.github.pwittchen.infinitescroll.library.InfiniteScrollListener
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.appbar_main.*
-import kotlinx.android.synthetic.main.nav_menu_layout.*
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.adapters.RankingsFirestoreAdapter
 import re.spitfy.ctftime.data.Team
@@ -41,8 +35,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
     {
         val TAG = "TeamRankingsFragment"
         val PAGE_LENGTH : Long = 50
-        fun newInstance(year: String): TeamRankingsFragment
-        {
+        fun newInstance(year: String): TeamRankingsFragment {
             val args = Bundle()
             args.putString("YEAR", year)
             val fragment = TeamRankingsFragment()
@@ -51,16 +44,18 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val yearArg = arguments?.getString("YEAR")
         if (yearArg != null) {
             year = yearArg
             rankingsYear = "${year}_Rankings"
         } else {
-            Log.d(TAG, "No arguments. Did you create " +
-                    "TeamRankingsFragment instance with newInstance method?")
+            Log.d(
+                    TAG,
+                    "No arguments. Did you create TeamRankingsFragment instance" +
+                            "with newInstance method?"
+            )
         }
         //TODO: Check Internet connectivity
 
@@ -71,29 +66,36 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
-                              savedInstanceState: Bundle?): View?
-    {
+                              savedInstanceState: Bundle?
+    ): View? {
         val rootView = inflater.inflate(
                 R.layout.fragment_rankings,
                 container,
-                false)
+                false
+        )
         rootView.tag = TAG + year
 
         setHasOptionsMenu(true)
 
 
-        return inflater.inflate(R.layout.fragment_rankings, container, false) ?:
-                throw IllegalStateException(
+        return inflater.inflate(
+                R.layout.fragment_rankings,
+                container,
+                false
+        ) ?: throw IllegalStateException(
                 "LayoutInflater is null in onCreateView. "
-                + "Unable to inflate view.")
+                + "Unable to inflate view."
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.rankings_spinner, menu)
         val spinner = menu?.findItem(R.id.rankings_spinner)?.actionView as Spinner
-        val adapter = ArrayAdapter.createFromResource(context,
+        val adapter = ArrayAdapter.createFromResource(
+                context,
                 R.array.ranking_years,
-                android.R.layout.simple_spinner_item)
+                android.R.layout.simple_spinner_item
+        )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
         spinner.setSelection(adapter.getPosition(year))
@@ -103,9 +105,11 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                 if (year != newYear) {
                     activity?.supportFragmentManager
                             ?.beginTransaction()
-                            ?.replace(R.id.container,
+                            ?.replace(
+                                    R.id.container,
                                     TeamRankingsFragment.newInstance(newYear),
-                                    newYear)
+                                    newYear
+                            )
                             ?.commit()
                 }
             }
@@ -117,11 +121,9 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        item?.setOnMenuItemClickListener(object : MenuItem.OnMenuItemClickListener {
-            override fun onMenuItemClick(item: MenuItem?): Boolean {
-                Log.d(TAG, item.toString())
-                return true
-            }
+        item?.setOnMenuItemClickListener({
+            it -> Log.d(TAG, it.toString())
+            true
         })
         return super.onOptionsItemSelected(item)
     }
@@ -153,7 +155,8 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
             rankingLayoutManager.orientation = LinearLayoutManager.VERTICAL
             recyclerView.layoutManager = rankingLayoutManager
 
-            rankingsRecyclerViewScrollListener = object : RankingsRecyclerViewScrollListener(rankingLayoutManager) {
+            rankingsRecyclerViewScrollListener =
+                    object : RankingsRecyclerViewScrollListener(rankingLayoutManager) {
                 override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
                     getRankings()
                 }
@@ -181,24 +184,22 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                 .limit(PAGE_LENGTH)
                 .startAfter(lastDocument)
                 .get()
-                .addOnCompleteListener(object : OnCompleteListener<QuerySnapshot> {
-                    override fun onComplete(task: Task<QuerySnapshot>) {
-                        if (task.isSuccessful) {
-                            val querySnapshot = task.result
-                            if (!querySnapshot.isEmpty) {
-                                for (document in querySnapshot.documents) {
-                                    val team = document.toObject(Team::class.java)
-                                    rankingsList.add(team)
-                                    lastDocument = document
-                                }
-                                Log.d(TAG, "Loaded more data for page $page")
-                                page++
-                                progressBarLoadingRankings.visibility = View.GONE
-                                adapter.notifyDataSetChanged()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val querySnapshot = task.result
+                        if (!querySnapshot.isEmpty) {
+                            for (document in querySnapshot.documents) {
+                                val team = document.toObject(Team::class.java)
+                                rankingsList.add(team)
+                                lastDocument = document
                             }
+                            Log.d(TAG, "Loaded more data for page $page")
+                            page++
+                            progressBarLoadingRankings.visibility = View.GONE
+                            adapter.notifyDataSetChanged()
                         }
                     }
-                })
+                }
     }
 
     private fun attachCollectionSnapshotListener() {
@@ -212,8 +213,8 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                             rankingsList.add(ranking)
                             lastDocument = document
                         }
-                    progressBarLoadingRankingsBig.visibility = View.GONE
-                    adapter.notifyDataSetChanged()
+                        progressBarLoadingRankingsBig.visibility = View.GONE
+                        adapter.notifyDataSetChanged()
                     } else {
                         //TODO: Small textview as bottom row saying no more teams available
                     }
@@ -222,7 +223,8 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                 }
             }
         }
-        listenerRegistration = collectionRef.orderBy("Scores.$year", Query.Direction.DESCENDING)
+        listenerRegistration = collectionRef
+                .orderBy("Scores.$year", Query.Direction.DESCENDING)
                 .limit(PAGE_LENGTH)
                 .addSnapshotListener(eventListener)
     }
@@ -230,16 +232,4 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
     private fun detachCollectionSnapshotListener() {
         listenerRegistration.remove()
     }
-
-    /*
-    private fun spinnerInitiate(spinner: Spinner) {
-        val rankingsArray = activity?.resources?.getStringArray(R.array.ranking_years)
-        val yearSpinnerAdapter = ArrayAdapter<String>(activity, R.layout.spinner_head, rankingsArray)
-        yearSpinnerAdapter.setDropDownViewResource(R.layout.spinner_item)
-        spinner.adapter = yearSpinnerAdapter
-        val yearPosition = yearSpinnerAdapter.getPosition(year)
-        spinner.setSelection(yearPosition, false)
-        spinner.onItemSelectedListener = this
-    }
-    */
 }
