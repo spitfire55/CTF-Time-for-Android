@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="48dp"
     app:cardBackgroundColor="@color/colorSecondary"
-    android:layout_marginBottom="1dp">
+    android:layout_marginBottom="1dp"
+    android:elevation="0dp">
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

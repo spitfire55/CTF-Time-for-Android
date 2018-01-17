@@ -16,7 +16,6 @@ class RankingsFirestoreAdapter(
         holder?.bind(rankingsList[position], year, position + 1)
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TeamRankViewHolder? {
         val v = LayoutInflater
                 .from(parent?.context)

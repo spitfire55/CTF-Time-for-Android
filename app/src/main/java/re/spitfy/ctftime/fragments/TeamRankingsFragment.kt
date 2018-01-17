@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.SpannableString
 import android.util.Log
 import android.view.*
 import android.widget.*
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetView
 
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.appbar_main.*
@@ -91,7 +94,8 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.rankings_spinner, menu)
         val spinner = menu?.findItem(R.id.rankings_spinner)?.actionView as Spinner
-        val spinnerAdapter = ArrayAdapter<String>(context, R.layout.spinner_item, years)
+        val spinnerAdapter = ArrayAdapter<String>(context, R.layout.spinner_head_item, years)
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
         spinner.adapter = spinnerAdapter
         spinner.setSelection(spinnerAdapter.getPosition(year))
         spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
@@ -113,6 +117,21 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                 // Do nothing
             }
         }
+
+        val spinnerDescription = resources.getString(R.string.rankings_spinner_hint)
+        val spinnerItem = activity?.toolbar?.menu?.findItem(R.id.rankings_spinner)?.actionView
+        TapTargetView.showFor(
+                activity,
+                TapTarget.forView(
+                        spinnerItem,
+                        "Select the Year",
+                        spinnerDescription
+                ).cancelable(false)
+                        .drawShadow(true)
+                        .textColor(android.R.color.black)
+                        .titleTextDimen(R.dimen.feature_tap_title)
+                        .tintTarget(false), object : TapTargetView.Listener(){}
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -123,43 +142,36 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (view != null) {
-            activity.toolbar.title = "Team Rankings"
-            // Rankings RecyclerView instantiation
-            recyclerView = view.
-                    findViewById(R.id.team_ranking_recyclerview)
+        activity?.toolbar?.title = "Team Rankings"
+        // Rankings RecyclerView instantiation
+        recyclerView = view.
+                findViewById(R.id.team_ranking_recyclerview)
 
-            /* Ranking spinner instantiation
-            val yearSpinner = view.findViewById<Spinner>(R.id.rankings_spinner)
-            spinnerInitiate(yearSpinner)
-            */
+        progressBarLoadingRankings = view.findViewById(R.id.progressBarRankings)
+        progressBarLoadingRankingsBig = view.findViewById(R.id.progressBarRankingsBig)
+        progressBarLoadingRankings.visibility = View.GONE
+        progressBarLoadingRankingsBig.visibility = View.GONE
 
-            progressBarLoadingRankings = view.findViewById(R.id.progressBarRankings)
-            progressBarLoadingRankingsBig = view.findViewById(R.id.progressBarRankingsBig)
-            progressBarLoadingRankings.visibility = View.GONE
-            progressBarLoadingRankingsBig.visibility = View.GONE
+        adapter = RankingsFirestoreAdapter(rankingsList, year)
+        recyclerView.adapter = adapter
+        recyclerView.setHasFixedSize(true)
 
-            adapter = RankingsFirestoreAdapter(rankingsList, year)
-            recyclerView.adapter = adapter
-            recyclerView.setHasFixedSize(true)
+        // Rankings layout instantiation
+        val rankingLayoutManager = LinearLayoutManager(activity)
+        rankingLayoutManager.orientation = LinearLayoutManager.VERTICAL
+        recyclerView.layoutManager = rankingLayoutManager
 
-            // Rankings layout instantiation
-            val rankingLayoutManager = LinearLayoutManager(activity)
-            rankingLayoutManager.orientation = LinearLayoutManager.VERTICAL
-            recyclerView.layoutManager = rankingLayoutManager
-
-            rankingsRecyclerViewScrollListener =
-                    object : RankingsRecyclerViewScrollListener(rankingLayoutManager) {
-                override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                    getRankings()
-                }
+        rankingsRecyclerViewScrollListener =
+                object : RankingsRecyclerViewScrollListener(rankingLayoutManager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+                getRankings()
             }
-            recyclerView.addOnScrollListener(rankingsRecyclerViewScrollListener)
-
-            getFirstRankings() // initial query
         }
+        recyclerView.addOnScrollListener(rankingsRecyclerViewScrollListener)
+
+        getFirstRankings() // initial query
     }
 
     override fun onPause() {
@@ -174,6 +186,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
     }
 
     fun getRankings() {
+
         progressBarLoadingRankings.visibility = View.VISIBLE
         collectionRef.orderBy("Scores.$year", Query.Direction.DESCENDING)
                 .limit(PAGE_LENGTH)

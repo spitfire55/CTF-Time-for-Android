@@ -8,4 +8,5 @@
     <dimen name="actionbar_elevation">4dp</dimen>
     <dimen name="focus_elevation">8dp</dimen>
     <dimen name="card_elevation">2dp</dimen>
+    <dimen name="feature_tap_title">20dp</dimen>
 </resources>

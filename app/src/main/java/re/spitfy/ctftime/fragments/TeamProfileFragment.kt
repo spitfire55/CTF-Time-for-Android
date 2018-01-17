@@ -59,7 +59,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
                 false
         )
         rootView?.tag = TAG + id
-        activity.toolbar.title = "Team Profile"
+        activity?.toolbar?.title = "Team Profile"
         val autoCompleteView = rootView?.findViewById<AutoCompleteTextView>(R.id.team_search_bar)
         autoCompleteView?.setOnClickListener {
             autoCompleteView.hint = "Team name"
