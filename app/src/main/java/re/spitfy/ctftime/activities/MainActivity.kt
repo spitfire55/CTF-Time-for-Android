@@ -4,11 +4,13 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.view.View
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 import re.spitfy.ctftime.R
@@ -23,13 +25,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var toolbar: android.support.v7.widget.Toolbar
     private var title: String? = null
-    private var userIsInteracting = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
         setContentView(R.layout.activity_main)
 
+        val mainView = findViewById<DrawerLayout>(R.id.drawer_layout)
         toolbar = findViewById(R.id.toolbar)
         drawerLayout = findViewById(R.id.drawer_layout)
 
@@ -39,7 +41,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             toolbar.title = savedTitle
         }
 
-
         drawerToggle = setupDrawerToggle()
         navView = findViewById(R.id.mainNav)
         drawerLayout.addDrawerListener(drawerToggle)
@@ -48,6 +49,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             true
         }
         setSupportActionBar(toolbar)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            window.navigationBarColor = ContextCompat.getColor(this, android.R.color.white)
+            mainView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+        } else {
+            window.navigationBarColor = ContextCompat.getColor(this, android.R.color.transparent)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -85,31 +92,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun displayNavView(viewId: Int) {
         var title = getString(R.string.app_name) // default
-        var tag = getString(R.string.app_name)
         var fragment: Fragment? = null
 
         when (viewId) {
             R.id.nav_team_ranking -> {
-                fragment = TeamRankingsFragment.newInstance("2017")
+                val savedFragment = supportFragmentManager.findFragmentByTag(getString(R.string.toolbar_team_rankings))
+                fragment = savedFragment ?: TeamRankingsFragment.newInstance("2017")
                 title = getString(R.string.toolbar_team_rankings)
-                tag = "2017"
             }
             R.id.nav_team_profile -> {
                 fragment = TeamProfileFragment.newInstance(8327)
                 title = getString(R.string.toolbar_team_profiles)
-                tag = title
             }
         }
         // gets fragment if it is already in the stack
-        if (fragment != null && this.title != title) {
-            // check to see if fragment already in the stack
-            supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.container, fragment, tag)
-                    .commit()
-            this.toolbar.title = title
-            this.title = title
-        }
+        supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.container, fragment, title)
+                .commit()
+        this.toolbar.title = title
+        this.title = title
+
         drawerLayout.closeDrawers()
     }
 
@@ -122,10 +125,5 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 R.string.navdrawer_open,
                 R.string.navdrawer_close
         )
-    }
-
-    override fun onUserInteraction() {
-        super.onUserInteraction()
-        userIsInteracting = true
     }
 }

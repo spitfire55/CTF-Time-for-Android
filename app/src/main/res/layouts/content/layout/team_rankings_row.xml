@@ -4,13 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    app:cardBackgroundColor="@color/colorSecondary"
-    android:layout_marginBottom="1dp"
-    android:elevation="0dp">
+    app:cardBackgroundColor="@android:color/white"
+    android:layout_marginBottom="1dp">
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/team_rank_textview"

@@ -1,10 +1,10 @@
 package re.spitfy.ctftime.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.SpannableString
 import android.util.Log
 import android.view.*
 import android.widget.*
@@ -26,7 +26,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
     private lateinit var db : FirebaseFirestore
     private lateinit var collectionRef : CollectionReference
     private lateinit var progressBarLoadingRankings : CardView
-    private lateinit var progressBarLoadingRankingsBig : ProgressBar
+    private lateinit var progressBarLoadingRankingsBig : CardView
     private lateinit var recyclerView : RecyclerView
     private lateinit var rankingsRecyclerViewScrollListener : RankingsRecyclerViewScrollListener
     private lateinit var listenerRegistration : ListenerRegistration
@@ -36,8 +36,8 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
 
     companion object
     {
-        val TAG = "TeamRankingsFragment"
-        val PAGE_LENGTH : Long = 50
+        const val TAG = "TeamRankingsFragment"
+        const val PAGE_LENGTH : Long = 50
         val years = listOf("2017", "2016", "2015", "2014", "2013", "2012", "2011")
         fun newInstance(year: String): TeamRankingsFragment {
             val args = Bundle()
@@ -117,21 +117,13 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                 // Do nothing
             }
         }
+        val firstTimePreference = activity?.getSharedPreferences("pref", Context.MODE_PRIVATE)?.getBoolean("rankingsFirstTime", true)
+        if (firstTimePreference != null && firstTimePreference) {
+            showSpinnerFeatureDiscovery()
+            activity?.getSharedPreferences("pref", Context.MODE_PRIVATE)?.edit()?.putBoolean("rankingsFirstTime", false)?.apply()
+        } else {
 
-        val spinnerDescription = resources.getString(R.string.rankings_spinner_hint)
-        val spinnerItem = activity?.toolbar?.menu?.findItem(R.id.rankings_spinner)?.actionView
-        TapTargetView.showFor(
-                activity,
-                TapTarget.forView(
-                        spinnerItem,
-                        "Select the Year",
-                        spinnerDescription
-                ).cancelable(false)
-                        .drawShadow(true)
-                        .textColor(android.R.color.black)
-                        .titleTextDimen(R.dimen.feature_tap_title)
-                        .tintTarget(false), object : TapTargetView.Listener(){}
-        )
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -189,6 +181,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
 
         progressBarLoadingRankings.visibility = View.VISIBLE
         collectionRef.orderBy("Scores.$year", Query.Direction.DESCENDING)
+                .whereGreaterThan("Scores.$year", 0)
                 .limit(PAGE_LENGTH)
                 .startAfter(lastDocument)
                 .get()
@@ -233,11 +226,38 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
         }
         listenerRegistration = collectionRef
                 .orderBy("Scores.$year", Query.Direction.DESCENDING)
+                .whereGreaterThan("Scores.$year", 0)
                 .limit(PAGE_LENGTH)
                 .addSnapshotListener(eventListener)
     }
 
     private fun detachCollectionSnapshotListener() {
         listenerRegistration.remove()
+    }
+
+    private fun showSpinnerFeatureDiscovery() {
+        val spinnerDescription = resources.getString(R.string.rankings_spinner_hint)
+        val spinnerItem = activity?.toolbar?.menu?.findItem(R.id.rankings_spinner)?.actionView
+        if (spinnerItem != null) {
+            TapTargetView.showFor(
+                    activity,
+                    TapTarget.forView(
+                            spinnerItem,
+                            "Select the Year",
+                            spinnerDescription
+                    )
+                            .cancelable(true)
+                            .drawShadow(true)
+                            .textColor(android.R.color.black)
+                            .targetCircleColor(R.color.colorPrimary)
+                            .targetRadius(0)
+                            .titleTextDimen(R.dimen.feature_tap_title)
+                            .tintTarget(false),
+                    object : TapTargetView.Listener() {
+                        override fun onOuterCircleClick(view: TapTargetView?) {
+                            view?.dismiss(true)
+                        }
+                    })
+        }
     }
 }
