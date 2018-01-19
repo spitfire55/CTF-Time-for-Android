@@ -33,6 +33,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
     private lateinit var lastDocument : DocumentSnapshot
     private var rankingsList : MutableList<Team> = ArrayList()
     private var page = 0
+    private var moreData = true
 
     companion object
     {
@@ -81,14 +82,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
 
         setHasOptionsMenu(true)
 
-        return inflater.inflate(
-                R.layout.fragment_rankings,
-                container,
-                false
-        ) ?: throw IllegalStateException(
-                "LayoutInflater is null in onCreateView. "
-                + "Unable to inflate view."
-        )
+        return rootView
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -158,7 +152,9 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
         rankingsRecyclerViewScrollListener =
                 object : RankingsRecyclerViewScrollListener(rankingLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                getRankings()
+                if (moreData) {
+                    getRankings()
+                }
             }
         }
         recyclerView.addOnScrollListener(rankingsRecyclerViewScrollListener)
@@ -189,6 +185,9 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                     if (task.isSuccessful) {
                         val querySnapshot = task.result
                         if (!querySnapshot.isEmpty) {
+                            if (querySnapshot.documents.size < 50) {
+                                moreData = false
+                            }
                             for (document in querySnapshot.documents) {
                                 val team = document.toObject(Team::class.java)
                                 rankingsList.add(team)
@@ -199,6 +198,13 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                             progressBarLoadingRankings.visibility = View.GONE
                             adapter.notifyDataSetChanged()
                         }
+                        else {
+                            progressBarLoadingRankings.visibility = View.GONE
+                            moreData = false
+                        }
+                    } else {
+                        progressBarLoadingRankings.visibility = View.GONE
+                        moreData = false
                     }
                 }
     }

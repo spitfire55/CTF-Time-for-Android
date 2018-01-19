@@ -14,7 +14,7 @@ data class Team(
         val LinkedIn : String = "",
         val Logo : String = "",
         val Members : List<Member> = emptyList(),
-        val Scores: Map<String, Float> = emptyMap(),
-        val Name: String = ""
+        val Name: String = "",
+        val Scores: Map<String, Float> = emptyMap()
 )
 

@@ -2,6 +2,8 @@ package re.spitfy.ctftime.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +12,8 @@ import android.widget.AutoCompleteTextView
 import re.spitfy.ctftime.R
 import android.util.Log
 import android.widget.ArrayAdapter
-import com.google.firebase.firestore.FirebaseFirestore
+import android.widget.Toast
+import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.appbar_main.*
 
 
@@ -18,10 +21,12 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
 {
     private var teamId = 0
     private lateinit var db : FirebaseFirestore
+    private lateinit var autoCompleteTextView : AutoCompleteTextView
+    private var teamNameArray : MutableList<String> = ArrayList()
 
     companion object {
-        val TAG = "TeamProfileFragment"
-
+        const val TAG = "TeamProfileFragment"
+        const val SUGGESTION_LIMIT : Long = 5
         fun newInstance(id: Int): TeamProfileFragment {
             val args = Bundle()
             args.putInt("ID", id)
@@ -59,29 +64,21 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
                 false
         )
         rootView?.tag = TAG + id
-        activity?.toolbar?.title = "Team Profile"
-        val autoCompleteView = rootView?.findViewById<AutoCompleteTextView>(R.id.team_search_bar)
-        autoCompleteView?.setOnClickListener {
-            autoCompleteView.hint = "Team name"
-            autoCompleteView.isCursorVisible = true
-        }
-        val autoCompleteDropdown = android.R.layout.simple_dropdown_item_1line
-        val autoCompleteAdapter = ArrayAdapter<String>(activity, autoCompleteDropdown)
 
-        db.collection("Teams")
-                .get()
-                .addOnCompleteListener{ task ->
-                        if (task.isSuccessful) {
-                            task.result.forEach {
-                                val nameStr = it.getString("Name")
-                                if (nameStr != null) {
-                                    autoCompleteAdapter.add(nameStr)
-                                }
-                            }
-                        }
-                }
-        autoCompleteView?.setAdapter(autoCompleteAdapter)
         return rootView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        activity?.toolbar?.title = "Team Profile"
+        autoCompleteTextView = view.findViewById(R.id.team_search_bar)
+        autoCompleteTextView.setOnClickListener {
+            autoCompleteTextView.hint = "Team name"
+            autoCompleteTextView.isCursorVisible = true
+        }
+
+        setAutoCompleteListener()
     }
 
     override fun onDetach() {
@@ -93,5 +90,44 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
                 activity?.currentFocus?.windowToken,
                 InputMethodManager.HIDE_NOT_ALWAYS
         )
+    }
+
+    private fun setAutoCompleteListener() {
+        autoCompleteTextView.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (!charSequence.isNullOrBlank()) {
+                    retrieveTeamNameSuggestions(charSequence.toString())
+                }
+            }
+        })
+    }
+
+    private fun retrieveTeamNameSuggestions(input: String) {
+        //TODO: Upper case vs lower case teams, caching results by searching upon installation
+        db.collection("Teams")
+                .orderBy("Name", Query.Direction.ASCENDING)
+                .whereGreaterThanOrEqualTo("Name", input)
+                .whereLessThanOrEqualTo("Name", input + "\uf8ff")
+                .limit(SUGGESTION_LIMIT)
+                .get()
+                .addOnCompleteListener {
+                    task -> if (task.isSuccessful) {
+                        val querySnapshot = task.result
+                        if (!querySnapshot.isEmpty) {
+                            for (document in querySnapshot.documents) {
+                                teamNameArray.add(document.getString("Name"))
+                            }
+                            val arrayAdapter = ArrayAdapter<String>(
+                                    activity,
+                                    android.R.layout.select_dialog_item,
+                                    teamNameArray
+                            )
+                            autoCompleteTextView.setAdapter(arrayAdapter)
+                        }
+                    }
+                    Toast.makeText(activity, teamNameArray.first(), Toast.LENGTH_LONG).show()
+                }
     }
 }

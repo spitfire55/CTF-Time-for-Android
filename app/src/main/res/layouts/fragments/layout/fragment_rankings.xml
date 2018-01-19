@@ -31,7 +31,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/TeamNameHeader"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintVertical_bias="0.7"
+            app:layout_constraintVertical_bias="0.8"
             app:layout_constraintHorizontal_weight="2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -51,7 +51,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/CountryFlagHeader"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintVertical_bias="0.7"
+            app:layout_constraintVertical_bias="0.8"
             app:layout_constraintHorizontal_weight="4"
             app:layout_constraintStart_toEndOf="@+id/RankHeader"
             app:layout_constraintTop_toTopOf="parent" />
@@ -71,7 +71,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/PointsTotalHeader"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintVertical_bias="0.7"
+            app:layout_constraintVertical_bias="0.8"
             app:layout_constraintHorizontal_weight="2"
             app:layout_constraintStart_toEndOf="@+id/TeamNameHeader"
             app:layout_constraintTop_toTopOf="parent" />
@@ -91,7 +91,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintVertical_bias="0.7"
+            app:layout_constraintVertical_bias="0.8"
             app:layout_constraintHorizontal_weight="2"
             app:layout_constraintStart_toEndOf="@+id/CountryFlagHeader"
             app:layout_constraintTop_toTopOf="parent" />
@@ -126,8 +126,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="48dp"
-            android:clipToPadding="false"
-            android:scrollbars="vertical"/>
+            android:clipToPadding="false"/>
 
         <android.support.v7.widget.CardView
             android:id="@+id/progressBarRankings"
