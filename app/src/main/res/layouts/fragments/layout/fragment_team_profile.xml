@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorSecondaryLight"
     android:orientation="vertical">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorSecondaryLight">
 
         <android.support.v7.widget.AppCompatAutoCompleteTextView
             android:id="@+id/team_search_text_view"
@@ -26,8 +26,8 @@
             android:cursorVisible="false"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black"
-            android:backgroundTint="@color/colorSecondary"
-            android:textCursorDrawable="@drawable/team_profile_cursor"
+            android:backgroundTint="@color/colorPrimary"
+            android:textCursorDrawable="@null"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -53,7 +53,7 @@
             android:layout_marginTop="0dp"
             app:cardCornerRadius="4dp"
             app:cardElevation="2dp"
-            app:cardBackgroundColor="@color/colorPrimaryLight"
+            app:cardBackgroundColor="@color/colorSecondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/team_search_text_view"

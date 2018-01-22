@@ -13,7 +13,6 @@ import re.spitfy.ctftime.R
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.ProgressBar
-import android.widget.Toast
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.appbar_main.*
 
@@ -28,7 +27,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
 
     companion object {
         const val TAG = "TeamProfileFragment"
-        const val SUGGESTION_LIMIT : Long = 5
+        const val SUGGESTION_LIMIT : Long = 3
         fun newInstance(id: Int): TeamProfileFragment {
             val args = Bundle()
             args.putInt("ID", id)
@@ -100,11 +99,13 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (charSequence != null && charSequence.isNotBlank()) {
+                    autoCompleteTextView.dismissDropDown()
                     autoCompleteProgressBar.visibility = View.VISIBLE
                     retrieveTeamNameSuggestions(charSequence.toString().toLowerCase())
                     Log.d(TAG, charSequence.toString().toLowerCase())
                 } else {
                     autoCompleteTextView.dismissDropDown()
+                    autoCompleteProgressBar.visibility = View.INVISIBLE
                 }
             }
             override fun afterTextChanged(input: Editable?) {}
@@ -134,7 +135,6 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
                                         teamNameArray
                                 )
                                 autoCompleteTextView.setAdapter(arrayAdapter)
-                                autoCompleteTextView.showDropDown()
                                 autoCompleteProgressBar.visibility = View.INVISIBLE
                             } else {
                                 Log.d(TAG, "Null activity")

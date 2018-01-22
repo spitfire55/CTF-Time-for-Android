@@ -26,7 +26,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
     private lateinit var db : FirebaseFirestore
     private lateinit var collectionRef : CollectionReference
     private lateinit var progressBarLoadingRankings : CardView
-    private lateinit var progressBarLoadingRankingsBig : CardView
+    private lateinit var progressBarLoadingRankingsBig : ProgressBar
     private lateinit var recyclerView : RecyclerView
     private lateinit var rankingsRecyclerViewScrollListener : RankingsRecyclerViewScrollListener
     private lateinit var listenerRegistration : ListenerRegistration
