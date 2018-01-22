@@ -12,6 +12,7 @@ import android.widget.AutoCompleteTextView
 import re.spitfy.ctftime.R
 import android.util.Log
 import android.widget.ArrayAdapter
+import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.appbar_main.*
@@ -22,6 +23,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
     private var teamId = 0
     private lateinit var db : FirebaseFirestore
     private lateinit var autoCompleteTextView : AutoCompleteTextView
+    private lateinit var autoCompleteProgressBar : ProgressBar
     private var teamNameArray : MutableList<String> = ArrayList()
 
     companion object {
@@ -72,9 +74,10 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
         super.onViewCreated(view, savedInstanceState)
 
         activity?.toolbar?.title = "Team Profile"
-        autoCompleteTextView = view.findViewById(R.id.team_search_bar)
+        autoCompleteTextView = view.findViewById(R.id.team_search_text_view)
+        autoCompleteProgressBar = view.findViewById(R.id.team_search_progressbar)
         autoCompleteTextView.setOnClickListener {
-            autoCompleteTextView.hint = "Team name"
+            autoCompleteTextView.hint = ""
             autoCompleteTextView.isCursorVisible = true
         }
 
@@ -85,8 +88,8 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
         super.onDetach()
         val inputManager = activity?.
                 getSystemService(Context.INPUT_METHOD_SERVICE)
-                as InputMethodManager
-        inputManager.hideSoftInputFromWindow(
+                as InputMethodManager?
+        inputManager?.hideSoftInputFromWindow(
                 activity?.currentFocus?.windowToken,
                 InputMethodManager.HIDE_NOT_ALWAYS
         )
@@ -95,39 +98,50 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
     private fun setAutoCompleteListener() {
         autoCompleteTextView.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?) {}
             override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (!charSequence.isNullOrBlank()) {
-                    retrieveTeamNameSuggestions(charSequence.toString())
+                if (charSequence != null && charSequence.isNotBlank()) {
+                    autoCompleteProgressBar.visibility = View.VISIBLE
+                    retrieveTeamNameSuggestions(charSequence.toString().toLowerCase())
+                    Log.d(TAG, charSequence.toString().toLowerCase())
+                } else {
+                    autoCompleteTextView.dismissDropDown()
                 }
             }
+            override fun afterTextChanged(input: Editable?) {}
         })
     }
 
     private fun retrieveTeamNameSuggestions(input: String) {
         //TODO: Upper case vs lower case teams, caching results by searching upon installation
         db.collection("Teams")
-                .orderBy("Name", Query.Direction.ASCENDING)
-                .whereGreaterThanOrEqualTo("Name", input)
-                .whereLessThanOrEqualTo("Name", input + "\uf8ff")
+                .orderBy("NameCaseInsensitive", Query.Direction.ASCENDING)
+                .whereGreaterThanOrEqualTo("NameCaseInsensitive", input)
+                .whereLessThanOrEqualTo("NameCaseInsensitive", input + "\uf8ff")
                 .limit(SUGGESTION_LIMIT)
                 .get()
                 .addOnCompleteListener {
                     task -> if (task.isSuccessful) {
                         val querySnapshot = task.result
                         if (!querySnapshot.isEmpty) {
+                            teamNameArray.clear()
                             for (document in querySnapshot.documents) {
                                 teamNameArray.add(document.getString("Name"))
                             }
-                            val arrayAdapter = ArrayAdapter<String>(
-                                    activity,
-                                    android.R.layout.select_dialog_item,
-                                    teamNameArray
-                            )
-                            autoCompleteTextView.setAdapter(arrayAdapter)
+                            if (activity != null) {
+                                val arrayAdapter = ArrayAdapter<String>(
+                                        activity,
+                                        android.R.layout.select_dialog_item,
+                                        teamNameArray
+                                )
+                                autoCompleteTextView.setAdapter(arrayAdapter)
+                                autoCompleteTextView.showDropDown()
+                                autoCompleteProgressBar.visibility = View.INVISIBLE
+                            } else {
+                                Log.d(TAG, "Null activity")
+                            }
                         }
                     }
-                    Toast.makeText(activity, teamNameArray.first(), Toast.LENGTH_LONG).show()
                 }
+
     }
 }

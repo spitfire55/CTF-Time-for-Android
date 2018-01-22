@@ -15,6 +15,7 @@ data class Team(
         val Logo : String = "",
         val Members : List<Member> = emptyList(),
         val Name: String = "",
+        val NameCaseInsensitive: String = "",
         val Scores: Map<String, Float> = emptyMap()
 )
 
