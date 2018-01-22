@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.AutoCompleteTextView
 import re.spitfy.ctftime.R
 import android.util.Log
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.google.firebase.firestore.*
@@ -19,17 +20,18 @@ import kotlinx.android.synthetic.main.appbar_main.*
 
 class TeamProfileFragment : android.support.v4.app.Fragment()
 {
-    private var teamId = 0
+    private lateinit var teamName : String
     private lateinit var db : FirebaseFirestore
+    private lateinit var teamDocument : DocumentSnapshot
     private lateinit var autoCompleteTextView : AutoCompleteTextView
     private var teamNameArray : MutableList<String> = ArrayList()
 
     companion object {
         const val TAG = "TeamProfileFragment"
-        const val SUGGESTION_LIMIT : Long = 5
-        fun newInstance(id: Int): TeamProfileFragment {
+        const val SUGGESTION_LIMIT : Long = 3
+        fun newInstance(name: String): TeamProfileFragment {
             val args = Bundle()
-            args.putInt("ID", id)
+            args.putString("Name", name)
             val fragment = TeamProfileFragment()
             fragment.arguments = args
             return fragment
@@ -38,16 +40,14 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        try {
-            val idArg = arguments?.getInt("ID")
-            if (idArg != null) {
-                teamId = idArg
-            }
-        } catch (e : NullPointerException) {
+        val nameArg = arguments?.getString("Name")
+        if (nameArg != null) {
+            teamName = nameArg
+        } else {
             Log.d(
                     TAG,
-                    "No arguments. Did you create TeamProfileFragment " +
-                            "instance with newInstance method?")
+                    "No arguments. Did you create TeamProfileFragment instance with newInstance method?"
+            )
         }
         //TODO: Check for internet connectivity
         db = FirebaseFirestore.getInstance()
@@ -63,7 +63,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
                 container,
                 false
         )
-        rootView?.tag = TAG + id
+        rootView?.tag = TAG + teamName
 
         return rootView
     }
@@ -74,11 +74,36 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
         activity?.toolbar?.title = "Team Profile"
         autoCompleteTextView = view.findViewById(R.id.team_search_bar)
         autoCompleteTextView.setOnClickListener {
-            autoCompleteTextView.hint = "Team name"
             autoCompleteTextView.isCursorVisible = true
+            autoCompleteTextView.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    val newTeamName = parent?.getItemAtPosition(position).toString()
+                    if (newTeamName != teamName) {
+                        activity?.supportFragmentManager
+                                ?.beginTransaction()
+                                ?.replace(
+                                        R.id.container,
+                                        TeamProfileFragment.newInstance(newTeamName),
+                                        newTeamName
+                                )
+                                ?.commit()
+                    }
+                }
+            }
         }
-
         setAutoCompleteListener()
+
+        db.collection("Teams").whereEqualTo("Name", teamName).limit(1).get().addOnCompleteListener {
+            task -> if (task.isSuccessful) {
+                val querySnapshot = task.result
+                if (!querySnapshot.isEmpty) {
+                    for (document in querySnapshot.documents) {
+                        teamDocument = document
+                    }
+                }
+            }
+        }
     }
 
     override fun onDetach() {
@@ -95,10 +120,10 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
     private fun setAutoCompleteListener() {
         autoCompleteTextView.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?) {}
-            override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (!charSequence.isNullOrBlank()) {
-                    retrieveTeamNameSuggestions(charSequence.toString())
+            override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(input: Editable?) {
+                if (input != null && input.isNotBlank()) {
+                    retrieveTeamNameSuggestions(input.toString().toLowerCase())
                 }
             }
         })
@@ -107,15 +132,16 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
     private fun retrieveTeamNameSuggestions(input: String) {
         //TODO: Upper case vs lower case teams, caching results by searching upon installation
         db.collection("Teams")
-                .orderBy("Name", Query.Direction.ASCENDING)
-                .whereGreaterThanOrEqualTo("Name", input)
-                .whereLessThanOrEqualTo("Name", input + "\uf8ff")
+                .orderBy("NameCaseInsensitive", Query.Direction.ASCENDING)
+                .whereGreaterThanOrEqualTo("NameCaseInsensitive", input)
+                .whereLessThanOrEqualTo("NameCaseInsensitive", input + "\uf8ff")
                 .limit(SUGGESTION_LIMIT)
                 .get()
                 .addOnCompleteListener {
                     task -> if (task.isSuccessful) {
                         val querySnapshot = task.result
                         if (!querySnapshot.isEmpty) {
+                            teamNameArray.clear()
                             for (document in querySnapshot.documents) {
                                 teamNameArray.add(document.getString("Name"))
                             }

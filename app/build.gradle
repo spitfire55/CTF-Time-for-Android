@@ -5,7 +5,7 @@ apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.2"
+    buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "re.spitfy.ctftime"
         minSdkVersion 21
