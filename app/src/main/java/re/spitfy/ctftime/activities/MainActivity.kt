@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 title = getString(R.string.toolbar_team_rankings)
             }
             R.id.nav_team_profile -> {
-                fragment = TeamProfileFragment.newInstance(8327)
+                fragment = TeamProfileFragment.newInstance(null)
                 title = getString(R.string.toolbar_team_profiles)
             }
         }

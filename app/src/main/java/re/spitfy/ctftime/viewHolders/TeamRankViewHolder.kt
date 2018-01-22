@@ -25,9 +25,9 @@ class TeamRankViewHolder(itemView: View, private val parent: ViewGroup?): Recycl
                             "${rankData.CountryCode.toLowerCase()}.png"
                     )
                     .into(teamCountryFlagView)
-            pointsView.text = rankData.Scores[year]?.format(3).toString()
+            pointsView.text = rankData.Scores[year]?.Points?.format(3).toString()
         }
     }
 
-    private fun Float.format(digits: Int) = java.lang.String.format("%.${digits}f", this)
+    private fun Double.format(digits: Int) = java.lang.String.format("%.${digits}f", this)
 }

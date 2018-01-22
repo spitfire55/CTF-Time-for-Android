@@ -2,35 +2,38 @@ package re.spitfy.ctftime.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.support.v7.widget.AppCompatTextView
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.AutoCompleteTextView
 import re.spitfy.ctftime.R
 import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.ProgressBar
+import android.widget.*
 import com.google.firebase.firestore.*
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.appbar_main.*
+import re.spitfy.ctftime.data.Team
+import java.io.Serializable
 
 
 class TeamProfileFragment : android.support.v4.app.Fragment()
 {
-    private var teamId = 0
-    private lateinit var db : FirebaseFirestore
+    private val db : FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var team : Team? = null
     private lateinit var autoCompleteTextView : AutoCompleteTextView
     private lateinit var autoCompleteProgressBar : ProgressBar
     private var teamNameArray : MutableList<String> = ArrayList()
+    private var teamArray : MutableList<Team> = ArrayList()
 
     companion object {
         const val TAG = "TeamProfileFragment"
         const val SUGGESTION_LIMIT : Long = 3
-        fun newInstance(id: Int): TeamProfileFragment {
+        fun newInstance(team: Team?): TeamProfileFragment {
             val args = Bundle()
-            args.putInt("ID", id)
+            args.putSerializable("Team", team as? Serializable)
             val fragment = TeamProfileFragment()
             fragment.arguments = args
             return fragment
@@ -39,33 +42,18 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        try {
-            val idArg = arguments?.getInt("ID")
-            if (idArg != null) {
-                teamId = idArg
-            }
-        } catch (e : NullPointerException) {
-            Log.d(
-                    TAG,
-                    "No arguments. Did you create TeamProfileFragment " +
-                            "instance with newInstance method?")
+        val teamArg = arguments?.getSerializable("Team") as? Team
+        if (teamArg != null) {
+            team = teamArg
+        } else {
+            //TODO: Setup Fragment to load dummy frame on first load
         }
         //TODO: Check for internet connectivity
-        db = FirebaseFirestore.getInstance()
     }
 
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
-        val rootView = inflater.inflate(
-                R.layout.fragment_team_profile,
-                container,
-                false
-        )
-        rootView?.tag = TAG + id
-
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val rootView = inflater.inflate(R.layout.fragment_team_profile, container, false)
+        rootView?.tag = TAG + team?.Name
         return rootView
     }
 
@@ -73,14 +61,32 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
         super.onViewCreated(view, savedInstanceState)
 
         activity?.toolbar?.title = "Team Profile"
-        autoCompleteTextView = view.findViewById(R.id.team_search_text_view)
-        autoCompleteProgressBar = view.findViewById(R.id.team_search_progressbar)
+        autoCompleteTextView = view.findViewById(R.id.appCompatAutoCompleteTextView_team_searchTeam)
+        autoCompleteProgressBar = view.findViewById(R.id.progressBar_team_searchTeamStatus)
         autoCompleteTextView.setOnClickListener {
             autoCompleteTextView.hint = ""
             autoCompleteTextView.isCursorVisible = true
+            autoCompleteTextView.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    val newTeamName = parent?.getItemAtPosition(position).toString()
+                    if (newTeamName != team?.Name) {
+                        activity?.supportFragmentManager
+                                ?.beginTransaction()
+                                ?.replace(
+                                        R.id.container,
+                                        TeamProfileFragment.newInstance(teamArray[position]),
+                                        newTeamName
+                                )
+                                ?.commit()
+                    }
+                }
+            }
         }
-
         setAutoCompleteListener()
+        if (team != null) {
+            populateGeneralCard(view)
+        }
     }
 
     override fun onDetach() {
@@ -124,8 +130,10 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
                     task -> if (task.isSuccessful) {
                         val querySnapshot = task.result
                         if (!querySnapshot.isEmpty) {
+                            teamArray.clear()
                             teamNameArray.clear()
                             for (document in querySnapshot.documents) {
+                                teamArray.add(document.toObject(Team::class.java))
                                 teamNameArray.add(document.getString("Name"))
                             }
                             if (activity != null) {
@@ -143,5 +151,16 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
                     }
                 }
 
+    }
+
+    private fun populateGeneralCard(rootView : View) {
+        rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_pointsDescription).text = resources.getString(R.string.points)
+        rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_rankDescription).text = resources.getString(R.string.rank)
+        rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_name).text = team?.Name
+        rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_pointsValue).text = team?.Scores?.get("2017")?.Points?.toString()
+        rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_rankValue).text = team?.Scores?.get("2017")?.Rank?.toString()
+        Picasso.with(context)
+                .load("https://ctftime.org/static/images/f/${team?.CountryCode?.toLowerCase()}.png")
+                .into(rootView.findViewById<ImageView>(R.id.image_team_logo))
     }
 }

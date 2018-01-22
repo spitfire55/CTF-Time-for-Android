@@ -1,6 +1,6 @@
 package re.spitfy.ctftime.data
 
-
+import java.io.Serializable
 
 data class Team(
         val Academic : String = "",
@@ -16,6 +16,11 @@ data class Team(
         val Members : List<Member> = emptyList(),
         val Name: String = "",
         val NameCaseInsensitive: String = "",
-        val Scores: Map<String, Float> = emptyMap()
-)
+        val OtherLinks : List<String> = emptyList(),
+        val Scores: Map<String, Score> = emptyMap(),
+        val Skype: String = "",
+        val Telegram : String = "",
+        val Twitter: String = "",
+        val Website : String = ""
+) : Serializable
 

@@ -13,7 +13,7 @@
         android:background="@color/colorSecondaryLight">
 
         <android.support.v7.widget.AppCompatAutoCompleteTextView
-            android:id="@+id/team_search_text_view"
+            android:id="@+id/appCompatAutoCompleteTextView_team_searchTeam"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -33,19 +33,19 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ProgressBar
-            android:id="@+id/team_search_progressbar"
+            android:id="@+id/progressBar_team_searchTeamStatus"
             android:layout_height="24sp"
             android:layout_width="wrap_content"
             android:indeterminate="true"
             android:indeterminateTint="@color/colorPrimaryDark"
             android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="@id/team_search_text_view"
-            app:layout_constraintBottom_toBottomOf="@id/team_search_text_view"
-            app:layout_constraintTop_toTopOf="@id/team_search_text_view"/>
+            app:layout_constraintEnd_toEndOf="@id/appCompatAutoCompleteTextView_team_searchTeam"
+            app:layout_constraintBottom_toBottomOf="@id/appCompatAutoCompleteTextView_team_searchTeam"
+            app:layout_constraintTop_toTopOf="@id/appCompatAutoCompleteTextView_team_searchTeam"/>
 
 
         <android.support.v7.widget.CardView
-            android:id="@+id/cardView"
+            android:id="@+id/card_team_generalInfo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -56,23 +56,24 @@
             app:cardBackgroundColor="@color/colorSecondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/team_search_text_view"
+            app:layout_constraintTop_toBottomOf="@+id/appCompatAutoCompleteTextView_team_searchTeam"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="151dp">
 
             <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout_team_generalInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <android.support.constraint.Guideline
-                    android:id="@+id/center_guideline"
+                    android:id="@+id/guideline_team_verticalCenterGuide"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     app:layout_constraintGuide_percent="0.5" />
 
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/image_team_logo"
                     android:layout_width="0dp"
                     android:layout_height="125dp"
                     android:layout_marginBottom="16dp"
@@ -82,7 +83,7 @@
                     android:contentDescription="@string/team_profile_image"
                     android:paddingTop="24dp"
                     android:scaleType="fitCenter"
-                    app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+                    app:layout_constraintBottom_toTopOf="@+id/appCompatText_team_name"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -90,34 +91,24 @@
                     tools:layout_editor_absoluteX="170dp"
                     tools:layout_editor_absoluteY="88dp" />
 
-                <LinearLayout
-                    android:id="@+id/linearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="12dp"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView2"
-                    tools:layout_editor_absoluteX="0dp"
-                    tools:layout_editor_absoluteY="157dp">
-
-                    <android.support.v7.widget.AppCompatTextView
-                        android:id="@+id/textView"
+                <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/appCompatText_team_name"
                         android:layout_width="match_parent"
                         android:layout_height="75dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="8dp"
                         android:layout_marginEnd="24dp"
                         android:layout_marginStart="24dp"
                         android:gravity="center"
                         android:text="@string/default_name"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        app:autoSizeTextType="uniform" />
-                </LinearLayout>
+                        app:autoSizeTextType="uniform"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/image_team_logo"/>
 
                 <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/appCompatText_team_rankValue"
                     android:layout_width="wrap_content"
                     android:layout_height="32sp"
                     android:layout_marginTop="8dp"
@@ -125,25 +116,25 @@
                     android:text="@string/default_rank"
                     android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
                     app:autoSizeTextType="uniform"
-                    app:layout_constraintEnd_toStartOf="@+id/center_guideline"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline_team_verticalCenterGuide"
                     app:layout_constraintHorizontal_bias="0.65"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+                    app:layout_constraintTop_toBottomOf="@+id/appCompatText_team_name" />
 
                 <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/appCompatText_team_rankDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="16sp"
                     android:layout_marginTop="8dp"
                     android:text="@string/rank"
                     android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-                    app:layout_constraintEnd_toStartOf="@+id/center_guideline"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline_team_verticalCenterGuide"
                     app:layout_constraintHorizontal_bias="0.65"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                    app:layout_constraintTop_toBottomOf="@+id/appCompatText_team_rankValue" />
 
                 <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/appCompatText_team_pointsValue"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_marginEnd="0dp"
@@ -155,11 +146,11 @@
                     app:autoSizeTextType="uniform"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.35"
-                    app:layout_constraintStart_toEndOf="@+id/center_guideline"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+                    app:layout_constraintStart_toEndOf="@+id/guideline_team_verticalCenterGuide"
+                    app:layout_constraintTop_toBottomOf="@+id/appCompatText_team_name" />
 
                 <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/textView5"
+                    android:id="@+id/appCompatText_team_pointsDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="0dp"
@@ -168,12 +159,28 @@
                     android:text="@string/points"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.35"
-                    app:layout_constraintStart_toEndOf="@+id/center_guideline"
-                    app:layout_constraintTop_toBottomOf="@+id/textView4"
+                    app:layout_constraintStart_toEndOf="@+id/guideline_team_verticalCenterGuide"
+                    app:layout_constraintTop_toBottomOf="@+id/appCompatText_team_pointsValue"
                     tools:layout_editor_absoluteX="199dp"
                     tools:layout_editor_absoluteY="209dp" />
 
             </android.support.constraint.ConstraintLayout>
+
+            <FrameLayout
+                android:id="@+id/card_team_error"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    app:autoSizeTextType="uniform"
+                    android:text="@string/team_load_error"/>
+
+            </FrameLayout>
+
         </android.support.v7.widget.CardView>
 
     </android.support.constraint.ConstraintLayout>

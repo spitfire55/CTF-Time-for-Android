@@ -115,8 +115,6 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
         if (firstTimePreference != null && firstTimePreference) {
             showSpinnerFeatureDiscovery()
             activity?.getSharedPreferences("pref", Context.MODE_PRIVATE)?.edit()?.putBoolean("rankingsFirstTime", false)?.apply()
-        } else {
-
         }
     }
 
@@ -132,8 +130,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
         super.onViewCreated(view, savedInstanceState)
         activity?.toolbar?.title = "Team Rankings"
         // Rankings RecyclerView instantiation
-        recyclerView = view.
-                findViewById(R.id.team_ranking_recyclerview)
+        recyclerView = view.findViewById(R.id.recyclerView_rankings_content)
 
         progressBarLoadingRankings = view.findViewById(R.id.progressBarRankings)
         progressBarLoadingRankingsBig = view.findViewById(R.id.progressBarRankingsBig)
@@ -149,8 +146,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
         rankingLayoutManager.orientation = LinearLayoutManager.VERTICAL
         recyclerView.layoutManager = rankingLayoutManager
 
-        rankingsRecyclerViewScrollListener =
-                object : RankingsRecyclerViewScrollListener(rankingLayoutManager) {
+        rankingsRecyclerViewScrollListener = object : RankingsRecyclerViewScrollListener(rankingLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
                 if (moreData) {
                     getRankings()
@@ -223,10 +219,10 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                         progressBarLoadingRankingsBig.visibility = View.GONE
                         adapter.notifyDataSetChanged()
                     } else {
-                        //TODO: Small textview as bottom row saying no more teams available
+                        //TODO: Small text view as bottom row saying no more teams available
                     }
                 } else {
-                    //TODO: Large textview saying error retrieving contents
+                    //TODO: Large text view saying error retrieving contents
                 }
             }
         }

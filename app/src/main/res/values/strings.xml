@@ -25,4 +25,6 @@
     <string name="Country">Country</string>
     <string name="rankings_spinner_hint">In order to change which year\'s rankings you want to view, select the year from this spinner</string>
 
+    <string name="team_load_error">Failed to load team.</string>
+
 </resources>
