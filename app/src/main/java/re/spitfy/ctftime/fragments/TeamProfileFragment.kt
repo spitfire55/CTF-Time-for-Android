@@ -66,20 +66,35 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
         autoCompleteTextView.setOnClickListener {
             autoCompleteTextView.hint = ""
             autoCompleteTextView.isCursorVisible = true
-            autoCompleteTextView.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onNothingSelected(parent: AdapterView<*>?) {}
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    val newTeamName = parent?.getItemAtPosition(position).toString()
-                    if (newTeamName != team?.Name) {
-                        activity?.supportFragmentManager
-                                ?.beginTransaction()
-                                ?.replace(
-                                        R.id.container,
-                                        TeamProfileFragment.newInstance(teamArray[position]),
-                                        newTeamName
-                                )
-                                ?.commit()
-                    }
+        }
+        autoCompleteTextView.onItemClickListener = AdapterView.OnItemClickListener{
+            adapterView, _, pos, _ ->
+                val newTeamName = adapterView?.getItemAtPosition(pos).toString()
+                if (newTeamName != team?.Name) {
+                    activity?.supportFragmentManager
+                            ?.beginTransaction()
+                            ?.replace(
+                                    R.id.container,
+                                    TeamProfileFragment.newInstance(teamArray[pos]),
+                                    newTeamName
+                            )
+                            ?.commit()
+                }
+        }
+        autoCompleteTextView.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                Log.d("TEST", teamNameArray[position])
+                val newTeamName = parent?.getItemAtPosition(position).toString()
+                if (newTeamName != team?.Name) {
+                    activity?.supportFragmentManager
+                            ?.beginTransaction()
+                            ?.replace(
+                                    R.id.container,
+                                    TeamProfileFragment.newInstance(teamArray[position]),
+                                    newTeamName
+                            )
+                            ?.commit()
                 }
             }
         }
@@ -107,7 +122,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
                 if (charSequence != null && charSequence.isNotBlank()) {
                     autoCompleteTextView.dismissDropDown()
                     autoCompleteProgressBar.visibility = View.VISIBLE
-                    retrieveTeamNameSuggestions(charSequence.toString().toLowerCase())
+                    retrieveTeamNameSuggestions(charSequence.toString().trim().toLowerCase())
                     Log.d(TAG, charSequence.toString().toLowerCase())
                 } else {
                     autoCompleteTextView.dismissDropDown()
@@ -144,9 +159,12 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
                                 )
                                 autoCompleteTextView.setAdapter(arrayAdapter)
                                 autoCompleteProgressBar.visibility = View.INVISIBLE
+                                autoCompleteTextView.showDropDown()
                             } else {
                                 Log.d(TAG, "Null activity")
                             }
+                        } else {
+                            autoCompleteProgressBar.visibility = View.INVISIBLE
                         }
                     }
                 }
@@ -160,7 +178,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
         rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_pointsValue).text = team?.Scores?.get("2017")?.Points?.toString()
         rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_rankValue).text = team?.Scores?.get("2017")?.Rank?.toString()
         Picasso.with(context)
-                .load("https://ctftime.org/static/images/f/${team?.CountryCode?.toLowerCase()}.png")
+                .load("https://ctftime.org/${team?.Logo}")
                 .into(rootView.findViewById<ImageView>(R.id.image_team_logo))
     }
 }

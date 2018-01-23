@@ -2,6 +2,7 @@ package re.spitfy.ctftime.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -32,7 +33,6 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
     private lateinit var listenerRegistration : ListenerRegistration
     private lateinit var lastDocument : DocumentSnapshot
     private var rankingsList : MutableList<Team> = ArrayList()
-    private var page = 0
     private var moreData = true
 
     companion object
@@ -160,81 +160,65 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
 
     override fun onPause() {
         super.onPause()
-        detachCollectionSnapshotListener()
+        listenerRegistration.remove()
     }
 
     private fun getFirstRankings() {
         progressBarLoadingRankingsBig.visibility = View.VISIBLE
         rankingsRecyclerViewScrollListener.resetState()
-        attachCollectionSnapshotListener()
+        val eventListener = object : EventListener<QuerySnapshot> {
+            override fun onEvent(snapshot: QuerySnapshot?, e: FirebaseFirestoreException?) {
+                Log.d(TAG, "Event logged")
+                if (snapshot != null && !snapshot.isEmpty) {
+                    rankingsList.clear()
+                    for (document in snapshot.documents) {
+                        try {
+                            Log.d(TAG, document.getString("Name"))
+                            rankingsList.add(document.toObject(Team::class.java))
+                            lastDocument = document
+                        } catch (e : RuntimeException) {
+                            Log.d(TAG, document.id)
+                        }
+                    }
+                    progressBarLoadingRankingsBig.visibility = View.GONE
+                    adapter.notifyDataSetChanged()
+                } else {
+                    //TODO: Large textView saying error retrieving contents
+                }
+            }
+        }
+        listenerRegistration = collectionRef
+                .orderBy("Scores.$year.Points", Query.Direction.DESCENDING)
+                .whereGreaterThan("Scores.$year.Points", 0)
+                .limit(PAGE_LENGTH)
+                .addSnapshotListener(eventListener)
     }
 
     fun getRankings() {
 
         progressBarLoadingRankings.visibility = View.VISIBLE
-        collectionRef.orderBy("Scores.$year", Query.Direction.DESCENDING)
-                .whereGreaterThan("Scores.$year", 0)
+        collectionRef.orderBy("Scores.$year.Points", Query.Direction.DESCENDING)
+                .whereGreaterThan("Scores.$year.Points", 0)
                 .limit(PAGE_LENGTH)
                 .startAfter(lastDocument)
                 .get()
                 .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val querySnapshot = task.result
-                        if (!querySnapshot.isEmpty) {
+                    if (task.isSuccessful && !task.result.isEmpty) {
+                            val querySnapshot = task.result
                             if (querySnapshot.documents.size < 50) {
                                 moreData = false
                             }
                             for (document in querySnapshot.documents) {
-                                val team = document.toObject(Team::class.java)
-                                rankingsList.add(team)
+                                rankingsList.add(document.toObject(Team::class.java))
                                 lastDocument = document
                             }
-                            Log.d(TAG, "Loaded more data for page $page")
-                            page++
                             progressBarLoadingRankings.visibility = View.GONE
                             adapter.notifyDataSetChanged()
-                        }
-                        else {
+                    } else {
                             progressBarLoadingRankings.visibility = View.GONE
                             moreData = false
-                        }
-                    } else {
-                        progressBarLoadingRankings.visibility = View.GONE
-                        moreData = false
                     }
                 }
-    }
-
-    private fun attachCollectionSnapshotListener() {
-        val eventListener = object : EventListener<QuerySnapshot> {
-            override fun onEvent(snapshot: QuerySnapshot?, e: FirebaseFirestoreException?) {
-                if (snapshot != null) {
-                    if (!snapshot.isEmpty) {
-                        rankingsList.clear()
-                        for (document in snapshot.documents) {
-                            val ranking = document.toObject(Team::class.java)
-                            rankingsList.add(ranking)
-                            lastDocument = document
-                        }
-                        progressBarLoadingRankingsBig.visibility = View.GONE
-                        adapter.notifyDataSetChanged()
-                    } else {
-                        //TODO: Small text view as bottom row saying no more teams available
-                    }
-                } else {
-                    //TODO: Large text view saying error retrieving contents
-                }
-            }
-        }
-        listenerRegistration = collectionRef
-                .orderBy("Scores.$year", Query.Direction.DESCENDING)
-                .whereGreaterThan("Scores.$year", 0)
-                .limit(PAGE_LENGTH)
-                .addSnapshotListener(eventListener)
-    }
-
-    private fun detachCollectionSnapshotListener() {
-        listenerRegistration.remove()
     }
 
     private fun showSpinnerFeatureDiscovery() {
@@ -243,11 +227,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
         if (spinnerItem != null) {
             TapTargetView.showFor(
                     activity,
-                    TapTarget.forView(
-                            spinnerItem,
-                            "Select the Year",
-                            spinnerDescription
-                    )
+                    TapTarget.forView(spinnerItem, "Select the Year", spinnerDescription)
                             .cancelable(true)
                             .drawShadow(true)
                             .textColor(android.R.color.black)
@@ -259,7 +239,8 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                         override fun onOuterCircleClick(view: TapTargetView?) {
                             view?.dismiss(true)
                         }
-                    })
+                    }
+            )
         }
     }
 }
