@@ -27,6 +27,9 @@ class TeamPastResultsAdapter(
         var lConvertView = convertView
         val viewHolder : ViewHolder
         val score = getItem(position)
+        if (score.Score.Rank == 0) {
+            return null
+        }
         if (lConvertView == null) {
             viewHolder = ViewHolder()
             lConvertView = LayoutInflater.from(ctx).inflate(R.layout.team_scores_item, parent, false)

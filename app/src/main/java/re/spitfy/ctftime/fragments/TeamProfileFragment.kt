@@ -206,7 +206,9 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
         val listViewAdapterCount = listViewAdapter.count
         for (i in 0 until listViewAdapterCount) {
             val item = listViewAdapter.getView(i, null, null)
-            linearLayout.addView(item)
+            if (item != null) {
+                linearLayout.addView(item)
+            }
         }
     }
 }
