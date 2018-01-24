@@ -15,6 +15,9 @@ import android.widget.*
 import com.google.firebase.firestore.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.appbar_main.*
+import re.spitfy.ctftime.adapters.TeamPastResultsAdapter
+import re.spitfy.ctftime.data.Score
+import re.spitfy.ctftime.data.ScoreAndYear
 import re.spitfy.ctftime.data.Team
 import java.io.Serializable
 
@@ -101,6 +104,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
         setAutoCompleteListener()
         if (team != null) {
             populateGeneralCard(view)
+            populatePastResultsCard(view)
         }
     }
 
@@ -172,13 +176,37 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
     }
 
     private fun populateGeneralCard(rootView : View) {
-        rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_pointsDescription).text = resources.getString(R.string.points)
-        rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_rankDescription).text = resources.getString(R.string.rank)
+        rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_pointsDescription).text =
+                resources.getString(R.string.points)
+        rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_rankDescription).text =
+                resources.getString(R.string.rank)
         rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_name).text = team?.Name
-        rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_pointsValue).text = team?.Scores?.get("2017")?.Points?.toString()
-        rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_rankValue).text = team?.Scores?.get("2017")?.Rank?.toString()
+        rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_pointsValue).text =
+                team?.Scores?.get("2017")?.Points?.toString()
+        rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_rankValue).text =
+                team?.Scores?.get("2017")?.Rank?.toString()
         Picasso.with(context)
                 .load("https://ctftime.org/${team?.Logo}")
                 .into(rootView.findViewById<ImageView>(R.id.image_team_logo))
+    }
+
+    private fun populatePastResultsCard(rootView : View) {
+        val linearLayout = rootView.findViewById<LinearLayout>(R.id.linear_team_pastResults)
+        val scoreYearArray = ArrayList<ScoreAndYear>()
+        val scores = team?.Scores
+        scores?.forEach {
+            scoreYearArray.add(
+                    ScoreAndYear(
+                            it.key,
+                            Score(it.value.Points, it.value.Rank)
+                    )
+            )
+        }
+        val listViewAdapter = TeamPastResultsAdapter(context, scoreYearArray)
+        val listViewAdapterCount = listViewAdapter.count
+        for (i in 0 until listViewAdapterCount) {
+            val item = listViewAdapter.getView(i, null, null)
+            linearLayout.addView(item)
+        }
     }
 }

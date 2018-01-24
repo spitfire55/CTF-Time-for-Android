@@ -17,7 +17,7 @@ data class Team(
         val Name: String = "",
         val NameCaseInsensitive: String = "",
         val OtherLinks : List<String> = emptyList(),
-        var Scores: Map<String, Score> = emptyMap(),
+        val Scores: Map<String, Score> = HashMap(),
         val Skype: String = "",
         val Telegram : String = "",
         val Twitter: String = "",
