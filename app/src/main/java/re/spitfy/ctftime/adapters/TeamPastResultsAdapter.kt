@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import re.spitfy.ctftime.R
-import re.spitfy.ctftime.data.Score
 import re.spitfy.ctftime.data.ScoreAndYear
 import re.spitfy.ctftime.fragments.TeamProfileFragment.Companion.TAG
 
@@ -32,7 +31,7 @@ class TeamPastResultsAdapter(
         }
         if (lConvertView == null) {
             viewHolder = ViewHolder()
-            lConvertView = LayoutInflater.from(ctx).inflate(R.layout.team_scores_item, parent, false)
+            lConvertView = LayoutInflater.from(ctx).inflate(R.layout.team_scores_row, parent, false)
             viewHolder.year = lConvertView.findViewById(R.id.appCompatText_team_pastScoresYear)
             viewHolder.rank = lConvertView.findViewById(R.id.appCompatText_team_pastScoresRank)
             viewHolder.points = lConvertView.findViewById(R.id.appCompatText_team_pastScoresPoints)

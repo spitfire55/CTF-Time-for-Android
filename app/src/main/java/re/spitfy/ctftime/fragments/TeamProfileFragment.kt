@@ -195,12 +195,14 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
         val scoreYearArray = ArrayList<ScoreAndYear>()
         val scores = team?.Scores
         scores?.forEach {
-            scoreYearArray.add(
-                    ScoreAndYear(
-                            it.key,
-                            Score(it.value.Points, it.value.Rank)
-                    )
-            )
+            if (it.value.Rank != 0) {
+                scoreYearArray.add(
+                        ScoreAndYear(
+                                it.key,
+                                Score(it.value.Points, it.value.Rank)
+                        )
+                )
+            }
         }
         val listViewAdapter = TeamPastResultsAdapter(context, scoreYearArray)
         val listViewAdapterCount = listViewAdapter.count

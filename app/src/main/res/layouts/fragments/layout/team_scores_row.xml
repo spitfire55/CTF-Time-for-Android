@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:padding="8dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/appCompatText_team_pastScoresYear"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/appCompatText_team_pastScoresRank"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="2017" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/appCompatText_team_pastScoresRank"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/appCompatText_team_pastScoresPoints"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toEndOf="@id/appCompatText_team_pastScoresYear"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="420" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/appCompatText_team_pastScoresPoints"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toEndOf="@id/appCompatText_team_pastScoresRank"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="1337.30" />
+
+</android.support.constraint.ConstraintLayout>
