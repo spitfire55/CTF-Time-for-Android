@@ -17,6 +17,8 @@
     <string name="teams">Teams</string>
     <string name="team_profile_image">Team Profile Image</string>
     <string name="previous_rankings">Previous Rankings</string>
+    <string name="team_members">Team Members</string>
+    <string name="team_aliases">Team Aliases</string>
 
     <string name="twenty_seventeen">2017</string>
     <string name="year">Year</string>
@@ -25,6 +27,7 @@
     <string name="points">Points</string>
     <string name="Country">Country</string>
     <string name="rankings_spinner_hint">In order to change which year\'s rankings you want to view, select the year from this spinner</string>
+    <string name="team_search_hint">Enter the team name in the search bar above</string>
 
     <string name="team_load_error">Failed to load team.</string>
 

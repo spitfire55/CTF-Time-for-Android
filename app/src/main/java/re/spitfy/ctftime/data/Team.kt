@@ -4,7 +4,7 @@ import java.io.Serializable
 
 data class Team(
         val Academic : String = "",
-        val Aliases : List<String> = emptyList(),
+        val Aliases : List<String>? = emptyList(),
         val CountryCode : String = "",
         val Description : String = "",
         val Email : String = "",
@@ -13,7 +13,7 @@ data class Team(
         val Jabber : String = "",
         val LinkedIn : String = "",
         val Logo : String = "",
-        val Members : List<Member> = emptyList(),
+        val Members : List<Member>? = emptyList(),
         val Name: String = "",
         val NameCaseInsensitive: String = "",
         val OtherLinks : List<String> = emptyList(),

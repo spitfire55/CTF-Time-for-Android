@@ -17,6 +17,8 @@ import android.widget.*
 import com.google.firebase.firestore.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.appbar_main.*
+import re.spitfy.ctftime.adapters.TeamAliasesAdapter
+import re.spitfy.ctftime.adapters.TeamMembersAdapter
 import re.spitfy.ctftime.adapters.TeamPastResultsAdapter
 import re.spitfy.ctftime.data.Score
 import re.spitfy.ctftime.data.ScoreAndYear
@@ -101,11 +103,16 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
         }
         setAutoCompleteListener()
         if (team.Name != ""){
-            populateGeneralCard(view, team)
+            populateGeneralCard(view)
             populatePastResultsCard(view)
+            populateMembersCard(view)
+            populateAliasesCard(view)
         } else {
             view.findViewById<CardView>(R.id.card_team_generalInfo).visibility = View.GONE
             view.findViewById<CardView>(R.id.card_team_pastResults).visibility = View.GONE
+            view.findViewById<CardView>(R.id.card_team_members).visibility = View.GONE
+            view.findViewById<CardView>(R.id.card_team_aliases).visibility = View.GONE
+            view.findViewById<FrameLayout>(R.id.frame_team_blank).visibility = View.VISIBLE
         }
     }
 
@@ -139,7 +146,6 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
     }
 
     private fun retrieveTeamNameSuggestions(input: String) {
-        //TODO: Upper case vs lower case teams, caching results by searching upon installation
         db.collection("Teams")
                 .orderBy("NameCaseInsensitive", Query.Direction.ASCENDING)
                 .whereGreaterThanOrEqualTo("NameCaseInsensitive", input)
@@ -164,6 +170,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
                                 )
                                 autoCompleteTextView.setAdapter(arrayAdapter)
                                 autoCompleteProgressBar.visibility = View.INVISIBLE
+                                autoCompleteTextView.dismissDropDown()
                                 autoCompleteTextView.showDropDown()
                             } else {
                                 Log.d(TAG, "Null activity")
@@ -176,7 +183,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
 
     }
 
-    private fun populateGeneralCard(rootView : View, team : Team) {
+    private fun populateGeneralCard(rootView : View) {
 
         val currentRankingsContainerView =
                 rootView.findViewById<ConstraintLayout>(R.id.constraintLayout_team_currentRanking)
@@ -191,12 +198,34 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
             currentRankingsContainerView.visibility = View.GONE
         } else {
             rankValueView.text = team.Scores["2017"]?.Rank?.toString()
-            pointsValueView.text = team.Scores["2017"]?.Points.toString()
+            pointsValueView.text = team.Scores["2017"]?.Points?.formatToString(2)
 
         }
-        Picasso.with(context)
-                .load("https://ctftime.org/${team.Logo}")
-                .into(rootView.findViewById<ImageView>(R.id.image_team_logo))
+        if (team.Logo != "/static/images/nologo.png") {
+            Picasso.with(context)
+                    .load("https://ctftime.org/${team.Logo}")
+                    .into(rootView.findViewById<ImageView>(R.id.image_team_logo))
+        } else {
+            rootView.findViewById<ConstraintLayout>(R.id.constraintLayout_team_logo).visibility =
+                    View.GONE
+        }
+    }
+
+    private fun populateAliasesCard(rootView: View) {
+        val linearLayout = rootView.findViewById<LinearLayout>(R.id.linear_team_aliases)
+        linearLayout.dividerDrawable.alpha = 12
+        val aliases = team.Aliases
+        if (aliases == null) {
+            rootView.findViewById<CardView>(R.id.card_team_members).visibility = View.GONE
+        } else {
+            val listViewAdapter = TeamAliasesAdapter(context, aliases)
+            val membersLength = aliases.size
+            (0 until membersLength).forEach {
+                val item = listViewAdapter.getView(it, null, null)
+                linearLayout.addView(item)
+            }
+        }
+
     }
 
     private fun populatePastResultsCard(rootView : View) {
@@ -207,7 +236,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
         scores.asSequence()
                 .filter{ it.value.Rank != 0 && it.key != "2017" }
                 .mapTo(scoreYearArray) {
-                    ScoreAndYear(it.key, Score(it.value.Points, it.value.Rank))
+                    ScoreAndYear(it.key, Score(it.value.Points.formatToDouble(2), it.value.Rank))
                 }
         if (scoreYearArray.size == 0) {
             rootView.findViewById<CardView>(R.id.card_team_pastResults).visibility = View.GONE
@@ -222,4 +251,24 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
             }
         }
     }
+
+    private fun populateMembersCard(rootView: View) {
+        val linearLayout = rootView.findViewById<LinearLayout>(R.id.linear_team_members)
+        linearLayout.dividerDrawable.alpha = 12
+        val members = team.Members
+        if (members == null) {
+            rootView.findViewById<CardView>(R.id.card_team_members).visibility = View.GONE
+        } else {
+            val listViewAdapter = TeamMembersAdapter(context, members!!)
+            val membersLength = members.size
+            (0 until membersLength).forEach {
+                val item = listViewAdapter.getView(it, null, null)
+                linearLayout.addView(item)
+            }
+        }
+
+    }
+
+    private fun Double.formatToString(digits: Int) = java.lang.String.format("%.${digits}f", this)
+    private fun Double.formatToDouble(digits: Int) = this.formatToString(digits).toDouble()
 }
