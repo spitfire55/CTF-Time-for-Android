@@ -2,7 +2,9 @@ package re.spitfy.ctftime.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.AppCompatTextView
+import android.support.v7.widget.CardView
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -25,7 +27,7 @@ import java.io.Serializable
 class TeamProfileFragment : android.support.v4.app.Fragment()
 {
     private val db : FirebaseFirestore = FirebaseFirestore.getInstance()
-    private var team : Team? = null
+    private lateinit var team : Team
     private lateinit var autoCompleteTextView : AutoCompleteTextView
     private lateinit var autoCompleteProgressBar : ProgressBar
     private var teamNameArray : MutableList<String> = ArrayList()
@@ -46,17 +48,13 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val teamArg = arguments?.getSerializable("Team") as? Team
-        if (teamArg != null) {
-            team = teamArg
-        } else {
-            //TODO: Setup Fragment to load dummy frame on first load
-        }
+        team = teamArg ?: Team()
         //TODO: Check for internet connectivity
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_team_profile, container, false)
-        rootView?.tag = TAG + team?.Name
+        rootView?.tag = TAG + team.Name
         return rootView
     }
 
@@ -73,7 +71,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
         autoCompleteTextView.onItemClickListener = AdapterView.OnItemClickListener{
             adapterView, _, pos, _ ->
                 val newTeamName = adapterView?.getItemAtPosition(pos).toString()
-                if (newTeamName != team?.Name) {
+                if (newTeamName != team.Name) {
                     activity?.supportFragmentManager
                             ?.beginTransaction()
                             ?.replace(
@@ -89,7 +87,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 Log.d("TEST", teamNameArray[position])
                 val newTeamName = parent?.getItemAtPosition(position).toString()
-                if (newTeamName != team?.Name) {
+                if (newTeamName != team.Name) {
                     activity?.supportFragmentManager
                             ?.beginTransaction()
                             ?.replace(
@@ -102,9 +100,12 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
             }
         }
         setAutoCompleteListener()
-        if (team != null) {
-            populateGeneralCard(view)
+        if (team.Name != ""){
+            populateGeneralCard(view, team)
             populatePastResultsCard(view)
+        } else {
+            view.findViewById<CardView>(R.id.card_team_generalInfo).visibility = View.GONE
+            view.findViewById<CardView>(R.id.card_team_pastResults).visibility = View.GONE
         }
     }
 
@@ -175,41 +176,49 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
 
     }
 
-    private fun populateGeneralCard(rootView : View) {
-        rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_pointsDescription).text =
-                resources.getString(R.string.points)
-        rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_rankDescription).text =
-                resources.getString(R.string.rank)
-        rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_name).text = team?.Name
-        rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_pointsValue).text =
-                team?.Scores?.get("2017")?.Points?.toString()
-        rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_rankValue).text =
-                team?.Scores?.get("2017")?.Rank?.toString()
+    private fun populateGeneralCard(rootView : View, team : Team) {
+
+        val currentRankingsContainerView =
+                rootView.findViewById<ConstraintLayout>(R.id.constraintLayout_team_currentRanking)
+        val rankValueView =
+                rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_rankValue)
+        val pointsValueView =
+                rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_pointsValue)
+        val nameView = rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_name)
+
+        nameView.text = team.Name
+        if (team.Scores["2017"] == null || team.Scores["2017"]?.Rank == 0) {
+            currentRankingsContainerView.visibility = View.GONE
+        } else {
+            rankValueView.text = team.Scores["2017"]?.Rank?.toString()
+            pointsValueView.text = team.Scores["2017"]?.Points.toString()
+
+        }
         Picasso.with(context)
-                .load("https://ctftime.org/${team?.Logo}")
+                .load("https://ctftime.org/${team.Logo}")
                 .into(rootView.findViewById<ImageView>(R.id.image_team_logo))
     }
 
     private fun populatePastResultsCard(rootView : View) {
         val linearLayout = rootView.findViewById<LinearLayout>(R.id.linear_team_pastResults)
+        linearLayout.dividerDrawable.alpha = 12
         val scoreYearArray = ArrayList<ScoreAndYear>()
-        val scores = team?.Scores
-        scores?.forEach {
-            if (it.value.Rank != 0) {
-                scoreYearArray.add(
-                        ScoreAndYear(
-                                it.key,
-                                Score(it.value.Points, it.value.Rank)
-                        )
-                )
-            }
-        }
-        val listViewAdapter = TeamPastResultsAdapter(context, scoreYearArray)
-        val listViewAdapterCount = listViewAdapter.count
-        for (i in 0 until listViewAdapterCount) {
-            val item = listViewAdapter.getView(i, null, null)
-            if (item != null) {
-                linearLayout.addView(item)
+        val scores = team.Scores
+        scores.asSequence()
+                .filter{ it.value.Rank != 0 && it.key != "2017" }
+                .mapTo(scoreYearArray) {
+                    ScoreAndYear(it.key, Score(it.value.Points, it.value.Rank))
+                }
+        if (scoreYearArray.size == 0) {
+            rootView.findViewById<CardView>(R.id.card_team_pastResults).visibility = View.GONE
+        } else {
+            val listViewAdapter = TeamPastResultsAdapter(context, scoreYearArray)
+            val listViewAdapterCount = listViewAdapter.count
+            (0 until listViewAdapterCount).forEach {
+                val item = listViewAdapter.getView(it, null, null)
+                if (item != null) {
+                    linearLayout.addView(item)
+                }
             }
         }
     }
