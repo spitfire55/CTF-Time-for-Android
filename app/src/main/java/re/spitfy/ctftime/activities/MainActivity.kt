@@ -14,6 +14,7 @@ import android.view.View
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 import re.spitfy.ctftime.R
+import re.spitfy.ctftime.fragments.HomeFragment
 import re.spitfy.ctftime.fragments.TeamProfileFragment
 import re.spitfy.ctftime.fragments.TeamRankingsFragment
 
@@ -52,9 +53,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             window.navigationBarColor = ContextCompat.getColor(this, android.R.color.white)
             mainView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-        } else {
-            window.navigationBarColor = ContextCompat.getColor(this, android.R.color.transparent)
         }
+        displayNavView(R.id.nav_home)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -95,9 +95,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var fragment: Fragment? = null
 
         when (viewId) {
+            R.id.nav_home -> {
+                val savedFragment = supportFragmentManager.findFragmentByTag(getString(R.string.toolbar_home))
+                fragment = savedFragment ?: HomeFragment()
+            }
             R.id.nav_team_ranking -> {
                 val savedFragment = supportFragmentManager.findFragmentByTag(getString(R.string.toolbar_team_rankings))
-                fragment = savedFragment ?: TeamRankingsFragment.newInstance("2017")
+                fragment = savedFragment ?: TeamRankingsFragment.newInstance("2018")
                 title = getString(R.string.toolbar_team_rankings)
             }
             R.id.nav_team_profile -> {

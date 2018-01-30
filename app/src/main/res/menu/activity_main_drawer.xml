@@ -5,6 +5,11 @@
 
     <!-- <group> -->
         <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_flag"
+            android:title="@string/toolbar_home" />
+
+        <item
             android:id="@+id/nav_team_ranking"
             android:icon="@drawable/ic_menu_list"
             android:title="@string/toolbar_team_rankings" />

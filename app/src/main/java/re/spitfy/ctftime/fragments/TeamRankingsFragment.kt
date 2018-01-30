@@ -3,6 +3,7 @@ package re.spitfy.ctftime.fragments
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.view.ViewCompat
+import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -14,6 +15,7 @@ import com.getkeepsafe.taptargetview.TapTargetView
 
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.appbar_main.*
+import kotlinx.android.synthetic.main.fragment_rankings.*
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.adapters.RankingsFirestoreAdapter
 import re.spitfy.ctftime.data.Team
@@ -26,6 +28,8 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
     private lateinit var adapter : RankingsFirestoreAdapter
     private lateinit var db : FirebaseFirestore
     private lateinit var collectionRef : CollectionReference
+    private lateinit var rankingsFooter : FrameLayout
+    private lateinit var rankingsFooterText : AppCompatTextView
     private lateinit var progressBarLoadingRankings : CardView
     private lateinit var progressBarLoadingRankingsBig : ProgressBar
     private lateinit var recyclerView : RecyclerView
@@ -39,7 +43,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
     {
         const val TAG = "TeamRankingsFragment"
         const val PAGE_LENGTH : Long = 50
-        val years = listOf("2017", "2016", "2015", "2014", "2013", "2012", "2011")
+        val years = listOf("2018", "2017", "2016", "2015", "2014", "2013", "2012", "2011")
         fun newInstance(year: String): TeamRankingsFragment {
             val args = Bundle()
             args.putString("YEAR", year)
@@ -134,8 +138,12 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
 
         progressBarLoadingRankings = view.findViewById(R.id.progressBarRankings)
         progressBarLoadingRankingsBig = view.findViewById(R.id.progressBarRankingsBig)
-        progressBarLoadingRankings.visibility = View.GONE
+        rankingsFooter = view.findViewById(R.id.frame_rankings_footer)
+        rankingsFooterText = view.findViewById(R.id.appCompatText_rankings_footer)
+        progressBarLoadingRankings.visibility = View.VISIBLE
         progressBarLoadingRankingsBig.visibility = View.GONE
+        rankingsFooter.visibility = View.GONE
+        rankingsFooterText.visibility = View.GONE
 
         adapter = RankingsFirestoreAdapter(rankingsList, year)
         recyclerView.adapter = adapter
@@ -196,7 +204,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
 
     fun getRankings() {
 
-        progressBarLoadingRankings.visibility = View.VISIBLE
+        rankingsFooter.visibility = View.VISIBLE
         collectionRef.orderBy("Scores.$year.Points", Query.Direction.DESCENDING)
                 .whereGreaterThan("Scores.$year.Points", 0)
                 .limit(PAGE_LENGTH)
@@ -212,10 +220,15 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                                 rankingsList.add(document.toObject(Team::class.java))
                                 lastDocument = document
                             }
-                            progressBarLoadingRankings.visibility = View.GONE
+                            if (moreData) {
+                                rankingsFooter.visibility = View.GONE
+                            } else {
+                                progressBarLoadingRankings.visibility = View.GONE
+                                rankingsFooter.visibility = View.VISIBLE
+                                rankingsFooterText.visibility = View.VISIBLE
+                            }
                             adapter.notifyDataSetChanged()
                     } else {
-                            progressBarLoadingRankings.visibility = View.GONE
                             moreData = false
                     }
                 }

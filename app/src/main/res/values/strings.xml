@@ -12,6 +12,7 @@
     <string name="default_country">US</string>
     <string name="default_points">9001</string>
 
+    <string name="toolbar_home">Home</string>
     <string name="toolbar_team_rankings">Team Rankings</string>
     <string name="toolbar_team_profiles">Team Profiles</string>
     <string name="teams">Teams</string>
@@ -28,6 +29,7 @@
     <string name="Country">Country</string>
     <string name="rankings_spinner_hint">In order to change which year\'s rankings you want to view, select the year from this spinner</string>
     <string name="team_search_hint">Enter the team name in the search bar above</string>
+    <string name="rankings_end_hint">No more rankings available</string>
 
     <string name="team_load_error">Failed to load team.</string>
 

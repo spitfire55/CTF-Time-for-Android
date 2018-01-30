@@ -5,8 +5,12 @@
     android:id="@+id/appCompatText_team_item"
     android:layout_width="match_parent"
     android:layout_height="48dp"
+    app:layout_rowWeight="1"
+    android:layout_weight="1"
     android:padding="8dp"
+    android:textAlignment="center"
     android:gravity="center"
+    app:layout_columnWeight="1"
     android:textColor="@android:color/black"
     app:autoSizeTextType="uniform">
 </android.support.v7.widget.AppCompatTextView>

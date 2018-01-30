@@ -187,6 +187,8 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
 
         val currentRankingsContainerView =
                 rootView.findViewById<ConstraintLayout>(R.id.constraintLayout_team_currentRanking)
+        val currentRankingsDividerView =
+                rootView.findViewById<View>(R.id.view_team_nameCurrentScoreSeperator)
         val rankValueView =
                 rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_rankValue)
         val pointsValueView =
@@ -194,11 +196,12 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
         val nameView = rootView.findViewById<AppCompatTextView>(R.id.appCompatText_team_name)
 
         nameView.text = team.Name
-        if (team.Scores["2017"] == null || team.Scores["2017"]?.Rank == 0) {
+        if (team.Scores["2018"] == null || team.Scores["2018"]?.Rank == 0) {
             currentRankingsContainerView.visibility = View.GONE
+            currentRankingsDividerView.visibility = View.GONE
         } else {
-            rankValueView.text = team.Scores["2017"]?.Rank?.toString()
-            pointsValueView.text = team.Scores["2017"]?.Points?.formatToString(2)
+            rankValueView.text = team.Scores["2018"]?.Rank?.toString()
+            pointsValueView.text = team.Scores["2018"]?.Points?.formatToString(2)
 
         }
         if (team.Logo != "/static/images/nologo.png") {
@@ -212,29 +215,30 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
     }
 
     private fun populateAliasesCard(rootView: View) {
-        val linearLayout = rootView.findViewById<LinearLayout>(R.id.linear_team_aliases)
-        linearLayout.dividerDrawable.alpha = 12
+        val aliasView = rootView.findViewById<LinearLayout>(R.id.linear_team_aliases)
+        aliasView.dividerDrawable.alpha = 12
         val aliases = team.Aliases
         if (aliases == null) {
-            rootView.findViewById<CardView>(R.id.card_team_members).visibility = View.GONE
+            rootView.findViewById<CardView>(R.id.card_team_aliases).visibility = View.GONE
         } else {
-            val listViewAdapter = TeamAliasesAdapter(context, aliases)
-            val membersLength = aliases.size
-            (0 until membersLength).forEach {
-                val item = listViewAdapter.getView(it, null, null)
-                linearLayout.addView(item)
+            val aliasAdapter = TeamAliasesAdapter(context, aliases)
+            (0 until aliases.size).forEach {
+                val item = aliasAdapter.getView(it, null, null)
+                if (item != null) {
+                    aliasView.addView(item)
+                }
             }
         }
 
     }
 
     private fun populatePastResultsCard(rootView : View) {
-        val linearLayout = rootView.findViewById<LinearLayout>(R.id.linear_team_pastResults)
-        linearLayout.dividerDrawable.alpha = 12
+        val pastResultsView = rootView.findViewById<LinearLayout>(R.id.linear_team_pastResults)
+        pastResultsView.dividerDrawable.alpha = 12
         val scoreYearArray = ArrayList<ScoreAndYear>()
         val scores = team.Scores
         scores.asSequence()
-                .filter{ it.value.Rank != 0 && it.key != "2017" }
+                .filter{ it.value.Rank != 0 && it.key != "2018" }
                 .mapTo(scoreYearArray) {
                     ScoreAndYear(it.key, Score(it.value.Points.formatToDouble(2), it.value.Rank))
                 }
@@ -242,31 +246,29 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
             rootView.findViewById<CardView>(R.id.card_team_pastResults).visibility = View.GONE
         } else {
             val listViewAdapter = TeamPastResultsAdapter(context, scoreYearArray)
-            val listViewAdapterCount = listViewAdapter.count
-            (0 until listViewAdapterCount).forEach {
+            (0 until scoreYearArray.size).forEach {
                 val item = listViewAdapter.getView(it, null, null)
                 if (item != null) {
-                    linearLayout.addView(item)
+                    pastResultsView.addView(item)
                 }
             }
         }
     }
 
     private fun populateMembersCard(rootView: View) {
-        val linearLayout = rootView.findViewById<LinearLayout>(R.id.linear_team_members)
-        linearLayout.dividerDrawable.alpha = 12
+        val gridLayout = rootView.findViewById<android.support.v7.widget.GridLayout>(R.id.grid_team_members)
         val members = team.Members
         if (members == null) {
             rootView.findViewById<CardView>(R.id.card_team_members).visibility = View.GONE
         } else {
-            val listViewAdapter = TeamMembersAdapter(context, members!!)
+            val memberNames = members.map{ it.Name }
+            val listViewAdapter = TeamMembersAdapter(context, memberNames)
             val membersLength = members.size
             (0 until membersLength).forEach {
                 val item = listViewAdapter.getView(it, null, null)
-                linearLayout.addView(item)
+                gridLayout.addView(item)
             }
         }
-
     }
 
     private fun Double.formatToString(digits: Int) = java.lang.String.format("%.${digits}f", this)

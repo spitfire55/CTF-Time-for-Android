@@ -1,6 +1,7 @@
 package re.spitfy.ctftime.adapters
 
 import android.content.Context
+import android.support.v7.widget.AppCompatTextView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +12,8 @@ import re.spitfy.ctftime.data.Member
 
 class TeamMembersAdapter(
         private val ctx : Context?,
-        scores : List<Member>
-) : ArrayAdapter<Member>(ctx, 0, scores) {
+        scores : List<String>
+) : ArrayAdapter<String>(ctx, 0, scores) {
 
     private class ViewHolder {
         internal var member: TextView? = null
@@ -24,14 +25,13 @@ class TeamMembersAdapter(
         val member = getItem(position)
         if (lConvertView == null) {
             viewHolder = ViewHolder()
-            lConvertView = LayoutInflater.from(ctx).inflate(R.layout.team_generic_row, parent, false)
-            viewHolder.member = lConvertView.findViewById(R.id.appCompatText_team_item)
-            lConvertView.tag = viewHolder
+            lConvertView = LayoutInflater.from(ctx).inflate(R.layout.team_generic_row, parent, false) as? AppCompatTextView
+            viewHolder.member = lConvertView?.findViewById(R.id.appCompatText_team_item)
+            lConvertView?.tag = viewHolder
         } else {
             viewHolder = lConvertView.tag as ViewHolder
         }
-
-        viewHolder.member?.text = member.Name
+        viewHolder.member?.text = member
         return lConvertView
     }
 }
