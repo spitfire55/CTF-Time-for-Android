@@ -2,7 +2,6 @@ package re.spitfy.ctftime.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.view.ViewCompat
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
@@ -15,7 +14,6 @@ import com.getkeepsafe.taptargetview.TapTargetView
 
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.appbar_main.*
-import kotlinx.android.synthetic.main.fragment_rankings.*
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.adapters.RankingsFirestoreAdapter
 import re.spitfy.ctftime.data.Team
@@ -106,8 +104,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                                     R.id.container,
                                     TeamRankingsFragment.newInstance(newYear),
                                     newYear
-                            )
-                            ?.commit()
+                            )?.commit()
                 }
             }
 
@@ -172,7 +169,9 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
     }
 
     private fun getFirstRankings() {
-        progressBarLoadingRankingsBig.visibility = View.VISIBLE
+        if (rankingsList.size == 0) {
+            progressBarLoadingRankingsBig.visibility = View.VISIBLE
+        }
         rankingsRecyclerViewScrollListener.resetState()
         val eventListener = object : EventListener<QuerySnapshot> {
             override fun onEvent(snapshot: QuerySnapshot?, e: FirebaseFirestoreException?) {

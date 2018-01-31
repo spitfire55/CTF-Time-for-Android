@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.CardView
+import android.support.v7.widget.GridLayout
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import re.spitfy.ctftime.R
 import android.util.Log
+import android.view.Gravity
 import android.widget.*
 import com.google.firebase.firestore.*
 import com.squareup.picasso.Picasso
@@ -215,8 +217,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
     }
 
     private fun populateAliasesCard(rootView: View) {
-        val aliasView = rootView.findViewById<LinearLayout>(R.id.linear_team_aliases)
-        aliasView.dividerDrawable.alpha = 12
+        val aliasView = rootView.findViewById<GridLayout>(R.id.grid_team_aliases)
         val aliases = team.Aliases
         if (aliases == null) {
             rootView.findViewById<CardView>(R.id.card_team_aliases).visibility = View.GONE
@@ -224,9 +225,12 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
             val aliasAdapter = TeamAliasesAdapter(context, aliases)
             (0 until aliases.size).forEach {
                 val item = aliasAdapter.getView(it, null, null)
-                if (item != null) {
-                    aliasView.addView(item)
-                }
+                val params = GridLayout.LayoutParams()
+                params.columnSpec = GridLayout.spec(it % 3, 1.0f)
+                params.rowSpec = GridLayout.spec(it / 3, GridLayout.BASELINE, 1.0f)
+                params.setGravity(Gravity.CENTER)
+                item?.layoutParams = params
+                aliasView.addView(item)
             }
         }
 
@@ -234,7 +238,6 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
 
     private fun populatePastResultsCard(rootView : View) {
         val pastResultsView = rootView.findViewById<LinearLayout>(R.id.linear_team_pastResults)
-        pastResultsView.dividerDrawable.alpha = 12
         val scoreYearArray = ArrayList<ScoreAndYear>()
         val scores = team.Scores
         scores.asSequence()
@@ -266,6 +269,11 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
             val membersLength = members.size
             (0 until membersLength).forEach {
                 val item = listViewAdapter.getView(it, null, null)
+                val params = GridLayout.LayoutParams()
+                params.columnSpec = GridLayout.spec(it % 3, 1.0f)
+                params.rowSpec = GridLayout.spec(it / 3, GridLayout.BASELINE, 1.0f)
+                params.setGravity(Gravity.CENTER)
+                item?.layoutParams = params
                 gridLayout.addView(item)
             }
         }

@@ -65,7 +65,6 @@
             android:padding="8dp"
             android:text="@string/rankings_end_hint"
             android:textColor="@android:color/darker_gray"
-            android:background="@android:color/white"
             android:textAlignment="center"
             app:autoSizeTextType="uniform" />
 

@@ -36,7 +36,6 @@ abstract class RankingsRecyclerViewScrollListener(val layoutManager : LinearLayo
         // If it isn’t currently loading, we check to see if we have breached
         // the visibleThreshold and need to reload more data.
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
-        // threshold should reflect how many total columns there are too
         if (!loading && lastVisibleItemPosition + visibleThreshold > totalItemCount) {
             loading = true
             currentPage++
@@ -49,6 +48,6 @@ abstract class RankingsRecyclerViewScrollListener(val layoutManager : LinearLayo
         previousTotalItemCount = 0
         loading = true
     }
-
+    // Implementation-specific data fetch
     abstract fun onLoadMore(page: Int, totalItemsCount : Int, view: RecyclerView?)
 }

@@ -2,8 +2,10 @@ package re.spitfy.ctftime.activities
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
@@ -13,6 +15,7 @@ import android.view.MenuItem
 import android.view.View
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
+import org.jetbrains.anko.toast
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.fragments.HomeFragment
 import re.spitfy.ctftime.fragments.TeamProfileFragment
@@ -25,6 +28,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var navView: NavigationView
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var toolbar: android.support.v7.widget.Toolbar
+    private var secondBackClickFlag = false
+    private val backPressHandler = Handler()
+    private val backPressRunnable = Runnable { secondBackClickFlag = false }
     private var title: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,30 +96,58 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         outState?.putString(getString(R.string.title), this.title)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        backPressHandler.removeCallbacks(backPressRunnable)
+    }
+
+    override fun onBackPressed() {
+        if (secondBackClickFlag || supportFragmentManager.backStackEntryCount != 0) {
+            super.onBackPressed()
+            return
+        }
+        secondBackClickFlag = true
+        toast("Press back button again to exit")
+        backPressHandler.postDelayed(backPressRunnable, 2000)
+    }
+
     private fun displayNavView(viewId: Int) {
         var title = getString(R.string.app_name) // default
         var fragment: Fragment? = null
+        var savedFragment : Fragment? = null
 
         when (viewId) {
             R.id.nav_home -> {
-                val savedFragment = supportFragmentManager.findFragmentByTag(getString(R.string.toolbar_home))
+                savedFragment = supportFragmentManager.findFragmentByTag(getString(R.string.app_name))
                 fragment = savedFragment ?: HomeFragment()
+                title = getString(R.string.app_name)
             }
             R.id.nav_team_ranking -> {
-                val savedFragment = supportFragmentManager.findFragmentByTag(getString(R.string.toolbar_team_rankings))
-                fragment = savedFragment ?: TeamRankingsFragment.newInstance("2018")
+                savedFragment = supportFragmentManager.findFragmentByTag(getString(R.string.toolbar_team_rankings))
+                fragment = savedFragment ?: TeamRankingsFragment.newInstance(getString(R.string.current_year))
                 title = getString(R.string.toolbar_team_rankings)
             }
             R.id.nav_team_profile -> {
-                fragment = TeamProfileFragment.newInstance(null)
+                savedFragment = supportFragmentManager.findFragmentByTag(getString(R.string.toolbar_team_profiles))
+                fragment = savedFragment ?: TeamProfileFragment.newInstance(null)
                 title = getString(R.string.toolbar_team_profiles)
             }
         }
         // gets fragment if it is already in the stack
-        supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.container, fragment, title)
-                .commit()
+        if (savedFragment != null) {
+            supportFragmentManager.popBackStack(title, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, fragment, title)
+                    .addToBackStack(this.title)
+                    .commit()
+        } else {
+            supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, fragment, title)
+                    .addToBackStack(this.title)
+                    .commit()
+        }
         this.toolbar.title = title
         this.title = title
 
