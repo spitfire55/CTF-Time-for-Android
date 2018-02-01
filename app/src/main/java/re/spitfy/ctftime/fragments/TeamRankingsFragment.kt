@@ -1,5 +1,6 @@
 package re.spitfy.ctftime.fragments
 
+import android.app.FragmentManager
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.AppCompatTextView
@@ -14,6 +15,7 @@ import com.getkeepsafe.taptargetview.TapTargetView
 
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.appbar_main.*
+import org.jetbrains.anko.support.v4.act
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.adapters.RankingsFirestoreAdapter
 import re.spitfy.ctftime.data.Team
@@ -98,13 +100,19 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 val newYear = p0?.getItemAtPosition(p2).toString()
                 if (year != newYear) {
+                    activity?.supportFragmentManager?.popBackStack(
+                            getString(R.string.toolbar_team_profiles),
+                            FragmentManager.POP_BACK_STACK_INCLUSIVE
+                    )
                     activity?.supportFragmentManager
                             ?.beginTransaction()
                             ?.replace(
                                     R.id.container,
                                     TeamRankingsFragment.newInstance(newYear),
                                     newYear
-                            )?.commit()
+
+                            )?.addToBackStack(getString(R.string.toolbar_team_rankings))
+                            ?.commit()
                 }
             }
 
@@ -117,14 +125,6 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
             showSpinnerFeatureDiscovery()
             activity?.getSharedPreferences("pref", Context.MODE_PRIVATE)?.edit()?.putBoolean("rankingsFirstTime", false)?.apply()
         }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        item?.setOnMenuItemClickListener({
-            it -> Log.d(TAG, it.toString())
-            true
-        })
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

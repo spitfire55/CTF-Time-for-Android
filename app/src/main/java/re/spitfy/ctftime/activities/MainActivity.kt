@@ -3,6 +3,7 @@ package re.spitfy.ctftime.activities
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
+import android.os.PersistableBundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var navView: NavigationView
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var toolbar: android.support.v7.widget.Toolbar
+    private lateinit var currentFragment : Fragment
     private var secondBackClickFlag = false
     private val backPressHandler = Handler()
     private val backPressRunnable = Runnable { secondBackClickFlag = false }
@@ -60,7 +62,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             window.navigationBarColor = ContextCompat.getColor(this, android.R.color.white)
             mainView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
         }
-        displayNavView(R.id.nav_home)
+        currentFragment = if (savedInstanceState != null) {
+            supportFragmentManager.getFragment(savedInstanceState, this.title)
+        } else {
+            acquireFragment(R.id.nav_home)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putString(getString(R.string.title), this.title)
+        supportFragmentManager.putFragment(outState, this.title, currentFragment)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -91,11 +103,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerToggle.onConfigurationChanged(newConfig)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        outState?.putString(getString(R.string.title), this.title)
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         backPressHandler.removeCallbacks(backPressRunnable)
@@ -111,9 +118,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         backPressHandler.postDelayed(backPressRunnable, 2000)
     }
 
-    private fun displayNavView(viewId: Int) {
+    private fun acquireFragment(viewId: Int) : android.support.v4.app.Fragment {
         var title = getString(R.string.app_name) // default
-        var fragment: Fragment? = null
+        var fragment = Fragment()
         var savedFragment : Fragment? = null
 
         when (viewId) {
@@ -133,24 +140,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 title = getString(R.string.toolbar_team_profiles)
             }
         }
+        if (title == this.title) {
+            drawerLayout.closeDrawers()
+            return currentFragment
+        }
         // gets fragment if it is already in the stack
         if (savedFragment != null) {
             supportFragmentManager.popBackStack(title, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-            supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.container, fragment, title)
-                    .addToBackStack(this.title)
-                    .commit()
-        } else {
-            supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.container, fragment, title)
-                    .addToBackStack(this.title)
-                    .commit()
         }
-        this.toolbar.title = title
-        this.title = title
+        return fragment
+    }
 
+    private fun displayNavView(viewId: Int) {
+        currentFragment = acquireFragment(viewId)
+        supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.container, currentFragment, title)
+                .addToBackStack(this.title)
+                .commit()
         drawerLayout.closeDrawers()
     }
 

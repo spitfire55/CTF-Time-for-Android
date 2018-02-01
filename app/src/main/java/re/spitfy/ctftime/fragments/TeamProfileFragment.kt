@@ -1,6 +1,6 @@
 package re.spitfy.ctftime.fragments
 
-import android.content.Context
+import android.app.FragmentManager
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.AppCompatTextView
@@ -8,13 +8,9 @@ import android.support.v7.widget.CardView
 import android.support.v7.widget.GridLayout
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import re.spitfy.ctftime.R
 import android.util.Log
-import android.view.Gravity
+import android.view.*
 import android.widget.*
 import com.google.firebase.firestore.*
 import com.squareup.picasso.Picasso
@@ -25,6 +21,7 @@ import re.spitfy.ctftime.adapters.TeamPastResultsAdapter
 import re.spitfy.ctftime.data.Score
 import re.spitfy.ctftime.data.ScoreAndYear
 import re.spitfy.ctftime.data.Team
+import re.spitfy.ctftime.utils.Utils
 import java.io.Serializable
 
 
@@ -36,6 +33,8 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
     private lateinit var autoCompleteProgressBar : ProgressBar
     private var teamNameArray : MutableList<String> = ArrayList()
     private var teamArray : MutableList<Team> = ArrayList()
+    private var query : Query? = null
+    private var queryRegistration : ListenerRegistration?  = null
 
     companion object {
         const val TAG = "TeamProfileFragment"
@@ -49,47 +48,64 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val teamArg = arguments?.getSerializable("Team") as? Team
-        team = teamArg ?: Team()
-        //TODO: Check for internet connectivity
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_team_profile, container, false)
+        team = if (savedInstanceState != null) {
+            savedInstanceState.getSerializable("Team") as Team
+        } else {
+            arguments?.getSerializable("Team") as? Team ?: Team()
+        }
         rootView?.tag = TAG + team.Name
         return rootView
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable("Team", team as? Serializable)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        queryRegistration?.remove()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         activity?.toolbar?.title = "Team Profile"
         autoCompleteTextView = view.findViewById(R.id.appCompatAutoCompleteTextView_team_searchTeam)
         autoCompleteProgressBar = view.findViewById(R.id.progressBar_team_searchTeamStatus)
+        autoCompleteTextView.setOnFocusChangeListener( { _, hasFocus ->
+            if (hasFocus) {
+                autoCompleteTextView.hint = ""
+                autoCompleteTextView.isCursorVisible = true
+            }
+        })
         autoCompleteTextView.setOnClickListener {
             autoCompleteTextView.hint = ""
             autoCompleteTextView.isCursorVisible = true
         }
         autoCompleteTextView.onItemClickListener = AdapterView.OnItemClickListener{
             adapterView, _, pos, _ ->
-                val newTeamName = adapterView?.getItemAtPosition(pos).toString()
-                if (newTeamName != team.Name) {
-                    activity?.supportFragmentManager
-                            ?.beginTransaction()
-                            ?.replace(
-                                    R.id.container,
-                                    TeamProfileFragment.newInstance(teamArray[pos]),
-                                    newTeamName
-                            )
-                            ?.commit()
-                }
+            Utils.hideKeyboardFrom(context, view)
+            val newTeamName = adapterView?.getItemAtPosition(pos).toString()
+            if (newTeamName != team.Name) {
+                activity?.supportFragmentManager?.popBackStack(
+                        getString(R.string.team_profile_image),
+                        FragmentManager.POP_BACK_STACK_INCLUSIVE
+                )
+                activity?.supportFragmentManager
+                        ?.beginTransaction()
+                        ?.replace(
+                                R.id.container,
+                                TeamProfileFragment.newInstance(teamArray[pos]),
+                                newTeamName
+                        )?.addToBackStack(getString(R.string.toolbar_team_profiles))
+                        ?.commit()
+            }
         }
         autoCompleteTextView.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                Log.d("TEST", teamNameArray[position])
                 val newTeamName = parent?.getItemAtPosition(position).toString()
                 if (newTeamName != team.Name) {
                     activity?.supportFragmentManager
@@ -118,17 +134,6 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
         }
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        val inputManager = activity?.
-                getSystemService(Context.INPUT_METHOD_SERVICE)
-                as InputMethodManager?
-        inputManager?.hideSoftInputFromWindow(
-                activity?.currentFocus?.windowToken,
-                InputMethodManager.HIDE_NOT_ALWAYS
-        )
-    }
-
     private fun setAutoCompleteListener() {
         autoCompleteTextView.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -136,9 +141,10 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
                 if (charSequence != null && charSequence.isNotBlank()) {
                     autoCompleteTextView.dismissDropDown()
                     autoCompleteProgressBar.visibility = View.VISIBLE
+                    queryRegistration?.remove() // remove previous request
                     retrieveTeamNameSuggestions(charSequence.toString().trim().toLowerCase())
-                    Log.d(TAG, charSequence.toString().toLowerCase())
                 } else {
+                    queryRegistration?.remove()
                     autoCompleteTextView.dismissDropDown()
                     autoCompleteProgressBar.visibility = View.INVISIBLE
                 }
@@ -148,41 +154,38 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
     }
 
     private fun retrieveTeamNameSuggestions(input: String) {
-        db.collection("Teams")
+        query = db.collection("Teams")
                 .orderBy("NameCaseInsensitive", Query.Direction.ASCENDING)
                 .whereGreaterThanOrEqualTo("NameCaseInsensitive", input)
                 .whereLessThanOrEqualTo("NameCaseInsensitive", input + "\uf8ff")
                 .limit(SUGGESTION_LIMIT)
-                .get()
-                .addOnCompleteListener {
-                    task -> if (task.isSuccessful) {
-                        val querySnapshot = task.result
-                        if (!querySnapshot.isEmpty) {
-                            teamArray.clear()
-                            teamNameArray.clear()
-                            for (document in querySnapshot.documents) {
-                                teamArray.add(document.toObject(Team::class.java))
-                                teamNameArray.add(document.getString("Name"))
-                            }
-                            if (activity != null) {
-                                val arrayAdapter = ArrayAdapter<String>(
-                                        activity,
-                                        android.R.layout.select_dialog_item,
-                                        teamNameArray
-                                )
-                                autoCompleteTextView.setAdapter(arrayAdapter)
-                                autoCompleteProgressBar.visibility = View.INVISIBLE
-                                autoCompleteTextView.dismissDropDown()
-                                autoCompleteTextView.showDropDown()
-                            } else {
-                                Log.d(TAG, "Null activity")
-                            }
-                        } else {
-                            autoCompleteProgressBar.visibility = View.INVISIBLE
-                        }
-                    }
+        queryRegistration = query?.addSnapshotListener {
+            querySnapshot: QuerySnapshot?,
+            _: FirebaseFirestoreException?
+            ->
+            if (querySnapshot != null && !querySnapshot.isEmpty) {
+                teamArray.clear()
+                teamNameArray.clear()
+                for (document in querySnapshot.documents) {
+                    teamArray.add(document.toObject(Team::class.java))
+                    teamNameArray.add(document.getString("Name"))
                 }
-
+                if (activity != null) {
+                    val arrayAdapter = ArrayAdapter<String>(
+                            activity,
+                            android.R.layout.select_dialog_item,
+                            teamNameArray
+                    )
+                    autoCompleteTextView.setAdapter(arrayAdapter)
+                    autoCompleteProgressBar.visibility = View.INVISIBLE
+                    autoCompleteTextView.showDropDown()
+                } else {
+                    Log.d(TAG, "Null activity")
+                }
+            } else {
+                autoCompleteProgressBar.visibility = View.INVISIBLE
+            }
+        }
     }
 
     private fun populateGeneralCard(rootView : View) {
