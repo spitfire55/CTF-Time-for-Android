@@ -3,7 +3,6 @@ package re.spitfy.ctftime.activities
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
-import android.os.PersistableBundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -120,44 +119,40 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun acquireFragment(viewId: Int) : android.support.v4.app.Fragment {
         var title = getString(R.string.app_name) // default
-        var fragment = Fragment()
-        var savedFragment : Fragment? = null
+        var fragment : Fragment? = null
 
         when (viewId) {
             R.id.nav_home -> {
-                savedFragment = supportFragmentManager.findFragmentByTag(getString(R.string.app_name))
-                fragment = savedFragment ?: HomeFragment()
+                fragment = supportFragmentManager.findFragmentByTag(getString(R.string.toolbar_home)) ?: HomeFragment()
                 title = getString(R.string.app_name)
             }
             R.id.nav_team_ranking -> {
-                savedFragment = supportFragmentManager.findFragmentByTag(getString(R.string.toolbar_team_rankings))
-                fragment = savedFragment ?: TeamRankingsFragment.newInstance(getString(R.string.current_year))
+                fragment = TeamRankingsFragment.newInstance(getString(R.string.current_year))
                 title = getString(R.string.toolbar_team_rankings)
             }
             R.id.nav_team_profile -> {
-                savedFragment = supportFragmentManager.findFragmentByTag(getString(R.string.toolbar_team_profiles))
-                fragment = savedFragment ?: TeamProfileFragment.newInstance(null)
+                fragment = TeamProfileFragment.newInstance(null)
                 title = getString(R.string.toolbar_team_profiles)
             }
         }
         if (title == this.title) {
-            drawerLayout.closeDrawers()
             return currentFragment
         }
-        // gets fragment if it is already in the stack
-        if (savedFragment != null) {
-            supportFragmentManager.popBackStack(title, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-        }
-        return fragment
+        return fragment ?: Fragment()
     }
 
     private fun displayNavView(viewId: Int) {
-        currentFragment = acquireFragment(viewId)
-        supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.container, currentFragment, title)
-                .addToBackStack(this.title)
-                .commit()
+        val tempFragment = acquireFragment(viewId)
+        if (tempFragment != currentFragment) {
+            // Clear stack of current menu item fragments (all Rankings, all Teams, etc.) but preserve Home
+            supportFragmentManager.popBackStack(title, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            currentFragment = tempFragment
+            supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, currentFragment, title)
+                    .addToBackStack(this.title)
+                    .commit()
+        }
         drawerLayout.closeDrawers()
     }
 

@@ -15,7 +15,6 @@ import com.getkeepsafe.taptargetview.TapTargetView
 
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.appbar_main.*
-import org.jetbrains.anko.support.v4.act
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.adapters.RankingsFirestoreAdapter
 import re.spitfy.ctftime.data.Team
@@ -24,7 +23,6 @@ import re.spitfy.ctftime.utils.RankingsRecyclerViewScrollListener
 class TeamRankingsFragment : android.support.v4.app.Fragment()
 {
     private lateinit var year: String
-    private lateinit var rankingsYear : String
     private lateinit var adapter : RankingsFirestoreAdapter
     private lateinit var db : FirebaseFirestore
     private lateinit var collectionRef : CollectionReference
@@ -58,7 +56,6 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
         val yearArg = arguments?.getString("YEAR")
         if (yearArg != null) {
             year = yearArg
-            rankingsYear = "${year}_Rankings"
         } else {
             Log.d(
                     TAG,
@@ -83,6 +80,9 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                 false
         )
         rootView.tag = TAG + year
+        if (savedInstanceState != null) {
+            year = savedInstanceState.getString("Year", "2018")
+        }
 
         setHasOptionsMenu(true)
 
@@ -100,18 +100,13 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 val newYear = p0?.getItemAtPosition(p2).toString()
                 if (year != newYear) {
-                    activity?.supportFragmentManager?.popBackStack(
-                            getString(R.string.toolbar_team_profiles),
-                            FragmentManager.POP_BACK_STACK_INCLUSIVE
-                    )
                     activity?.supportFragmentManager
                             ?.beginTransaction()
                             ?.replace(
                                     R.id.container,
                                     TeamRankingsFragment.newInstance(newYear),
                                     newYear
-
-                            )?.addToBackStack(getString(R.string.toolbar_team_rankings))
+                            )?.addToBackStack(null)
                             ?.commit()
                 }
             }
@@ -166,6 +161,11 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
     override fun onPause() {
         super.onPause()
         listenerRegistration.remove()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("Year", year)
     }
 
     private fun getFirstRankings() {

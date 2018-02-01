@@ -1,6 +1,5 @@
 package re.spitfy.ctftime.fragments
 
-import android.app.FragmentManager
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.AppCompatTextView
@@ -89,17 +88,18 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
             Utils.hideKeyboardFrom(context, view)
             val newTeamName = adapterView?.getItemAtPosition(pos).toString()
             if (newTeamName != team.Name) {
-                activity?.supportFragmentManager?.popBackStack(
-                        getString(R.string.team_profile_image),
-                        FragmentManager.POP_BACK_STACK_INCLUSIVE
-                )
+                if (team.Name == "") {
+                    // don't preserve blank Team fragment
+                    activity?.supportFragmentManager?.popBackStack()
+                }
+                autoCompleteTextView.setText("")
                 activity?.supportFragmentManager
                         ?.beginTransaction()
                         ?.replace(
                                 R.id.container,
                                 TeamProfileFragment.newInstance(teamArray[pos]),
                                 newTeamName
-                        )?.addToBackStack(getString(R.string.toolbar_team_profiles))
+                        )?.addToBackStack(null)
                         ?.commit()
             }
         }
@@ -108,13 +108,14 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val newTeamName = parent?.getItemAtPosition(position).toString()
                 if (newTeamName != team.Name) {
+                    autoCompleteTextView.setText("")
                     activity?.supportFragmentManager
                             ?.beginTransaction()
                             ?.replace(
                                     R.id.container,
                                     TeamProfileFragment.newInstance(teamArray[position]),
                                     newTeamName
-                            )
+                            )?.addToBackStack(null)
                             ?.commit()
                 }
             }
@@ -126,6 +127,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
             populateMembersCard(view)
             populateAliasesCard(view)
         } else {
+            // hide blank views
             view.findViewById<CardView>(R.id.card_team_generalInfo).visibility = View.GONE
             view.findViewById<CardView>(R.id.card_team_pastResults).visibility = View.GONE
             view.findViewById<CardView>(R.id.card_team_members).visibility = View.GONE
