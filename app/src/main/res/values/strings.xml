@@ -20,6 +20,7 @@
     <string name="previous_rankings">Previous Rankings</string>
     <string name="team_members">Team Members</string>
     <string name="team_aliases">Team Aliases</string>
+    <string name="top_ten_card_title">Top Ten Teams</string>
 
     <string name="current_year">2018</string>
     <string name="year">Year</string>
@@ -30,6 +31,7 @@
     <string name="rankings_spinner_hint">In order to change which year\'s rankings you want to view, select the year from this spinner</string>
     <string name="team_search_hint">Enter the team name in the search bar above</string>
     <string name="rankings_end_hint">No more rankings available</string>
+    <string name="team_flag_description">Team country flag</string>
 
     <string name="team_load_error">Failed to load team.</string>
 

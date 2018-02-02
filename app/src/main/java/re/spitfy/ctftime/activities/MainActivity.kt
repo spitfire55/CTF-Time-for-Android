@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var navView: NavigationView
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var toolbar: android.support.v7.widget.Toolbar
-    private lateinit var currentFragment : Fragment
+    private var currentFragment : Fragment? = null
     private var secondBackClickFlag = false
     private val backPressHandler = Handler()
     private val backPressRunnable = Runnable { secondBackClickFlag = false }
@@ -61,10 +61,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             window.navigationBarColor = ContextCompat.getColor(this, android.R.color.white)
             mainView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
         }
-        currentFragment = if (savedInstanceState != null) {
-            supportFragmentManager.getFragment(savedInstanceState, this.title)
+        if (savedInstanceState != null) {
+            currentFragment = supportFragmentManager.getFragment(savedInstanceState, this.title)
         } else {
-            acquireFragment(R.id.nav_home)
+            displayNavView(R.id.nav_home)
         }
     }
 
@@ -136,14 +136,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
         if (title == this.title) {
-            return currentFragment
+            return currentFragment ?: HomeFragment()
         }
+        this.title = title
         return fragment ?: Fragment()
     }
 
     private fun displayNavView(viewId: Int) {
         val tempFragment = acquireFragment(viewId)
-        if (tempFragment != currentFragment) {
+        if (currentFragment == null || tempFragment != currentFragment) {
             // Clear stack of current menu item fragments (all Rankings, all Teams, etc.) but preserve Home
             supportFragmentManager.popBackStack(title, FragmentManager.POP_BACK_STACK_INCLUSIVE)
             currentFragment = tempFragment

@@ -4,10 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:fillViewport="true"
     android:orientation="vertical"
-    android:scrollbars="vertical">
+    android:scrollbars="vertical"
+    android:background="@color/colorSecondary">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -34,8 +35,7 @@
             android:textSize="24sp"
             app:layout_constraintBottom_toTopOf="@id/constraintLayout_team_contents"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <ProgressBar
             android:id="@+id/progressBar_team_searchTeamStatus"
@@ -437,7 +437,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="@string/team_search_hint"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@android:color/black"
                     android:textSize="16sp" />
             </FrameLayout>
 

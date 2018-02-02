@@ -202,7 +202,6 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
     }
 
     fun getRankings() {
-
         rankingsFooter.visibility = View.VISIBLE
         collectionRef.orderBy("Scores.$year.Points", Query.Direction.DESCENDING)
                 .whereGreaterThan("Scores.$year.Points", 0)

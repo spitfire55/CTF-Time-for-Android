@@ -20,12 +20,11 @@ import re.spitfy.ctftime.adapters.TeamPastResultsAdapter
 import re.spitfy.ctftime.data.Score
 import re.spitfy.ctftime.data.ScoreAndYear
 import re.spitfy.ctftime.data.Team
-import re.spitfy.ctftime.utils.Utils
+import re.spitfy.ctftime.utils.*
 import java.io.Serializable
 
 
-class TeamProfileFragment : android.support.v4.app.Fragment()
-{
+class TeamProfileFragment : android.support.v4.app.Fragment() {
     private val db : FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var team : Team
     private lateinit var autoCompleteTextView : AutoCompleteTextView
@@ -54,7 +53,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
         } else {
             arguments?.getSerializable("Team") as? Team ?: Team()
         }
-        rootView?.tag = TAG + team.Name
+        rootView.tag = TAG + team.Name
         return rootView
     }
 
@@ -85,7 +84,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
         }
         autoCompleteTextView.onItemClickListener = AdapterView.OnItemClickListener{
             adapterView, _, pos, _ ->
-            Utils.hideKeyboardFrom(context, view)
+            hideKeyboardFrom(context, view)
             val newTeamName = adapterView?.getItemAtPosition(pos).toString()
             if (newTeamName != team.Name) {
                 if (team.Name == "") {
@@ -162,8 +161,8 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
                 .whereLessThanOrEqualTo("NameCaseInsensitive", input + "\uf8ff")
                 .limit(SUGGESTION_LIMIT)
         queryRegistration = query?.addSnapshotListener {
-            querySnapshot: QuerySnapshot?,
-            _: FirebaseFirestoreException?
+            querySnapshot,
+            _
             ->
             if (querySnapshot != null && !querySnapshot.isEmpty) {
                 teamArray.clear()
@@ -208,7 +207,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
             currentRankingsDividerView.visibility = View.GONE
         } else {
             rankValueView.text = team.Scores["2018"]?.Rank?.toString()
-            pointsValueView.text = team.Scores["2018"]?.Points?.formatToString(2)
+            pointsValueView.text = team.Scores["2018"]?.Points?.format(2)
 
         }
         if (team.Logo != "/static/images/nologo.png") {
@@ -248,7 +247,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
         scores.asSequence()
                 .filter{ it.value.Rank != 0 && it.key != "2018" }
                 .mapTo(scoreYearArray) {
-                    ScoreAndYear(it.key, Score(it.value.Points.formatToDouble(2), it.value.Rank))
+                    ScoreAndYear(it.key, Score(it.value.Points.format(2).toDouble(), it.value.Rank))
                 }
         if (scoreYearArray.size == 0) {
             rootView.findViewById<CardView>(R.id.card_team_pastResults).visibility = View.GONE
@@ -283,7 +282,4 @@ class TeamProfileFragment : android.support.v4.app.Fragment()
             }
         }
     }
-
-    private fun Double.formatToString(digits: Int) = java.lang.String.format("%.${digits}f", this)
-    private fun Double.formatToDouble(digits: Int) = this.formatToString(digits).toDouble()
 }

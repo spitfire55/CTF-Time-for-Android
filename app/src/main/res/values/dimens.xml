@@ -9,4 +9,5 @@
     <dimen name="focus_elevation">8dp</dimen>
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="feature_tap_title">20dp</dimen>
+    <dimen name="row_height">48dp</dimen>
 </resources>
