@@ -152,9 +152,17 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                     getRankings()
                 }
             }
+
+            override fun onScrolled(view: RecyclerView?, dx: Int, dy: Int) {
+                super.onScrolled(view, dx, dy)
+                if (view != null && view.canScrollVertically(1) && !moreData) { // get rid of end of rankings footer
+                    rankingsFooter.visibility = View.GONE
+                } else if (view != null && !view.canScrollVertically(1) && !moreData) { // re-display footer
+                    rankingsFooter.visibility = View.VISIBLE
+                }
+            }
         }
         recyclerView.addOnScrollListener(rankingsRecyclerViewScrollListener)
-
         getFirstRankings() // initial query
     }
 

@@ -131,7 +131,7 @@ class TeamProfileFragment : android.support.v4.app.Fragment() {
             view.findViewById<CardView>(R.id.card_team_pastResults).visibility = View.GONE
             view.findViewById<CardView>(R.id.card_team_members).visibility = View.GONE
             view.findViewById<CardView>(R.id.card_team_aliases).visibility = View.GONE
-            view.findViewById<FrameLayout>(R.id.frame_team_blank).visibility = View.VISIBLE
+            view.findViewById<ConstraintLayout>(R.id.frame_team_blank).visibility = View.VISIBLE
         }
     }
 

@@ -67,7 +67,7 @@
             android:text="@string/rankings_end_hint"
             android:textColor="@android:color/darker_gray"
             android:textAlignment="center"
-            app:autoSizeTextType="uniform" />
+            app:autoSizeTextType="uniform"/>
 
     </FrameLayout>
 

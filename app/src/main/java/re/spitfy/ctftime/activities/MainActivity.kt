@@ -69,9 +69,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
         outState?.putString(getString(R.string.title), this.title)
-        supportFragmentManager.putFragment(outState, this.title, currentFragment)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -81,9 +80,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 return true
             }
         }
-        if (drawerToggle.onOptionsItemSelected(item)) {
+        if (drawerToggle.onOptionsItemSelected(item))
             return true
-        }
         return super.onOptionsItemSelected(item)
     }
 

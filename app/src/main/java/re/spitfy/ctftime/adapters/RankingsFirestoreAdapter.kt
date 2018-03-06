@@ -12,11 +12,11 @@ class RankingsFirestoreAdapter(
         private val year: String
 ) : RecyclerView.Adapter<TeamRankViewHolder>() {
 
-    override fun onBindViewHolder(holder: TeamRankViewHolder?, position: Int) {
-        holder?.bind(rankingsList[position], year, position + 1)
+    override fun onBindViewHolder(holder: TeamRankViewHolder, position: Int) {
+        holder.bind(rankingsList[position], year, position + 1)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TeamRankViewHolder? {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TeamRankViewHolder {
         val v = LayoutInflater
                 .from(parent.context)
                 .inflate(R.layout.team_rankings_row, parent, false)

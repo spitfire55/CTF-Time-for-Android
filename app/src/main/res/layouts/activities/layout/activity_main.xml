@@ -16,7 +16,8 @@
         <android.support.design.widget.CoordinatorLayout
             android:id="@+id/MainCoordinatorLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+            android:background="@color/colorSecondary">
 
             <include
                 android:id="@+id/appbar"
