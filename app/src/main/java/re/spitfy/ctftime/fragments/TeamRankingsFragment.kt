@@ -1,8 +1,8 @@
 package re.spitfy.ctftime.fragments
 
-import android.app.FragmentManager
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
@@ -25,6 +25,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
     private lateinit var year: String
     private lateinit var adapter : RankingsFirestoreAdapter
     private lateinit var db : FirebaseFirestore
+    private lateinit var swipeRefreshLayout : SwipeRefreshLayout
     private lateinit var collectionRef : CollectionReference
     private lateinit var rankingsFooter : FrameLayout
     private lateinit var rankingsFooterText : AppCompatTextView
@@ -125,6 +126,12 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.toolbar?.title = "Team Rankings"
+        // Swipe Refresh Layout instantiation
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout_rankings)
+        swipeRefreshLayout.setOnRefreshListener {
+            refreshContent()
+        }
+
         // Rankings RecyclerView instantiation
         recyclerView = view.findViewById(R.id.recyclerView_rankings_content)
 
@@ -163,7 +170,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
             }
         }
         recyclerView.addOnScrollListener(rankingsRecyclerViewScrollListener)
-        getFirstRankings() // initial query
+        getFirstRankings(false) // initial query
     }
 
     override fun onPause() {
@@ -176,8 +183,8 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
         outState.putString("Year", year)
     }
 
-    private fun getFirstRankings() {
-        if (rankingsList.size == 0) {
+    private fun getFirstRankings(isRefreshing: Boolean) {
+        if (rankingsList.size == 0 && !isRefreshing) {
             progressBarLoadingRankingsBig.visibility = View.VISIBLE
         }
         rankingsRecyclerViewScrollListener.resetState()
@@ -200,6 +207,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                 } else {
                     //TODO: Large textView saying error retrieving contents
                 }
+                swipeRefreshLayout.isRefreshing = false
             }
         }
         listenerRegistration = collectionRef
@@ -238,6 +246,11 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                             moreData = false
                     }
                 }
+    }
+
+    private fun refreshContent() {
+        rankingsList.clear()
+        getFirstRankings(true)
     }
 
     private fun showSpinnerFeatureDiscovery() {

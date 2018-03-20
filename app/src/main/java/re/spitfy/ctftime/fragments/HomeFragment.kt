@@ -1,7 +1,7 @@
 package re.spitfy.ctftime.fragments
 
-import android.app.ActionBar
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +15,7 @@ import re.spitfy.ctftime.data.Team
 class HomeFragment : android.support.v4.app.Fragment() {
     private val db : FirebaseFirestore = FirebaseFirestore.getInstance()
     private var topTenTeams : MutableList<Team> = ArrayList()
+    private lateinit var swipeRefreshLayout : SwipeRefreshLayout
 
     companion object {
         const val TAG = "HomeFragment"
@@ -28,18 +29,22 @@ class HomeFragment : android.support.v4.app.Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        populateTopTenCard(view)
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout_home_topTen)
+        swipeRefreshLayout.setOnRefreshListener {
+            refreshTopTenCard(view)
+        }
+        populateTopTenCard(view, false)
     }
 
-    private fun populateTopTenCard(rootView: View) {
+    private fun populateTopTenCard(rootView: View, isRefresh: Boolean) {
         val topTenView = rootView.findViewById<LinearLayout>(R.id.linearLayout_home_topTen)
         val query = db.collection("Teams")
                 .orderBy("Scores.2018.Points", Query.Direction.DESCENDING)
                 .whereGreaterThan("Scores.2018.Points", 0)
                 .limit(10)
-        query.addSnapshotListener {
-            querySnapshot,
-            _
+            query.addSnapshotListener {
+                querySnapshot,
+                _
             ->
             if (querySnapshot != null && !querySnapshot.isEmpty) {
                 for (document in querySnapshot.documents) {
@@ -56,8 +61,16 @@ class HomeFragment : android.support.v4.app.Fragment() {
                     topTenView.addView(topTeamRow)
                 }
             }
-
+            if (isRefresh) {
+                swipeRefreshLayout.isRefreshing = false
+            }
         }
+    }
+
+    private fun refreshTopTenCard(rootView: View) {
+        val topTenView = rootView.findViewById<LinearLayout>(R.id.linearLayout_home_topTen)
+        topTenView.removeAllViews()
+        populateTopTenCard(rootView, true)
     }
 
 
