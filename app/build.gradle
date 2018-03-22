@@ -53,8 +53,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:27.1.0'
-    implementation 'com.android.support:design:27.1.0'
     implementation 'com.android.support:gridlayout-v7:27.1.0'
+    implementation 'com.android.support:design:27.1.0'
     implementation "org.jetbrains.anko:anko:$anko_version"
     implementation 'com.google.firebase:firebase-database:11.8.0'
     implementation 'com.google.firebase:firebase-core:11.8.0'
@@ -62,15 +62,17 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-firestore:3.2.2'
     implementation 'com.google.firebase:firebase-perf:11.8.0'
     implementation 'com.jaredrummler:material-spinner:1.1.0'
-    implementation 'com.github.pwittchen:infinitescroll:0.0.1'
+    implementation 'android.arch.lifecycle:extensions:1.1.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.9'
-    implementation 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:2.0.0'
     implementation ('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
         transitive = true
     }
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.11.0'
-    implementation 'com.dmitrymalkovich.android:material-design-dimens:1.4'
+    implementation 'com.google.dagger:dagger:2.15'
+    implementation 'com.google.dagger:dagger-android:2.15'
+    implementation 'com.google.dagger:dagger-android-support:2.15'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.15'
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.15'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support:support-annotations:27.1.0'
     androidTestImplementation 'com.android.support.test:rules:1.0.1'

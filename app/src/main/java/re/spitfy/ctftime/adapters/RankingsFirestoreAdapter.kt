@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.data.Team
-import re.spitfy.ctftime.viewHolders.TeamRankViewHolder
+import re.spitfy.ctftime.viewholder.TeamRankViewHolder
 
 class RankingsFirestoreAdapter(
         private val rankingsList : MutableList<Team>,
