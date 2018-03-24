@@ -15,15 +15,18 @@ class TeamRepository @Inject constructor(
 ) : FirestoreRepository<Team> {
 
     override fun getDocument(
-        collectionPath: String,
         documentPath: String,
         requestListener: FirestoreRequestListener<Team>
     ): LiveData<Team> {
         val team = MutableLiveData<Team>()
-        firestore.collection(collectionPath).document(documentPath).get().addOnSuccessListener {
+        firestore.collection("Teams").document(documentPath).get().addOnSuccessListener {
             team.value = it.toObject(Team::class.java)
         }
         return team
+    }
+
+    override fun updateDocument(documentPath: String, data: Team) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getDocuments(
@@ -36,5 +39,9 @@ class TeamRepository @Inject constructor(
         filters.orderByKeys.forEach {
             query = query.orderBy(it.first, filters.sortDirection)
         }
+        filters.equalToKeys.forEach {
+            query = query.whereEqualTo(it.first, it.second)
+        }
+        return teams
     }
 }

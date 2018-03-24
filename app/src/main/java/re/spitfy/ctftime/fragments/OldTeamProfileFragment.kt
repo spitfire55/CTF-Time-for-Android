@@ -74,7 +74,7 @@ class OldTeamProfileFragment : android.support.v4.app.Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity?.toolbar?.title = "Team Profile"
+        //activity?.toolbar?.title = "Team Profile"
         autoCompleteTextView = view.findViewById(R.id.appCompatAutoCompleteTextView_team_searchTeam)
         autoCompleteProgressBar = view.findViewById(R.id.progressBar_team_searchTeamStatus)
         autoCompleteTextView.setOnFocusChangeListener({ _, hasFocus ->
@@ -96,7 +96,7 @@ class OldTeamProfileFragment : android.support.v4.app.Fragment() {
                     activity?.supportFragmentManager?.popBackStack()
                 }
                 autoCompleteTextView.setText("")
-                activity?.supportFragmentManager
+                /*activity?.supportFragmentManager
                         ?.beginTransaction()
                         ?.replace(
                                 R.id.container,
@@ -104,6 +104,7 @@ class OldTeamProfileFragment : android.support.v4.app.Fragment() {
                                 newTeamName
                         )?.addToBackStack(null)
                         ?.commit()
+                        */
             }
         }
         autoCompleteTextView.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -112,7 +113,7 @@ class OldTeamProfileFragment : android.support.v4.app.Fragment() {
                 val newTeamName = parent?.getItemAtPosition(position).toString()
                 if (newTeamName != team.Name) {
                     autoCompleteTextView.setText("")
-                    activity?.supportFragmentManager
+                    /*activity?.supportFragmentManager
                             ?.beginTransaction()
                             ?.replace(
                                     R.id.container,
@@ -120,6 +121,7 @@ class OldTeamProfileFragment : android.support.v4.app.Fragment() {
                                     newTeamName
                             )?.addToBackStack(null)
                             ?.commit()
+                            */
                 }
             }
         }
