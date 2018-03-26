@@ -5,9 +5,7 @@ import android.app.Application
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
-import re.spitfy.ctftime.di.AppModule
-import re.spitfy.ctftime.di.DaggerApplicationComponent
-import re.spitfy.ctftime.di.FirestoreModule
+import re.spitfy.ctftime.di.app.DaggerApplicationComponent
 import javax.inject.Inject
 
 class CTFTimeApp : Application(), HasActivityInjector {
@@ -17,10 +15,7 @@ class CTFTimeApp : Application(), HasActivityInjector {
 
     override fun onCreate() {
         super.onCreate()
-        DaggerApplicationComponent.builder()
-                .appModule(AppModule(this))
-                .firestoreModule(FirestoreModule())
-                .build()
+        DaggerApplicationComponent.builder().application(this).build().inject(this)
     }
 
     override fun activityInjector(): AndroidInjector<Activity> = dispatchingActivityInjector
