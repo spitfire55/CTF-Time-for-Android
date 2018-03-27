@@ -5,7 +5,7 @@ import dagger.android.AndroidInjector
 import re.spitfy.ctftime.activities.MainActivity
 
 @Subcomponent
-interface MainActivitySubcomponent : AndroidInjector<MainActivity> {
+interface MainActivitySubComponent : AndroidInjector<MainActivity> {
 
     @Subcomponent.Builder
     abstract class Builder : AndroidInjector.Builder<MainActivity>()
