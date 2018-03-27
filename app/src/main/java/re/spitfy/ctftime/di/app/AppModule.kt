@@ -15,30 +15,32 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideContext(application: Application): Context = application.applicationContext
-
-    @Provides
-    @Singleton
-    fun provideFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
+    fun provideContext(application: Application): Context = application
 
     @Provides
     @Named("Teams")
     @Singleton
-    fun provideFirestoreTeams(): CollectionReference = FirebaseFirestore
-            .getInstance()
-            .collection("Teams")
+    fun provideFirestoreTeams(): CollectionReference {
+        FirebaseFirestore.setLoggingEnabled(true)
+        return FirebaseFirestore.getInstance().collection("Teams")
+
+    }
 
     @Provides
     @Named("Writeups")
     @Singleton
-    fun provideFirestoreWriteups(): CollectionReference = FirebaseFirestore
-            .getInstance()
-            .collection("Writeups")
+    fun provideFirestoreWriteups(): CollectionReference {
+        FirebaseFirestore.setLoggingEnabled(true)
+        return FirebaseFirestore.getInstance().collection("Writeups")
+
+    }
 
     @Provides
     @Named("Ctfs")
     @Singleton
-    fun provideFirestoreCtfs(): CollectionReference = FirebaseFirestore
-            .getInstance()
-            .collection("Ctfs")
+    fun provideFirestoreCtfs(): CollectionReference {
+        FirebaseFirestore.setLoggingEnabled(true)
+        return FirebaseFirestore.getInstance().collection("Ctfs")
+
+    }
 }
