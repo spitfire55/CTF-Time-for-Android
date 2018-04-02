@@ -1,15 +1,9 @@
-package re.spitfy.ctftime.views
+package re.spitfy.ctftime.view
 
 import android.os.Bundle
-import com.crashlytics.android.Crashlytics
-import com.google.firebase.firestore.CollectionReference
-import dagger.android.AndroidInjection
-import io.fabric.sdk.android.Fabric
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.viewmodel.MainActivityViewModel
-import re.spitfy.ctftime.views.BaseActivity
 import javax.inject.Inject
-import javax.inject.Named
 
 class MainActivity : BaseActivity() {
 

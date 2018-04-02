@@ -1,19 +1,18 @@
 package re.spitfy.ctftime.viewmodel
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import re.spitfy.ctftime.data.Team
-import re.spitfy.ctftime.repo.FirestoreRepository
+import re.spitfy.ctftime.repo.TeamRepository
+import re.spitfy.ctftime.viewobject.Resource
+import javax.inject.Inject
 
-class TeamViewModel(private val teamRepo: FirestoreRepository) : ViewModel() {
-    private lateinit var team: LiveData<Team>
 
-    /*fun newModel(teamId: String) {
-        team = teamRepo.getTeam(teamId)
-    }*/
+class TeamViewModel @Inject constructor(teamRepository: TeamRepository) : ViewModel() {
+    private var teamId: MutableLiveData<String> = MutableLiveData()
+    private val team: LiveData<Resource<Team>> = Transformations.switchMap(teamId, teamRepository::team)
 
-    fun getTeam(): LiveData<Team> {
-        return team
-    }
 
 }
