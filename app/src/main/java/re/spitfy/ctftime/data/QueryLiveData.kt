@@ -5,8 +5,8 @@ import com.google.firebase.firestore.*
 import re.spitfy.ctftime.viewobject.Resource
 
 class QueryLiveData<T: Model>(
-    val query: Query,
-    val type: Class<T>
+    private val query: Query,
+    private val type: Class<T>
 ): LiveData<Resource<List<T>>>(), EventListener<QuerySnapshot> {
 
     private var registration: ListenerRegistration? = null

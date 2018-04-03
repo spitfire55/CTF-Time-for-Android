@@ -3,16 +3,16 @@ package re.spitfy.ctftime.view
 import android.os.Bundle
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.viewmodel.MainActivityViewModel
-import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
 
-    @Inject lateinit var mainActivityViewModel: MainActivityViewModel
-
+    private lateinit var mainActivityViewModel: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        mainActivityViewModel = getViewModel(MainActivityViewModel::class.java)
     }
 
     override fun setupToolbar() {

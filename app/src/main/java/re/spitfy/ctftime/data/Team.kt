@@ -1,7 +1,10 @@
 package re.spitfy.ctftime.data
 
+import android.view.Display
+import com.google.firebase.firestore.IgnoreExtraProperties
 import java.io.Serializable
 
+@IgnoreExtraProperties
 data class Team(
         val Academic : String = "",
         val Aliases : List<String> = emptyList(),
@@ -22,5 +25,5 @@ data class Team(
         val Telegram : String = "",
         val Twitter: String = "",
         val Website : String = ""
-) : Serializable
+) : Serializable, Model()
 
