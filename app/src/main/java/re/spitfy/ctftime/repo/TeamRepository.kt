@@ -21,7 +21,7 @@ class TeamRepository {
         return data
     }
 
-    fun topTenTeams(): QueryLiveData<Team>? {
-        return QueryLiveData(teamCollection.orderBy("Scores/2018").limit(10), Team::class.java)
+    fun topTenTeams(year: String): QueryLiveData<Team>? {
+        return QueryLiveData(teamCollection.orderBy("Scores/$year").limit(10), Team::class.java)
     }
 }

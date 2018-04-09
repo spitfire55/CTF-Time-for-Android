@@ -6,7 +6,6 @@ import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import re.spitfy.ctftime.data.Team
 import re.spitfy.ctftime.repo.TeamRepository
-import re.spitfy.ctftime.viewobject.Resource
 import javax.inject.Inject
 
 

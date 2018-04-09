@@ -2,7 +2,6 @@ package re.spitfy.ctftime.data
 
 import android.arch.lifecycle.LiveData
 import com.google.firebase.firestore.*
-import re.spitfy.ctftime.viewobject.Resource
 
 class DocumentLiveData<T>(
     private val ref: DocumentReference,

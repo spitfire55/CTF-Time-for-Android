@@ -2,7 +2,7 @@ package re.spitfy.ctftime.di
 
 import dagger.Subcomponent
 import dagger.android.AndroidInjector
-import re.spitfy.ctftime.view.MainActivity
+import re.spitfy.ctftime.presentation.MainActivity
 
 @Subcomponent
 interface MainActivitySubComponent : AndroidInjector<MainActivity> {

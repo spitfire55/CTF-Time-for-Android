@@ -10,4 +10,5 @@
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="feature_tap_title">20dp</dimen>
     <dimen name="row_height">48dp</dimen>
+    <dimen name="carousel_horizontal_padding">20dp</dimen>
 </resources>
