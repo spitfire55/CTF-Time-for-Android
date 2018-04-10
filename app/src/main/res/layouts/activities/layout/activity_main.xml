@@ -1,46 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:openDrawer="start">
-
-    <LinearLayout
+    tools:context=".presentation.MainActivity"
+    >
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:openDrawer="start"
+        >
 
-        <android.support.design.widget.CoordinatorLayout
-            android:id="@+id/MainCoordinatorLayout"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraintLayout_mainActivity_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorSecondary">
+            >
 
-            <include
-                android:id="@+id/appbar"
-                layout="@layout/appbar_main" />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_mainActivity"
+                style="@style/Toolbar"
+                android:theme="@style/AppTheme.AppBarOverlay"
+                />
 
-            <FrameLayout
-                android:id="@+id/container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/appbar"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" >
-            </FrameLayout>
+            <android.support.design.widget.CoordinatorLayout
+                style="@style/ContentFrameLayout"
+                >
 
-        </android.support.design.widget.CoordinatorLayout>
+                <FrameLayout
+                    android:id="@+id/frame_mainActivity_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_behavior="re.spitfy.ctftime.presentation.ContentWithBottomNavigationBehavior"
+                    />
+                <android.support.design.widget.BottomNavigationView
+                    android:id="@+id/bottomNavigation_mainActivity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginStart="0dp"
+                    android:background="?android:attr/windowBackground"
+                    app:menu="@menu/bottom_navigation"
+                    />
 
-    </LinearLayout>
+            </android.support.design.widget.CoordinatorLayout>
 
-    <android.support.design.widget.NavigationView
-        android:id="@+id/mainNav"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/drawer_header"
-        app:menu="@menu/activity_main_drawer" />
+        </android.support.constraint.ConstraintLayout>
 
-</android.support.v4.widget.DrawerLayout>
+        <android.support.design.widget.NavigationView
+            android:id="@+id/navigation_mainActivity_drawer"
+            style="@style/DrawerNavigation"
+            />
+
+    </android.support.v4.widget.DrawerLayout>
+</layout>

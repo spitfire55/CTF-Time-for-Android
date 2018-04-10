@@ -1,51 +1,41 @@
 package re.spitfy.ctftime.presentation
 
-import android.graphics.Paint
 import android.os.Bundle
+import android.support.annotation.MenuRes
+import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
 import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.Section
 import com.xwray.groupie.ViewHolder
-import re.spitfy.ctftime.R
-import re.spitfy.ctftime.view.decoration.StandingsItemDecoration
-import re.spitfy.ctftime.view.item.HeaderItem
-import re.spitfy.ctftime.view.item.StandingsCarouselItem
 import re.spitfy.ctftime.viewmodel.MainActivityViewModel
 
 class MainActivity : BaseActivity() {
 
-    private lateinit var mainActivityViewModel: MainActivityViewModel
+    private val mainActivityViewModel by lazy { getViewModel(MainActivityViewModel::class.java)}
     private val groupAdapter = GroupAdapter<ViewHolder>()
     private val background by lazy {ContextCompat.getColor(this, R.color.colorSecondaryLight)}
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceStzzzzzzate: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        mainActivityViewModel = getViewModel(MainActivityViewModel::class.java)
-        populateAdapter()
+        setupBottomNavigation(savedInstanceState)
     }
 
     override fun setupToolbar() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    private fun populateAdapter() {
-
-        Section(HeaderItem(R.string.top_ten_card_title)).apply {
-            add(makeStandingsCarouselItem())
-            groupAdapter.add(this)
-        }
+    private fun setupBottomNavigation(savedInstanceState: Bundle?) {
+        //TODO: Setup Bottom Navigation
     }
 
-    private fun makeStandingsCarouselItem(): StandingsCarouselItem {
-        val paint = Paint()
-        paint.color = background
-        val carouselDecoration = StandingsItemDecoration(resources.getDimensionPixelSize(R.dimen.carousel_horizontal_padding), paint)
-        val carouselAdapter = GroupAdapter<ViewHolder>()
-        mainActivityViewModel.queryTopTenTeams()
-        mainActivityViewModel.topTenTeams.forEach {
-
-        }
+    enum class BottomNavigationItem(
+            @MenuRes val menuId: Int,
+            @StringRes val titleRes: Int?,
+            // flag for if navbar destination has
+            val isUseToolBarElevation: Boolean
+            //TODO: Implement Navigation Controller
+    ) {
+        RANKINGS(R.id.navigation_rankings, R.string.navbar_rankings_title, false)
     }
+
 }
