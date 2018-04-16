@@ -12,10 +12,16 @@
     <string name="default_country">US</string>
     <string name="default_points">9001</string>
 
+    <string name="navbar_home_title">Home</string>
     <string name="navbar_rankings_title">Rankings</string>
     <string name="navbar_events_title">Events</string>
     <string name="navbar_writeups_title">Writeups</string>
     <string name="navbar_search_title">Search</string>
+
+    <string name="drawer_notifications_title">Notifications</string>
+    <string name="drawer_settings_title">Settings</string>
+    <string name="drawer_about_title">About this app</string>
+    <string name="drawer_donate_title">Donate</string>
 
     <string name="toolbar_home">Home</string>
     <string name="toolbar_team_rankings">Team Rankings</string>

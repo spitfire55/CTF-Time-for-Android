@@ -5,19 +5,19 @@
 
     <!-- <group> -->
         <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_flag"
-            android:title="@string/toolbar_home" />
+            android:id="@+id/drawer_home"
+            android:icon="@drawable/navigation_home"
+            android:title="@string/navbar_home_title" />
 
         <item
-            android:id="@+id/nav_team_ranking"
-            android:icon="@drawable/ic_menu_list"
-            android:title="@string/toolbar_team_rankings" />
+            android:id="@+id/drawer_notifications"
+            android:icon="@drawable/navigation_notifications"
+            android:title="@string/drawer_notifications_title" />
 
         <item
-            android:id="@+id/nav_team_profile"
-            android:icon="@drawable/ic_menu_group"
-            android:title="@string/teams" />
+            android:id="@+id/drawer_settings"
+            android:icon="@drawable/navigation_settings"
+            android:title="@string/drawer_settings_title" />
     <!--
     </group>
 

@@ -30,11 +30,12 @@
                 >
 
                 <FrameLayout
-                    android:id="@+id/frame_mainActivity_content"
+                    android:id="@+id/content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:layout_behavior="re.spitfy.ctftime.presentation.ContentWithBottomNavigationBehavior"
                     />
+
                 <android.support.design.widget.BottomNavigationView
                     android:id="@+id/bottomNavigation_mainActivity"
                     android:layout_width="match_parent"

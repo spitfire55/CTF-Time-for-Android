@@ -5,7 +5,7 @@
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">141dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="actionbar_elevation">4dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
     <dimen name="session_title_line_spacing">4sp</dimen>
     <dimen name="focus_elevation">8dp</dimen>
     <dimen name="card_elevation">2dp</dimen>

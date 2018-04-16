@@ -8,17 +8,21 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import dagger.android.support.DaggerFragment
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.adapters.TopTenTeamsAdapter
 import re.spitfy.ctftime.data.Team
 
-class HomeFragment : android.support.v4.app.Fragment() {
+class HomeFragment : DaggerFragment() {
     private val db : FirebaseFirestore = FirebaseFirestore.getInstance()
     private var topTenTeams : MutableList<Team> = ArrayList()
     private lateinit var swipeRefreshLayout : SwipeRefreshLayout
 
     companion object {
         const val TAG = "HomeFragment"
+        fun newInstance(): HomeFragment {
+
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
