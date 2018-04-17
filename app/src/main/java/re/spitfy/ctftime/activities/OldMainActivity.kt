@@ -18,7 +18,7 @@ import dagger.android.AndroidInjection
 import io.fabric.sdk.android.Fabric
 import org.jetbrains.anko.toast
 import re.spitfy.ctftime.R
-import re.spitfy.ctftime.fragments.HomeFragment
+import re.spitfy.ctftime.presentation.home.HomeFragment
 import re.spitfy.ctftime.fragments.TeamRankingsFragment
 
 

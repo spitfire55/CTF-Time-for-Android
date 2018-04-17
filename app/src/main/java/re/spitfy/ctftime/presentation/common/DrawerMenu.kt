@@ -33,6 +33,14 @@ class DrawerMenu @Inject constructor(
             drawerLayout.closeDrawers()
             false
         }
+
+        currentNavigationItem = DrawerNavigationItem
+                .values()
+                .firstOrNull { activity::class == it.activityClass }
+                ?.also {
+                    navigationView.setCheckedItem(it.menuId)
+                }
+                ?: DrawerNavigationItem.OTHER
     }
 
     fun closeDrawerIfNeeded(): Boolean {
@@ -52,6 +60,10 @@ class DrawerMenu @Inject constructor(
     ) {
         HOME(R.id.drawer_home, MainActivity::class, {
             navigateToMainActivity()
+        }),
+
+        OTHER(0, Unit::class, {
+            //DO NOTHING
         })
     }
 

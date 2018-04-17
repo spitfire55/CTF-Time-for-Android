@@ -3,7 +3,7 @@ package re.spitfy.ctftime.presentation
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import re.spitfy.ctftime.R
-import re.spitfy.ctftime.fragments.HomeFragment
+import re.spitfy.ctftime.presentation.home.HomeFragment
 import javax.inject.Inject
 
 class NavigationController @Inject constructor(private val activity: AppCompatActivity) {

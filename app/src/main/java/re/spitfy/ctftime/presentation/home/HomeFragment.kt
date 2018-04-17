@@ -1,28 +1,32 @@
-package re.spitfy.ctftime.fragments
+package re.spitfy.ctftime.presentation.home
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.xwray.groupie.Section
 import dagger.android.support.DaggerFragment
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.adapters.TopTenTeamsAdapter
 import re.spitfy.ctftime.data.Team
+import re.spitfy.ctftime.presentation.NavigationController
+import re.spitfy.ctftime.viewmodel.ViewModelFactory
+import javax.inject.Inject
 
 class HomeFragment : DaggerFragment() {
-    private val db : FirebaseFirestore = FirebaseFirestore.getInstance()
-    private var topTenTeams : MutableList<Team> = ArrayList()
-    private lateinit var swipeRefreshLayout : SwipeRefreshLayout
+    @Inject lateinit var navigationController: NavigationController
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    private val homeViewModel: HomeViewModel by lazy {
+        ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
+    }
+    private val homeSection = Section()
 
     companion object {
         const val TAG = "HomeFragment"
-        fun newInstance(): HomeFragment {
-
-        }
+        fun newInstance(): HomeFragment = HomeFragment()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
