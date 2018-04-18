@@ -1,27 +1,17 @@
 package re.spitfy.ctftime.repo
 
 import com.google.firebase.firestore.CollectionReference
-import re.spitfy.ctftime.data.DocumentLiveData
-import re.spitfy.ctftime.data.QueryLiveData
+import io.reactivex.Flowable
 import re.spitfy.ctftime.data.Team
 import javax.inject.Inject
-import javax.inject.Named
 
-class TeamRepository {
+class TeamRepository @Inject constructor(val teamCollection: CollectionReference) {
 
-    @Inject @Named("Teams")
-    lateinit var teamCollection: CollectionReference
+    val teams: Flowable<List<Team>> = Flowable.
 
-    fun team(id: String?): DocumentLiveData<Team>? {
-        if (id == null)
-            return null
-        val teamRef = teamCollection.document(id)
-        val data: DocumentLiveData<Team> = DocumentLiveData(teamRef, Team::class.java)
-        teamRef.addSnapshotListener(data)
-        return data
+    val topTenTeams: Flowable<Map<String, List<Team>>> =
+            teams.map { teamList ->
+                teamList.filter
     }
 
-    fun topTenTeams(year: String): QueryLiveData<Team>? {
-        return QueryLiveData(teamCollection.orderBy("Scores/$year").limit(10), Team::class.java)
-    }
 }
