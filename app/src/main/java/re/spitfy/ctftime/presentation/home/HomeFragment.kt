@@ -13,7 +13,7 @@ import re.spitfy.ctftime.R
 import re.spitfy.ctftime.adapters.TopTenTeamsAdapter
 import re.spitfy.ctftime.data.Team
 import re.spitfy.ctftime.presentation.NavigationController
-import re.spitfy.ctftime.viewmodel.ViewModelFactory
+import re.spitfy.ctftime.presentation.common.ViewModelFactory
 import javax.inject.Inject
 
 class HomeFragment : DaggerFragment() {

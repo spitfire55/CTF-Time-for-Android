@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import re.spitfy.ctftime.R
-import re.spitfy.ctftime.viewmodel.TeamViewModel
+import re.spitfy.ctftime.presentation.team.TeamViewModel
 
 class TeamProfileFragment : android.support.v4.app.Fragment() {
 

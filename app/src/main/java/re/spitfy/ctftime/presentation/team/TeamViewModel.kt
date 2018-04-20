@@ -1,11 +1,11 @@
-package re.spitfy.ctftime.viewmodel
+package re.spitfy.ctftime.presentation.team
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import re.spitfy.ctftime.data.Team
-import re.spitfy.ctftime.repo.TeamRepository
+import re.spitfy.ctftime.data.repo.TeamRepository
 import javax.inject.Inject
 
 

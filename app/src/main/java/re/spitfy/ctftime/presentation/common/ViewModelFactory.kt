@@ -1,9 +1,9 @@
-package re.spitfy.ctftime.viewmodel
+package re.spitfy.ctftime.presentation.common
 
-import android.app.Application
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import re.spitfy.ctftime.repo.FirestoreRepository
+import re.spitfy.ctftime.data.repo.FirestoreRepository
+import re.spitfy.ctftime.presentation.team.TeamViewModel
 import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
@@ -15,7 +15,7 @@ class ViewModelFactory @Inject constructor(
             with(modelClass) {
                 when {
                     isAssignableFrom(TeamViewModel::class.java) ->
-                            TeamViewModel(repository)
+                        TeamViewModel(repository)
                     else ->
                         throw IllegalArgumentException("Unknown ViewModel: ${modelClass.name}")
                 }
