@@ -1,9 +1,19 @@
 package re.spitfy.ctftime.data.db
 
-import io.reactivex.Flowable
-import re.spitfy.ctftime.data.db.entity.TeamEntity
+import android.arch.persistence.room.RoomDatabase
+import re.spitfy.ctftime.data.Team
+import re.spitfy.ctftime.data.db.dao.TeamDao
+import re.spitfy.ctftime.data.mapper.toTeamEntities
+import javax.inject.Inject
 
-interface TeamDatabase {
+class TeamDatabase @Inject constructor(
+        private val database: RoomDatabase,
+        private val teamDao: TeamDao
+){
 
-    fun getAllTeams(): Flowable<List<TeamEntity>>
+    fun saveTeams(teams: List<Team>) {
+        database.runInTransaction {
+            teamDao.clearAndInsert(teams.toTeamEntities())
+        }
+    }
 }

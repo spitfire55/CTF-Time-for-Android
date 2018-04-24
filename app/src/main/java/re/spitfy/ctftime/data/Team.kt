@@ -23,5 +23,5 @@ data class Team(
         val Telegram : String,
         val Twitter: String,
         val Website : String
-)
+): Model()
 

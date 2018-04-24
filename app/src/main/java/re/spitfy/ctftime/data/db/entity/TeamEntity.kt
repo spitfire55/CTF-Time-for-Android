@@ -8,7 +8,6 @@ import android.arch.persistence.room.PrimaryKey
 data class TeamEntity (
     @PrimaryKey var id: String,
     var academic: String,
-    var aliases: List<String>,
     @ColumnInfo(name = "country_code")
     var countryCode: String,
     var description: String,
@@ -17,13 +16,9 @@ data class TeamEntity (
     var jabber: String,
     var linkedin: String,
     var logo: String,
-    var members: List<String>,
     var name: String,
     @ColumnInfo(name = "name_case_insensitive")
     var nameCaseInsensitive: String,
-    @ColumnInfo(name = "other_links")
-    var otherLinks: List<String>,
-    var scores: Map<String, ScoreEntity>,
     var skype: String,
     var telegram: String,
     var twitter: String,
