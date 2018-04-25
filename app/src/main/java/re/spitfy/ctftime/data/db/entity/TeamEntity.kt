@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey
 
 @Entity(tableName = "team")
 data class TeamEntity (
-    @PrimaryKey var id: String,
+    @PrimaryKey var id: Int,
     var academic: String,
     @ColumnInfo(name = "country_code")
     var countryCode: String,

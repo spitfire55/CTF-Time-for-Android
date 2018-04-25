@@ -27,7 +27,7 @@ inline fun <reified T: Model> CollectionReference.getSingleWithIds(): Single<Lis
                 .addOnSuccessListener {
                     try {
                         emitter.onSuccess(it.documents.mapNotNull {
-                            it.toObject(T::class.java)?.withId<T>(it.id)
+                            it.toObject(T::class.java)?.withId<T>(it.id.toInt())
                         })
                     } catch (e: Exception) {
                         emitter.onError(e)

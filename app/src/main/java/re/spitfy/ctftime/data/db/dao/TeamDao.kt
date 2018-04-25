@@ -22,7 +22,4 @@ abstract class TeamDao {
         deleteAll()
         insert(newTeams)
     }
-
-    @Query("SELECT team_id, :year FROM scores ORDER BY :year DESC LIMIT 10")
-    abstract fun getTopTenTeams(year: String)
 }
