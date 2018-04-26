@@ -9,7 +9,6 @@ data class Team(
         val CountryCode : String,
         val Description : String,
         val Email : String,
-        val Hash : String,
         val ICQ : String,
         val Jabber : String,
         val LinkedIn : String,

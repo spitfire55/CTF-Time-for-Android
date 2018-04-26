@@ -10,7 +10,7 @@ import android.arch.persistence.room.ForeignKey.CASCADE
         foreignKeys = [ForeignKey(
                 entity = TeamEntity::class,
                 parentColumns = arrayOf("id"),
-                childColumns = arrayOf("userId"),
+                childColumns = arrayOf("teamId"),
                 onDelete = CASCADE
         )]
 )
@@ -18,5 +18,5 @@ data class ScoreEntity (
     val year: String,
     var points: Double,
     var rank: Int,
-    val userId: Int
+    val teamId: Int
 )

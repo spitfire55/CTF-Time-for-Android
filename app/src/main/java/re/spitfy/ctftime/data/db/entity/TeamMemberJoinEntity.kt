@@ -23,6 +23,6 @@ import android.arch.persistence.room.ForeignKey.CASCADE
         ]
 )
 class TeamMemberJoinEntity (
-        val teamId: Int,
+        val teamId: Int?,
         val memberId: Int
 )
