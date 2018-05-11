@@ -1,8 +1,6 @@
 package re.spitfy.ctftime.data.mapper
 
-import io.reactivex.Flowable
 import re.spitfy.ctftime.data.Member
-import re.spitfy.ctftime.data.Score
 import re.spitfy.ctftime.data.Team
 import re.spitfy.ctftime.data.db.entity.*
 
@@ -60,11 +58,7 @@ fun List<Team>.toTeamMemberJoinEntities(): List<TeamMemberJoinEntity> {
     }
 }
 
-fun Flowable<List<TeamWithMembers>>.toTeams(members: List<Member>): Flowable<List<Team>> = map {
-    teamWithMembers -> teamWithMembers.map { it.toTeam(members) }
-}
-
-fun TeamWithMembers.toTeam(members: List<Member>): Team {
+fun TeamWithMembers.toTeam(members: List<MemberEntity>): Team {
     return Team(
             Academic = this.team.academic,
             Aliases = TypeConverters.fromJsonStringToStrings(this.team.aliases),
@@ -75,7 +69,7 @@ fun TeamWithMembers.toTeam(members: List<Member>): Team {
             Jabber = this.team.jabber,
             LinkedIn = this.team.linkedin,
             Logo = this.team.logo,
-            Members = members.filter { this.memberIdList.contains(it.Id) },
+            Members = members.filter { this.memberIdList.contains(it.id) }.map { it.toMember() },
             Name = this.team.name,
             NameCaseInsensitive = this.team.nameCaseInsensitive,
             OtherLinks = TypeConverters.fromJsonStringToStrings(this.team.otherLinks),

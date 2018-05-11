@@ -55,8 +55,7 @@ class OldTeamProfileFragment : android.support.v4.app.Fragment() {
         team = if (savedInstanceState != null) {
             savedInstanceState.getSerializable("Team") as Team
         } else {
-            arguments?.getSerializable("Team") as? Team
-                    ?: Team()
+            arguments?.getSerializable("Team") as Team
         }
         rootView.tag = TAG + team.Name
         return rootView
@@ -174,8 +173,8 @@ class OldTeamProfileFragment : android.support.v4.app.Fragment() {
                 teamArray.clear()
                 teamNameArray.clear()
                 for (document in querySnapshot.documents) {
-                    teamArray.add(document.toObject(Team::class.java))
-                    teamNameArray.add(document.getString("Name"))
+                    //teamArray.add(document.toObject(Team::class.java))
+                    //teamNameArray.add(document.getString("Name"))
                 }
                 if (activity != null) {
                     val arrayAdapter = ArrayAdapter<String>(

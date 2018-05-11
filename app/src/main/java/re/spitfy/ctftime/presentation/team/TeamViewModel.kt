@@ -11,7 +11,5 @@ import javax.inject.Inject
 
 class TeamViewModel @Inject constructor(teamRepository: TeamRepository) : ViewModel() {
     private var teamId: MutableLiveData<String> = MutableLiveData()
-    private val team: LiveData<Resource<Team>> = Transformations.switchMap(teamId, teamRepository::team)
-
-
+    //private val team: LiveData<Resource<Team>> = Transformations.switchMap(teamId, teamRepository::team)
 }

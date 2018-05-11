@@ -50,11 +50,11 @@ class OldMainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             toolbar.title = savedTitle
         }
 
-        drawerToggle = setupDrawerToggle()
-        navView = findViewById(R.id.mainNav)
+       // drawerToggle = setupDrawerToggle()
+        //navView = findViewById(R.id.mainNav)
         drawerLayout.addDrawerListener(drawerToggle)
         navView.setNavigationItemSelectedListener {
-            displayNavView(it.itemId)
+            //displayNavView(it.itemId)
             true
         }
         setSupportActionBar(toolbar)
@@ -65,7 +65,7 @@ class OldMainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         if (savedInstanceState != null) {
             currentFragment = supportFragmentManager.getFragment(savedInstanceState, this.title)
         } else {
-            displayNavView(R.id.nav_home)
+            //displayNavView(R.id.nav_home)
         }
     }
 
@@ -87,7 +87,7 @@ class OldMainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        displayNavView(item.itemId)
+        //displayNavView(item.itemId)
         return true
     }
 
@@ -116,6 +116,7 @@ class OldMainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         backPressHandler.postDelayed(backPressRunnable, 2000)
     }
 
+    /*
     private fun acquireFragment(viewId: Int) : android.support.v4.app.Fragment {
         var title = getString(R.string.app_name) // default
         var fragment : Fragment? = null
@@ -166,4 +167,5 @@ class OldMainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 R.string.navdrawer_close
         )
     }
+    */
 }
