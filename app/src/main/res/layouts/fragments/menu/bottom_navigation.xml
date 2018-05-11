@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/navigation_home"
+        android:title="@string/navbar_home_title"
+        />
+
+    <item
+        android:id="@+id/navigation_rankings"
+        android:icon="@drawable/navigation_rankings"
+        android:title="@string/navbar_rankings_title"
+        />
+
+    <item
+        android:id="@+id/navigation_upcoming"
+        android:icon="@drawable/navigation_events"
+        android:title="@string/navbar_events_title"
+        />
+
+    <item
+        android:id="@+id/navigation_writeups"
+        android:icon="@drawable/navigation_writeups"
+        android:title="@string/navbar_writeups_title"
+        />
+
+    <item
+        android:id="@+id/navigation_search"
+        android:icon="@drawable/navigation_search"
+        android:title="@string/navbar_search_title"
+        />
+
+</menu>

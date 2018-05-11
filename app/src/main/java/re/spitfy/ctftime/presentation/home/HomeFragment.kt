@@ -1,24 +1,27 @@
-package re.spitfy.ctftime.fragments
+package re.spitfy.ctftime.presentation.home
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
+import com.xwray.groupie.Section
+import dagger.android.support.DaggerFragment
 import re.spitfy.ctftime.R
-import re.spitfy.ctftime.adapters.TopTenTeamsAdapter
-import re.spitfy.ctftime.data.Team
+import re.spitfy.ctftime.presentation.NavigationController
+import javax.inject.Inject
 
-class HomeFragment : android.support.v4.app.Fragment() {
-    private val db : FirebaseFirestore = FirebaseFirestore.getInstance()
-    private var topTenTeams : MutableList<Team> = ArrayList()
-    private lateinit var swipeRefreshLayout : SwipeRefreshLayout
+class HomeFragment : DaggerFragment() {
+    @Inject lateinit var navigationController: NavigationController
+    //@Inject lateinit var viewModelFactory: ViewModelFactory
+    //private val homeViewModel: HomeViewModel by lazy {
+    //    ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
+    //}
+    private val homeSection = Section()
 
     companion object {
         const val TAG = "HomeFragment"
+        fun newInstance(): HomeFragment = HomeFragment()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -29,13 +32,14 @@ class HomeFragment : android.support.v4.app.Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout_home_topTen)
-        swipeRefreshLayout.setOnRefreshListener {
-            refreshTopTenCard(view)
-        }
-        populateTopTenCard(view, false)
+        //swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout_home_topTen)
+        //swipeRefreshLayout.setOnRefreshListener {
+        //    refreshTopTenCard(view)
+        //}
+        //populateTopTenCard(view, false)
     }
 
+    /*
     private fun populateTopTenCard(rootView: View, isRefresh: Boolean) {
         val topTenView = rootView.findViewById<LinearLayout>(R.id.linearLayout_home_topTen)
         val query = db.collection("Teams")
@@ -72,6 +76,7 @@ class HomeFragment : android.support.v4.app.Fragment() {
         topTenView.removeAllViews()
         populateTopTenCard(rootView, true)
     }
+    */
 
 
 }

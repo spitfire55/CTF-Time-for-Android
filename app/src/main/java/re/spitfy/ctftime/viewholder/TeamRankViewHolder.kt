@@ -1,4 +1,4 @@
-package re.spitfy.ctftime.viewHolders
+package re.spitfy.ctftime.viewholder
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
-import re.spitfy.ctftime.data.Team
 import re.spitfy.ctftime.R
+import re.spitfy.ctftime.data.Team
 import re.spitfy.ctftime.utils.format
 
 class TeamRankViewHolder(itemView: View, private val parent: ViewGroup?): RecyclerView.ViewHolder(itemView)

@@ -14,15 +14,15 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
 import com.crashlytics.android.Crashlytics
+import dagger.android.AndroidInjection
 import io.fabric.sdk.android.Fabric
 import org.jetbrains.anko.toast
 import re.spitfy.ctftime.R
-import re.spitfy.ctftime.fragments.HomeFragment
-import re.spitfy.ctftime.fragments.TeamProfileFragment
+import re.spitfy.ctftime.presentation.home.HomeFragment
 import re.spitfy.ctftime.fragments.TeamRankingsFragment
 
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class OldMainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var title: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
         setContentView(R.layout.activity_main)
@@ -49,11 +50,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             toolbar.title = savedTitle
         }
 
-        drawerToggle = setupDrawerToggle()
-        navView = findViewById(R.id.mainNav)
+       // drawerToggle = setupDrawerToggle()
+        //navView = findViewById(R.id.mainNav)
         drawerLayout.addDrawerListener(drawerToggle)
         navView.setNavigationItemSelectedListener {
-            displayNavView(it.itemId)
+            //displayNavView(it.itemId)
             true
         }
         setSupportActionBar(toolbar)
@@ -64,7 +65,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (savedInstanceState != null) {
             currentFragment = supportFragmentManager.getFragment(savedInstanceState, this.title)
         } else {
-            displayNavView(R.id.nav_home)
+            //displayNavView(R.id.nav_home)
         }
     }
 
@@ -86,7 +87,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        displayNavView(item.itemId)
+        //displayNavView(item.itemId)
         return true
     }
 
@@ -115,6 +116,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         backPressHandler.postDelayed(backPressRunnable, 2000)
     }
 
+    /*
     private fun acquireFragment(viewId: Int) : android.support.v4.app.Fragment {
         var title = getString(R.string.app_name) // default
         var fragment : Fragment? = null
@@ -128,10 +130,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 fragment = TeamRankingsFragment.newInstance(getString(R.string.current_year))
                 title = getString(R.string.toolbar_team_rankings)
             }
-            R.id.nav_team_profile -> {
-                fragment = TeamProfileFragment.newInstance(null)
-                title = getString(R.string.toolbar_team_profiles)
-            }
+        /*R.id.nav_team_profile -> {
+            fragment = TeamProfileFragment.newInstance(null)
+            title = getString(R.string.toolbar_team_profiles)
+        }*/
         }
         if (title == this.title) {
             return currentFragment ?: HomeFragment()
@@ -165,4 +167,5 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 R.string.navdrawer_close
         )
     }
+    */
 }

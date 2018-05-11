@@ -6,4 +6,9 @@
     <color name="colorSecondary">#E0E0E0</color>
     <color name="colorSecondaryDark">#aeaeae</color>
     <color name="colorSecondaryLight">#ffffff</color>
+    <color name="colorAccent">#222222</color>
+    <color name="window_background">#f2f2f2</color>
+
+    <color name="drawer_item_icon_tint">#666666</color>
+    <color name="drawer_item_text_color">#222222</color>
 </resources>

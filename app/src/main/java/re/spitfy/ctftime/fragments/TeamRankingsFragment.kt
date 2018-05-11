@@ -196,7 +196,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                     for (document in snapshot.documents) {
                         try {
                             Log.d(TAG, document.getString("Name"))
-                            rankingsList.add(document.toObject(Team::class.java))
+                            //rankingsList.add(document.toObject(Team::class.java))
                             lastDocument = document
                         } catch (e : RuntimeException) {
                             Log.d(TAG, document.id)
@@ -231,7 +231,7 @@ class TeamRankingsFragment : android.support.v4.app.Fragment()
                                 moreData = false
                             }
                             for (document in querySnapshot.documents) {
-                                rankingsList.add(document.toObject(Team::class.java))
+                                //rankingsList.add(document.toObject(Team::class.java))
                                 lastDocument = document
                             }
                             if (moreData) {

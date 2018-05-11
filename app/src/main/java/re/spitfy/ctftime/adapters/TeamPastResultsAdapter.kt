@@ -1,7 +1,6 @@
 package re.spitfy.ctftime.adapters
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import re.spitfy.ctftime.R
 import re.spitfy.ctftime.data.ScoreAndYear
-import re.spitfy.ctftime.fragments.TeamProfileFragment.Companion.TAG
 
 class TeamPastResultsAdapter(
         private val ctx : Context?,
@@ -43,7 +41,7 @@ class TeamPastResultsAdapter(
         viewHolder.rank?.text = score.Score.Rank.toString()
         viewHolder.points?.text = score.Score.Points.toString()
 
-        Log.d(TAG, viewHolder.year?.text.toString())
+        //Log.d(TAG, viewHolder.year?.text.toString())
         return lConvertView
     }
 }
